@@ -7,7 +7,7 @@ const getAllProjects = async (req, res) => {
       method: 'get',
       url: '/api/proyectos'
     });
-    console.log('Respuesta de la API:', response.data);
+    // console.log('Respuesta de la API:', response.data);
     res.json(response.data);
   } catch (error) {
     res.status(500).json({ error: 'Error al obtener proyectos desde API' });
@@ -22,7 +22,7 @@ const createProject = async (req, res) => {
       url: '/api/proyectos',
       data: req.body
     });
-    console.log('Proyecto creado:', response.data);
+    // console.log('Proyecto creado:', response.data);
     res.status(201).json(response.data);
   } catch (error) {
     res.status(400).json({ error: 'Error al crear proyecto desde API' });
