@@ -1,0 +1,15 @@
+// app_api/models/Project.js
+const mongoose = require('mongoose');
+
+const projectSchema = new mongoose.Schema({
+  title: { type: String, required: true, trim: true },
+  description: { type: String, required: true },
+  image: { type: String },
+  github: { type: String },
+  demo: { type: String },
+  technologies: { type: [String], default: [] },
+  createdAt: { type: Date, default: Date.now }
+});
+
+// "proyectos" será el nombre de la colección en MongoDB
+module.exports = mongoose.model('Project', projectSchema, 'proyectos');
