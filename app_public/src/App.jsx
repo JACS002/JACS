@@ -1,10 +1,18 @@
-import Hero from "./pages/Hero";
+import { useState } from "react";
+import LogoIntro from "./pages/LogoIntro";
+import Home from "./pages/Home";
 
 function App() {
+  const [showIntro, setShowIntro] = useState(true);
+
   return (
-    <div>
-      <Hero />
-    </div>
+    <>
+      {showIntro ? (
+        <LogoIntro onComplete={() => setShowIntro(false)} />
+      ) : (
+        <Home />
+      )}
+    </>
   );
 }
 
