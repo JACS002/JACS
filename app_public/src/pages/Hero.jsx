@@ -5,13 +5,13 @@ export default function Hero() {
   const titleRef = useRef();
 
   useEffect(() => {
-    gsap.from(titleRef.current, {
-      y: -50,
-      opacity: 0,
-      duration: 1,
-      ease: "power3.out"
-    });
+    gsap.fromTo(
+      titleRef.current,
+      { y: -50, opacity: 0 },
+      { y: 0, opacity: 1, duration: 3, ease: "power3.out" }
+    );
   }, []);
+  
 
   return (
     <section className="h-screen flex items-center justify-center bg-gradient-to-br from-blue-600 to-purple-700 text-white">
