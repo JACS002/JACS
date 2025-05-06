@@ -8,6 +8,7 @@ export default function LogoIntro({ onComplete }) {
   const [fadeOut, setFadeOut] = useState(false);
 
   useEffect(() => {
+    document.body.style.overflow = "hidden";
     const ctx = gsap.context(() => {
       const tl = gsap.timeline({
         defaults: { ease: "power2.out" },
@@ -37,7 +38,10 @@ export default function LogoIntro({ onComplete }) {
         .from("#S", { opacity: 0, y: 20, duration: 0.5 }, "-=0.3");
     }, containerRef);
 
-    return () => ctx.revert();
+    return () => {
+      document.body.style.overflow = "auto";
+      ctx.revert();
+    };
   }, [onComplete]);
 
   return (

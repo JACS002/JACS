@@ -1,0 +1,64 @@
+/* Efecto Glassmorphism */
+.glass {
+    backdrop-filter: blur(10px);
+    background-color: rgba(25, 25, 25, 0.6);
+    -webkit-backdrop-filter: blur(10px);
+    transition: top 0.3s ease-in-out;
+    border-bottom-left-radius: 1.75rem;  /* 16px */
+    border-bottom-right-radius: 1.75rem;
+  }
+  
+  
+  /* Mostrar/Ocultar el navbar al hacer scroll */
+  .navbar-hidden {
+    top: -100px;
+  }
+  .navbar-visible {
+    top: 0;
+  }
+
+  .neon-underline {
+    position: relative;
+    color: white;
+    text-decoration: none;
+  }
+  
+  .neon-underline::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: #864cef;
+    box-shadow: 0 0 6px #864cef, 0 0 12px #864cef;
+    opacity: 1;
+  }
+  
+  .neon-hover {
+    position: relative;
+    color: white;
+    transition: color 0.3s ease;
+  }
+  
+  .neon-hover::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 0%;
+    height: 2px;
+    background: #864cef;
+    transition: width 0.3s ease;
+  }
+  
+  .neon-hover:hover {
+    color: #864cef;
+  }
+  
+  .neon-hover:hover::after {
+    width: 100%;
+  }
+  
+  
+  

@@ -11,10 +11,11 @@ module.exports = {
         contenido: ['Poppins', 'sans-serif'],
       },
       colors: {
-        dark: '#0e0e2c',        // fondo oscuro
-        primary: '#a64bfd',     // morado eléctrico del logo
+        dark: '#0a0a0a',        // fondo oscuro
+        primary: '#864cef',     // morado eléctrico del logo
         accent: '#00f0ff',      // cian neón para botones/detalles
         neon: '#ff00c8',        // rosa neón opcional
+        white: '#ffffff',       // blanco para texto
       },
     },
   },

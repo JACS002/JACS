@@ -1,8 +1,17 @@
+import Navbar from "../components/Navbar";
+import Hero from "../components/Hero";
+import Proyectos from "../components/Proyectos";
+import QuienSoy from "../components/QuienSoy";
+import Contacto from "../components/Contacto";
+
 export default function Home() {
-    return (
-      <main className="min-h-screen bg-dark flex items-center justify-center text-white text-3xl font-titulos ">
-        Bienvenido a mi universo digital 🚀
-      </main>
-    );
-  }
-  
+  return (
+    <main className="bg-dark">
+      <Navbar />
+      <Hero />
+      <Proyectos />
+      <QuienSoy />
+      <Contacto />
+    </main>
+  );
+}
