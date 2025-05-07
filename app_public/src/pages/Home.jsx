@@ -3,7 +3,6 @@ import Hero from "../components/Hero";
 import Proyectos from "../components/Proyectos";
 import QuienSoy from "../components/QuienSoy";
 import Contacto from "../components/Contacto";
-import ParticlesBackground from "../components/ParticlesBackground";
 
 export default function Home() {
   return (
