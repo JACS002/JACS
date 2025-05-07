@@ -1,9 +1,10 @@
-export default function LogoNombre({ fillColor = "none", strokeColor = "rgba(255,255,255,0.3)", strokeWidth = 0.5,  classPerLetter = "" })  {
+export default function LogoNombre({ fillColor = "none", strokeColor = "rgba(255,255,255,0.3)", strokeWidth = 0.5,  classPerLetter = "", className = "" })  {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 119.5 30.16"
-      className="w-full h-auto overflow-visible logo-nombre"
+      className={`${className} w-full h-auto overflow-visible logo-nombre`}
+      preserveAspectRatio="xMidYMid meet"
     >
       <g id="Layer_2" data-name="Layer 2">
         <g id="logoNombre">

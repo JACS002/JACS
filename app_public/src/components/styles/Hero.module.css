@@ -1,38 +1,77 @@
 .heroSection {
+  height: 100vh;
+  background-color: #0a0a0a;
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
-  background-color: #0a0a0a;
+  position: relative;
+  overflow: hidden;
 }
 
 .logoWrapper {
-  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
+  position: relative;
+  will-change: transform;
+  transform: scale(1.8); /* Escalado global */
 }
 
 .logoContainer {
-  transition: all 0.4s ease;
+  position: relative;
+  padding: 0 5vw;
+  width: 100%;
+  height: auto;
+  will-change: transform, filter;
+  z-index: 2;
 }
 
-.glow {
-  filter: drop-shadow(0 0 6px #ffffff) drop-shadow(0 0 18px #d519ff88);
-}
-
+/* Reflejo alineado bajo el logo */
 .logoReflection {
-  transform: perspective(400px) rotateX(60deg) scaleY(0); /* empieza colapsado */
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  height: auto;
   transform-origin: top;
-  opacity: 0;
+  transform: perspective(400px) rotateX(75deg) scaleY(-1);
   filter: blur(3px);
-  transition: transform 0.4s ease, opacity 0.4s ease;
+  opacity: 0;
   mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.5), transparent);
   -webkit-mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.5), transparent);
+  transition: transform 0.4s ease, opacity 0.4s ease;
+  will-change: transform, opacity;
+  overflow: visible;
+  z-index: 1;
 }
 
-.visible {
-  transform: perspective(200px) rotateX(70deg) scaleY(-1) translateY(-90px);
-  opacity: 0.15;
+.bienvenida {
+  position: absolute;
+  bottom: 10vh;
+  opacity: 0;
+  color: white;
+  font-size: 2rem;
+  font-family: 'Segoe UI', sans-serif;
+  text-align: center;
+  will-change: transform, opacity;
 }
 
+/* Tablet */
+@media (max-width: 1023px) {
+  .logoWrapper {
+    transform: scale(1.4);
+  }
+}
+
+/* Celular */
+@media (max-width: 767px) {
+  .logoWrapper {
+    transform: scale(1.1);
+  }
+
+  .bienvenida {
+    font-size: 1.5rem;
+    padding: 0 10vw;
+  }
+}
