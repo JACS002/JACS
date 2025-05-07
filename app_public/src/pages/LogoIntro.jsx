@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import LogoSVG from "../components/LogoSVG";
-import ParticlesBackground from "../components/ParticlesBackground";
 
 export default function LogoIntro({ onComplete }) {
   const containerRef = useRef();
@@ -9,6 +8,7 @@ export default function LogoIntro({ onComplete }) {
 
   useEffect(() => {
     document.body.style.overflow = "hidden";
+
     const ctx = gsap.context(() => {
       const tl = gsap.timeline({
         defaults: { ease: "power2.out" },
@@ -16,7 +16,7 @@ export default function LogoIntro({ onComplete }) {
           setFadeOut(true);
           setTimeout(() => {
             onComplete?.();
-          }, 800); // espera a que termine el fade
+          }, 800);
         },
       });
 
@@ -45,14 +45,13 @@ export default function LogoIntro({ onComplete }) {
   }, [onComplete]);
 
   return (
-    <div className="min-h-screen w-full relative overflow-hidden bg-dark">
-      {/* Contenedor que hace fade out (logo + partículas) */}
+    <div className="min-h-screen w-full relative overflow-hidden bg-transparent">
+      {/* Logo animado con fade */}
       <div
         className={`absolute inset-0 z-20 pointer-events-none transition-opacity duration-700 ${
           fadeOut ? "opacity-0" : "opacity-100"
         }`}
       >
-        <ParticlesBackground />
         <div
           ref={containerRef}
           className="w-full h-full flex items-center justify-center"

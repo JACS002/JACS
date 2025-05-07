@@ -3,6 +3,7 @@ import styles from "../components/styles/Hero.module.css";
 import LogoNombre from "../assets/icons/LogoNombre";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import ParticlesBackground from "./ParticlesBackground";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -13,14 +14,14 @@ export default function Hero() {
     const ctx = gsap.context(() => {
       const letters = logoRef.current.querySelectorAll(".logo-letra");
       const logoContainer = logoRef.current.querySelector(".logo-container");
-      const reflection = logoRef.current.querySelector(".logo-reflection");
-      const bienvenida = logoRef.current.querySelector(".bienvenida");
+      const halo = logoRef.current.querySelector(".logo-halo");
       const wrapper = logoRef.current.querySelector(".logoWrapper");
+      const bienvenida = logoRef.current.querySelector(".bienvenida");
 
-      // Reset
+      // Reset inicial
       gsap.set(letters, { y: -200, opacity: 0 });
-      gsap.set(logoContainer, { filter: "none" });
-      gsap.set(reflection, { opacity: 0 });
+      gsap.set(logoContainer, { filter: "none", scale: 1 });
+      gsap.set(halo, { opacity: 0, scale: 1, y: 0, yPercent: 0 });
       gsap.set(wrapper, { y: 0 });
       gsap.set(bienvenida, { y: 100, opacity: 0 });
 
@@ -31,26 +32,41 @@ export default function Hero() {
           end: "+=2000",
           scrub: true,
           pin: true,
-          markers: true,
+          markers: false,
         },
       });
 
+      let lastFallTime = 0;
       letters.forEach((letter, i) => {
-        tl.to(letter, { y: 0, opacity: 1, ease: "power2.out" }, i * 0.1);
+        const time = i * 0.1;
+        tl.to(letter, { y: 0, opacity: 1, ease: "power2.out" }, time);
+        if (time > lastFallTime) lastFallTime = time;
       });
 
-      const glowStart = letters.length * 0.1 + 0.2;
+      const glowStart = lastFallTime + 0.2;
 
       tl.to(letters, { fill: "#ffffff", stroke: "#ffffff" }, glowStart);
       tl.to(logoContainer, {
-        filter: "drop-shadow(0 0 6px #ffffff) drop-shadow(0 0 20px #d000ff)",
+        filter: "drop-shadow(0 0 6px #ffffff) drop-shadow(0 0 20px #9c65f2)",
       }, "<");
-      tl.to(reflection, { opacity: 0.15 }, "<");
+      tl.to(halo, { opacity: 0.5 }, "<");
 
-      tl.to(wrapper, { y: -100 }, "+=0.3");
-      tl.to(logoContainer, { scale: 0.6 }, "<");
-      tl.to(reflection, { scale: 0.6, y: 10, opacity: 0.1 }, "<");
-      tl.to(bienvenida, { y: 0, opacity: 1 }, "<+0.2");
+      tl.to(wrapper, { y: -200 }, "+=0.3");
+
+      tl.to([logoContainer, halo], {
+        scale: 0.5,
+        transformOrigin: "center center",
+      }, "<");
+
+      tl.to(halo, {
+        yPercent: -60,
+      }, "<");
+
+      tl.to(bienvenida, {
+        y: 0,
+        opacity: 1,
+        ease: "power2.out",
+      }, "<+0.2");
     }, logoRef);
 
     return () => ctx.revert();
@@ -58,6 +74,7 @@ export default function Hero() {
 
   return (
     <section className={styles.heroSection} ref={logoRef}>
+      <ParticlesBackground /> {/* ← fondo detrás del logo */}
       <div className={`${styles.logoWrapper} logoWrapper`}>
         <div className={`logo-container ${styles.logoContainer}`}>
           <LogoNombre
@@ -66,17 +83,19 @@ export default function Hero() {
             classPerLetter="logo-letra"
           />
         </div>
-        <div className={`logo-reflection ${styles.logoReflection}`}>
-          <LogoNombre
-            fillColor="#a26bf0"
-            strokeColor="#a26bf0"
-            classPerLetter="logo-letra"
-          />
-        </div>
+        <div className={`${styles.logoHalo} logo-halo`}></div>
       </div>
+
       <div className={`${styles.bienvenida} bienvenida`}>
-        <h1>Bienvenido</h1>
+        <h1 className="text-white font-titulos font-bold text-5xl mb-9 mt-5">Bienvenido</h1>
+        <h2 className="text-white font-titulos font-semibold text-xl mb-7">Desarrollo full stack | Ciencias de la Computación</h2>
+        <p className="text-white font-contenido text-base leading-relaxed mb-5">
+          Este portafolio presenta una selección de mis proyectos y habilidades en desarrollo web,
+          diseño de interfaces y soluciones en ciencia de la computación. Aquí puedes explorar mis trabajos,
+          tecnologías que domino y experiencias destacadas.
+        </p>
       </div>
+
     </section>
   );
 }
