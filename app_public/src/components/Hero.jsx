@@ -105,11 +105,11 @@ export default function Hero() {
       </div>
 
       <div className={`${styles.bienvenida} bienvenida`}>
-        <h1 className="text-white font-titulos font-bold text-5xl mb-9 mt-5">Bienvenido</h1>
-        <h2 className="text-white font-titulos font-semibold text-xl mb-7">
+        <h1 className="text-white font-titulos font-bold text-5xl mb-7 mt-3">Bienvenido</h1>
+        <h2 className="text-white font-titulos font-semibold text-3xl mb-5">
           Desarrollo full stack | Ciencias de la Computación
         </h2>
-        <p className="text-white font-contenido text-base leading-relaxed mb-5">
+        <p className="text-white font-contenido text-xl leading-relaxed mb-4">
           Este portafolio presenta una selección de mis proyectos y habilidades en desarrollo web,
           diseño de interfaces y soluciones en ciencia de la computación. Aquí puedes explorar mis trabajos,
           tecnologías que domino y experiencias destacadas.
