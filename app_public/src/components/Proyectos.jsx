@@ -9,6 +9,7 @@ import ProjectModal from "./ProjectModal"; // <- modal con blur
 gsap.registerPlugin(ScrollTrigger);
 
 export default function Proyectos() {
+  const [modalOpen, setModalOpen] = useState(false);
   const cardsRef = useRef([]);
   const sectionRef = useRef(null);
   const arrowRef = useRef(null);
@@ -70,9 +71,12 @@ export default function Proyectos() {
           x: 0,
           skewX: 0,
           scale: 1,
-          color: "",
-          textShadow: "none",
           duration: 0.08,
+        });
+        tl.to(el, {
+          color: "#d7c1ff",
+          textShadow: "0 0 2px #864cef, 0 0 6px #864cef, 0 0 36px #864cefbf",
+          duration: 0.05,
         });
       }
 
@@ -115,7 +119,7 @@ export default function Proyectos() {
         }
       }
 
-      ScrollTrigger.create({
+      const scrollTrigger = ScrollTrigger.create({
         trigger: sectionRef.current,
         start: "top top",
         end: `+=${window.innerHeight * (projects.length + 1)}`,
@@ -128,8 +132,16 @@ export default function Proyectos() {
           } else {
             gsap.to(arrowRef.current, { opacity: 1, duration: 0.5 });
           }
+
+          // Actualizar durante el scroll
+          window.proyectosStart = self.start;
+          window.proyectosEnd = self.end;
         },
       });
+
+      // Inicializar inmediatamente para el Navbar
+      window.proyectosStart = scrollTrigger.start;
+      window.proyectosEnd = scrollTrigger.end;
 
       positionCards(0);
 
@@ -142,17 +154,21 @@ export default function Proyectos() {
       });
     }, sectionRef);
 
-    return () => ctx.revert();
+    return () => {
+      ctx.revert();
+      window.proyectosStart = null;
+      window.proyectosEnd = null;
+    };
   }, [projects]);
 
   return (
     <section id="proyectos" className={styles.steps} ref={sectionRef}>
       <div className={styles.cardTitleDynamic}>
-        <h1 className={`${styles.mainTitle} font-titulos mb-9`}>
+        <h1 className={`${styles.mainTitle} text-white font-titulos font-bold text-5xl mb-7 mt-3`}>
           Proyectos
         </h1>
         <h2
-          className={`${styles.subtitle} font-contenido text-accent`}
+          className={`${styles.subtitle} font-contenido font-semibold text-2xl`}
           ref={subtitleRef}
         >
           {subtitle}
@@ -171,7 +187,10 @@ export default function Proyectos() {
             title={project.title}
             imageSrc={project.image}
             technologies={project.technologies}
-            onClick={() => setSelectedProject(project)}
+            onClick={() => {
+              window.forceHideNavbar = true;
+              setSelectedProject(project);
+            }}
           />
         ))}
         <div className={`${styles.card} ${styles.empty}`}></div>
@@ -180,7 +199,10 @@ export default function Proyectos() {
       {selectedProject && (
         <ProjectModal
           project={selectedProject}
-          onClose={() => setSelectedProject(null)}
+          onClose={() => {
+            window.forceHideNavbar = false;
+            setSelectedProject(null);
+          }}
         />
       )}
     </section>

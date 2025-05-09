@@ -12,7 +12,7 @@ export default function Navbar() {
   const [showNavbar, setShowNavbar] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
   const [activeSection, setActiveSection] = useState("");
-  const [isScrolling, setIsScrolling] = useState(false); // ← evita conflicto de scroll animado
+  const [isScrolling, setIsScrolling] = useState(false);
 
   const toggleMenu = () => setMenuOpen(!menuOpen);
 
@@ -23,10 +23,21 @@ export default function Navbar() {
     { name: "Contactemos", href: "#contacto" },
   ];
 
-  // Ocultar al bajar, mostrar al subir (si no estamos en scroll animado)
+  // Si al montar el navbar el modal ya está abierto, ocultarlo
+  useEffect(() => {
+    if (window.forceHideNavbar) {
+      setShowNavbar(false);
+    }
+  }, []);
+
+  // Manejar scroll: ocultar al bajar, mostrar al subir (si no hay modal)
   useEffect(() => {
     const handleScroll = () => {
       if (isScrolling) return;
+      if (window.forceHideNavbar) {
+        setShowNavbar(false);
+        return;
+      }
 
       const currentScrollY = window.scrollY;
       setShowNavbar(currentScrollY < lastScrollY || currentScrollY <= 10);
@@ -42,13 +53,22 @@ export default function Navbar() {
     const handleScroll = () => {
       const scrollTop = window.scrollY;
 
-      // Si aún está en el hero (ScrollTrigger pin activo)
       if (window.heroEnd && scrollTop < window.heroEnd) {
         setActiveSection("inicio");
         return;
       }
 
-      const sections = ["proyectos", "quien-soy", "contacto"];
+      if (
+        window.proyectosStart !== null &&
+        window.proyectosEnd !== null &&
+        scrollTop >= window.proyectosStart &&
+        scrollTop < window.proyectosEnd
+      ) {
+        setActiveSection("proyectos");
+        return;
+      }
+
+      const sections = ["quien-soy", "contacto"];
       for (const id of sections) {
         const section = document.getElementById(id);
         if (section) {
@@ -71,13 +91,19 @@ export default function Navbar() {
 
   // Scroll animado con ocultación de navbar
   const handleScrollTo = (targetId) => {
-    const target =
-      targetId === "#inicio" && window.heroEnd
-        ? window.heroEnd - 1000 // ← antes del final de animación Hero
-        : targetId;
+    let target;
+
+    if (targetId === "#inicio" && window.heroEnd) {
+      target = window.heroEnd - 1000;
+    } else if (targetId === "#proyectos" && window.proyectosStart !== undefined) {
+      target = window.proyectosStart;
+    } else {
+      target = targetId;
+    }
+
 
     setIsScrolling(true);
-    setShowNavbar(false); // ocultar durante scroll
+    setShowNavbar(false);
 
     gsap.to(window, {
       duration: 1,
@@ -85,12 +111,27 @@ export default function Navbar() {
       ease: "power2.inOut",
       onComplete: () => {
         setTimeout(() => {
-          setShowNavbar(true);   // volver a mostrar
+          // Solo mostrar si NO está abierto el modal
+          if (!window.forceHideNavbar) {
+            setShowNavbar(true);
+          }
           setIsScrolling(false);
         }, 200);
       },
     });
   };
+
+  // Vigilar window.forceHideNavbar constantemente
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (window.forceHideNavbar) {
+        setShowNavbar(false);
+      }
+    }, 100); // cada 100ms
+
+    return () => clearInterval(interval);
+  }, []);
+
 
   return (
     <nav
