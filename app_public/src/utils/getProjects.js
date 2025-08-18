@@ -1,10 +1,8 @@
 import axios from 'axios';
 
 const getProjects = async () => {
-  // Detecta automáticamente la URL base según entorno
-  const serverURL = window.location.origin.includes('localhost')
-    ? 'http://localhost:5000'
-    : window.location.origin;
+  const serverURL = import.meta.env.VITE_API_URL; // Vite
+  // Para CRA sería: process.env.REACT_APP_API_URL
 
   try {
     const res = await axios.get(`${serverURL}/proyectos`);
