@@ -1,22 +1,47 @@
 import styles from "./styles/Proyectos.module.css";
 import techColors from "../utils/techColors";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { FaGithub } from "react-icons/fa";
 
 export default function ProjectModal({ project, onClose }) {
+  const [closing, setClosing] = useState(false);
+
   if (!project) return null;
 
   useEffect(() => {
     document.body.style.overflow = "hidden";
+
+    const handleKeyDown = (e) => {
+      if (e.key === "Escape") handleClose();
+    };
+    window.addEventListener("keydown", handleKeyDown);
+
     return () => {
       document.body.style.overflow = "";
+      window.removeEventListener("keydown", handleKeyDown);
     };
   }, []);
 
+  const handleClose = () => {
+    setClosing(true);
+    setTimeout(() => {
+      onClose();
+    }, 300); // ⏱ tiempo igual a la duración de fadeOut
+  };
+
   return (
-    <div className={styles.modalBackdrop} onClick={onClose}>
-      <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
-        <button className={styles.modalClose} onClick={onClose}>✕</button>
+    <div
+      className={`${styles.modalBackdrop} ${closing ? styles.fadeOut : styles.fadeIn}`}
+      onClick={handleClose}
+    >
+      <div
+        className={styles.modalContent}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <button className={styles.modalClose} onClick={handleClose} aria-label="Cerrar">
+          <span aria-hidden="true">×</span>
+        </button>
+
         <div className={styles.modalGrid}>
           {/* LADO IZQUIERDO */}
           <div className={styles.modalLeft}>
@@ -45,12 +70,22 @@ export default function ProjectModal({ project, onClose }) {
 
             <div className={styles.modalButtons}>
               {project.github && (
-                <a href={project.github} target="_blank" rel="noreferrer" className={styles.buttonGithub}>
+                <a
+                  href={project.github}
+                  target="_blank"
+                  rel="noreferrer"
+                  className={styles.buttonGithub}
+                >
                   <FaGithub /> GitHub
                 </a>
               )}
               {project.demo && (
-                <a href={project.demo} target="_blank" rel="noreferrer" className={styles.buttonDemo}>
+                <a
+                  href={project.demo}
+                  target="_blank"
+                  rel="noreferrer"
+                  className={styles.buttonDemo}
+                >
                   Ver Sitio
                 </a>
               )}

@@ -1,0 +1,42 @@
+/* === SCROLLBAR FUTURISTA GLOBAL === */
+
+/* WebKit (Chrome, Edge, Safari) */
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+  width: 10px;
+}
+
+html::-webkit-scrollbar-track,
+body::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+html::-webkit-scrollbar-thumb,
+body::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, rgba(255,255,255,0.1), rgba(255,255,255,0.3));
+  background-size: 200% 200%;
+  border-radius: 10px;
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(2px);
+  animation: scrollbarFlow 4s ease infinite;
+}
+
+html::-webkit-scrollbar-thumb:hover,
+body::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, rgba(255,255,255,0.4), rgba(255,255,255,0.6));
+  box-shadow: 0 0 12px rgba(255, 255, 255, 0.4);
+}
+
+/* Firefox */
+html,
+body {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+}
+
+/* Animación para el efecto de flujo */
+@keyframes scrollbarFlow {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}

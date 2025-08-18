@@ -1,5 +1,6 @@
 // src/App.jsx
 import { useState } from "react";
+import "./App.css"; // Importa el CSS global
 import LogoIntro from "./pages/LogoIntro";
 import Home from "./pages/Home";
 import ParticlesBackground from "./components/ParticlesBackground";
