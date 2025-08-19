@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const getProjects = async () => {
-  const serverURL = import.meta.env.VITE_API_URL; // Vite
+  const serverURL = import.meta.env.VITE_API_URL || 'http://localhost:5000'; // Vite
   // Para CRA sería: process.env.REACT_APP_API_URL
 
   try {

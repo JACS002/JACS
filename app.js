@@ -20,7 +20,7 @@ connectDB();
 // Middlewares
 const allowedOrigins = [
   'http://localhost:5173', // tu frontend local (ajusta el puerto según Vite/CRA)
-  'https://jacs.vercel.app' // tu frontend en Vercel
+  'https://jacs-7bhgvcw1l-jacs002s-projects.vercel.app' // tu frontend en Vercel
 ];
 
 app.use(cors({
