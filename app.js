@@ -18,23 +18,7 @@ const PORT = process.env.PORT || 5000;
 connectDB();
 
 // Middlewares
-const allowedOrigins = [
-  'http://localhost:5173', // tu frontend local (ajusta el puerto según Vite/CRA)
-  'https://jacs.vercel.app' // tu frontend en Vercel
-];
-
-app.use(cors({
-  origin: function(origin, callback){
-    // permitir requests sin origin (como Postman)
-    if(!origin) return callback(null, true);
-    if(allowedOrigins.includes(origin)){
-      return callback(null, true);
-    } else {
-      return callback(new Error('❌ No permitido por CORS'));
-    }
-  }
-}));
-
+app.use(cors());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
