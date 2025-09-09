@@ -4,7 +4,7 @@ import Card from "./Card";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import getProjects from "../utils/getProjects";
-import ProjectModal from "./ProjectModal"; // <- modal con blur
+import ProjectModal from "./ProjectModal";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -20,29 +20,35 @@ export default function Proyectos() {
   const [selectedProject, setSelectedProject] = useState(null);
   const previousTitle = useRef("");
 
-  // NUEVO:
+  // NUEVO: loading + error
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  useEffect(() => {
-    const fetchProjects = async () => {
-      try {
-        setLoading(true);
-        setError("");
-        const data = await getProjects();
-        setProjects(data || []);
-        if (data?.[0]?.title) {
-          setSubtitle(data[0].title);
-          previousTitle.current = data[0].title;
-        }
-      } catch (e) {
-        console.error(e);
-        setError("No se pudieron cargar los proyectos. Intenta nuevamente.");
-      } finally {
-        setLoading(false);
+  const handleRetry = async () => {
+    try {
+      setLoading(true);
+      setError("");
+      const data = await getProjects();
+      setProjects(data || []);
+      if (data?.[0]?.title) {
+        setSubtitle(data[0].title);
+        previousTitle.current = data[0].title;
+      } else {
+        setSubtitle("");
+        previousTitle.current = "";
       }
-    };
-    fetchProjects();
+    } catch (e) {
+      console.error(e);
+      setError("No se pudieron cargar los proyectos. Intenta nuevamente.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    // primer fetch
+    handleRetry();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -113,12 +119,12 @@ export default function Proyectos() {
         scrub: true,
         onUpdate: (self) => {
           positionCards(self.progress);
+          // flecha por progreso (además de opacity por loading)
           if (self.progress > 0.01) {
             gsap.to(arrowRef.current, { opacity: 0, duration: 0.5 });
           } else {
             gsap.to(arrowRef.current, { opacity: 1, duration: 0.5 });
           }
-
           window.proyectosStart = self.start;
           window.proyectosEnd = self.end;
         },
@@ -159,7 +165,7 @@ export default function Proyectos() {
         </h2>
       </div>
 
-      {/* LOADER / ERROR */}
+      {/* LOADER / ERROR (overlay siempre por encima) */}
       {(loading || error) && (
         <div
           className={styles.loaderWrap}
@@ -176,29 +182,7 @@ export default function Proyectos() {
           {error && !loading && (
             <>
               <p className={styles.errorText}>{error}</p>
-              <button
-                className={styles.retryBtn}
-                onClick={() => {
-                  // reintentar
-                  setLoading(true);
-                  setError("");
-                  (async () => {
-                    try {
-                      const data = await getProjects();
-                      setProjects(data || []);
-                      if (data?.[0]?.title) {
-                        setSubtitle(data[0].title);
-                        previousTitle.current = data[0].title;
-                      }
-                    } catch (e) {
-                      console.error(e);
-                      setError("No se pudieron cargar los proyectos. Intenta nuevamente.");
-                    } finally {
-                      setLoading(false);
-                    }
-                  })();
-                }}
-              >
+              <button className={styles.retryBtn} onClick={handleRetry}>
                 Reintentar
               </button>
             </>
@@ -206,12 +190,14 @@ export default function Proyectos() {
         </div>
       )}
 
-      {/* Oculta flecha mientras carga para evitar parpadeos */}
-      {!loading && !error && (
-        <div className={`${styles.scrollDown} scroll-down`} ref={arrowRef}>
-          <span className={styles.arrow}></span>
-        </div>
-      )}
+      {/* Flecha SIEMPRE montada; controlada por opacity (evita flicker SSR) */}
+      <div
+        className={`${styles.scrollDown} scroll-down`}
+        ref={arrowRef}
+        style={{ opacity: (loading || error) ? 0 : 1 }}
+      >
+        <span className={styles.arrow}></span>
+      </div>
 
       {/* Lista de cards */}
       <div className={styles.cards} aria-hidden={loading || !!error}>
