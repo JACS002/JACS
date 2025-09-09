@@ -380,4 +380,56 @@
     to { opacity: 1; transform: scale(1); }
   }
   
+  .loaderWrap {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  background: rgba(4, 6, 22, 0.55); /* semitransparente sobre el pin */
+  backdrop-filter: blur(2px);
+  z-index: 50;
+}
+
+.spinner {
+  width: 44px;
+  height: 44px;
+  border-radius: 9999px;
+  border: 4px solid rgba(215, 193, 255, 0.25);
+  border-top-color: #864cef;
+  animation: spin 0.9s linear infinite;
+}
+
+.loaderText {
+  color: #d7c1ff;
+  font-family: var(--font-contenido, sans-serif);
+  font-weight: 600;
+  text-shadow: 0 0 6px #864cef66;
+}
+
+.errorText {
+  color: #ffb4c1;
+  font-weight: 600;
+  text-align: center;
+}
+
+.retryBtn {
+  margin-top: 4px;
+  padding: 10px 16px;
+  border-radius: 12px;
+  background: #864cef;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  transition: transform 0.12s ease;
+}
+.retryBtn:hover { transform: translateY(-1px); }
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
   

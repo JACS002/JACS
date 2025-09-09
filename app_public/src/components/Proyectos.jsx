@@ -20,13 +20,26 @@ export default function Proyectos() {
   const [selectedProject, setSelectedProject] = useState(null);
   const previousTitle = useRef("");
 
+  // NUEVO:
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
   useEffect(() => {
     const fetchProjects = async () => {
-      const data = await getProjects();
-      setProjects(data);
-      if (data.length > 0) {
-        setSubtitle(data[0].title);
-        previousTitle.current = data[0].title;
+      try {
+        setLoading(true);
+        setError("");
+        const data = await getProjects();
+        setProjects(data || []);
+        if (data?.[0]?.title) {
+          setSubtitle(data[0].title);
+          previousTitle.current = data[0].title;
+        }
+      } catch (e) {
+        console.error(e);
+        setError("No se pudieron cargar los proyectos. Intenta nuevamente.");
+      } finally {
+        setLoading(false);
       }
     };
     fetchProjects();
@@ -46,38 +59,11 @@ export default function Proyectos() {
         const el = subtitleRef.current;
         if (!el) return;
         const tl = gsap.timeline();
-        tl.to(el, {
-          x: -4,
-          skewX: 15,
-          scale: 1.05,
-          color: "#ff00c8",
-          textShadow: "0 0 6px #ff00c8, 0 0 12px #00f0ff, 2px 2px 2px #00f0ff",
-          duration: 0.04,
-        });
-        tl.to(el, {
-          x: 4,
-          skewX: -12,
-          scale: 0.98,
-          color: "#00f0ff",
-          textShadow: "0 0 4px #00f0ff, 0 0 8px #ff00c8, -2px -2px 2px #ff00c8",
-          duration: 0.04,
-        });
-        tl.to(el, {
-          x: -2,
-          skewX: 5,
-          duration: 0.03,
-        });
-        tl.to(el, {
-          x: 0,
-          skewX: 0,
-          scale: 1,
-          duration: 0.08,
-        });
-        tl.to(el, {
-          color: "#d7c1ff",
-          textShadow: "0 0 2px #864cef, 0 0 6px #864cef, 0 0 36px #864cefbf",
-          duration: 0.05,
-        });
+        tl.to(el, { x: -4, skewX: 15, scale: 1.05, color: "#ff00c8", textShadow: "0 0 6px #ff00c8, 0 0 12px #00f0ff, 2px 2px 2px #00f0ff", duration: 0.04 });
+        tl.to(el, { x: 4, skewX: -12, scale: 0.98, color: "#00f0ff", textShadow: "0 0 4px #00f0ff, 0 0 8px #ff00c8, -2px -2px 2px #ff00c8", duration: 0.04 });
+        tl.to(el, { x: -2, skewX: 5, duration: 0.03 });
+        tl.to(el, { x: 0, skewX: 0, scale: 1, duration: 0.08 });
+        tl.to(el, { color: "#d7c1ff", textShadow: "0 0 2px #864cef, 0 0 6px #864cef, 0 0 36px #864cefbf", duration: 0.05 });
       }
 
       function positionCards(progress = 0) {
@@ -133,13 +119,11 @@ export default function Proyectos() {
             gsap.to(arrowRef.current, { opacity: 1, duration: 0.5 });
           }
 
-          // Actualizar durante el scroll
           window.proyectosStart = self.start;
           window.proyectosEnd = self.end;
         },
       });
 
-      // Inicializar inmediatamente para el Navbar
       window.proyectosStart = scrollTrigger.start;
       window.proyectosEnd = scrollTrigger.end;
 
@@ -175,12 +159,63 @@ export default function Proyectos() {
         </h2>
       </div>
 
-      <div className={`${styles.scrollDown} scroll-down`} ref={arrowRef}>
-        <span className={styles.arrow}></span>
-      </div>
+      {/* LOADER / ERROR */}
+      {(loading || error) && (
+        <div
+          className={styles.loaderWrap}
+          role="status"
+          aria-live="polite"
+          aria-busy={loading ? "true" : "false"}
+        >
+          {loading && (
+            <>
+              <span className={styles.spinner} aria-hidden="true"></span>
+              <p className={styles.loaderText}>Trayendo proyectos…</p>
+            </>
+          )}
+          {error && !loading && (
+            <>
+              <p className={styles.errorText}>{error}</p>
+              <button
+                className={styles.retryBtn}
+                onClick={() => {
+                  // reintentar
+                  setLoading(true);
+                  setError("");
+                  (async () => {
+                    try {
+                      const data = await getProjects();
+                      setProjects(data || []);
+                      if (data?.[0]?.title) {
+                        setSubtitle(data[0].title);
+                        previousTitle.current = data[0].title;
+                      }
+                    } catch (e) {
+                      console.error(e);
+                      setError("No se pudieron cargar los proyectos. Intenta nuevamente.");
+                    } finally {
+                      setLoading(false);
+                    }
+                  })();
+                }}
+              >
+                Reintentar
+              </button>
+            </>
+          )}
+        </div>
+      )}
 
-      <div className={styles.cards}>
-        {projects.map((project, i) => (
+      {/* Oculta flecha mientras carga para evitar parpadeos */}
+      {!loading && !error && (
+        <div className={`${styles.scrollDown} scroll-down`} ref={arrowRef}>
+          <span className={styles.arrow}></span>
+        </div>
+      )}
+
+      {/* Lista de cards */}
+      <div className={styles.cards} aria-hidden={loading || !!error}>
+        {!loading && !error && projects.map((project, i) => (
           <Card
             key={i}
             ref={(el) => (cardsRef.current[i] = el)}
@@ -193,7 +228,7 @@ export default function Proyectos() {
             }}
           />
         ))}
-        <div className={`${styles.card} ${styles.empty}`}></div>
+        {!loading && !error && <div className={`${styles.card} ${styles.empty}`}></div>}
       </div>
 
       {selectedProject && (
