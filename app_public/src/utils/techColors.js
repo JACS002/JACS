@@ -12,6 +12,8 @@ const techColors = {
     Vite: '#a66bff',
     ThreeJS: '#dddddd',
     GSAP: '#50fa7b',
+    Docker: '#2496ed',
+    AWS: '#ff9900',
   };
   
   export default techColors;

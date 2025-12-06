@@ -5,9 +5,13 @@ import styles from "../components/styles/Navbar.module.css";
 
 import { gsap } from "gsap";
 import { ScrollToPlugin } from "gsap/ScrollToPlugin";
+import { useLang } from "../context/LanguageProvider";
+
 gsap.registerPlugin(ScrollToPlugin);
 
 export default function Navbar() {
+  const { lang, toggleLang } = useLang();
+
   const [menuOpen, setMenuOpen] = useState(false);
   const [showNavbar, setShowNavbar] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
@@ -17,11 +21,25 @@ export default function Navbar() {
   const toggleMenu = () => setMenuOpen(!menuOpen);
 
   const navLinks = [
-    { name: "Inicio", href: "#inicio" },
-    { name: "Proyectos", href: "#proyectos" },
-    { name: "Quién Soy", href: "#quien-soy" },
-    { name: "Contactemos", href: "#contacto" },
+    { name: lang === "es" ? "Inicio" : "Home", href: "#inicio" },
+    { name: lang === "es" ? "Proyectos" : "Projects", href: "#proyectos" },
+    { name: lang === "es" ? "Quién soy" : "About me", href: "#quien-soy" },
+    { name: lang === "es" ? "Contacto" : "Contact", href: "#contacto" },
   ];
+
+  // NUEVO: handler para cambiar idioma sin mover el scroll
+  const handleLangToggle = () => {
+    const currentY = window.scrollY;
+    toggleLang();
+
+    // Esperamos al siguiente frame para que React pinte el nuevo texto
+    requestAnimationFrame(() => {
+      window.scrollTo({
+        top: currentY,
+        behavior: "auto",
+      });
+    });
+  };
 
   // Si al montar el navbar el modal ya está abierto, ocultarlo
   useEffect(() => {
@@ -101,7 +119,6 @@ export default function Navbar() {
       target = targetId;
     }
 
-
     setIsScrolling(true);
     setShowNavbar(false);
 
@@ -111,7 +128,6 @@ export default function Navbar() {
       ease: "power2.inOut",
       onComplete: () => {
         setTimeout(() => {
-          // Solo mostrar si NO está abierto el modal
           if (!window.forceHideNavbar) {
             setShowNavbar(true);
           }
@@ -127,17 +143,16 @@ export default function Navbar() {
       if (window.forceHideNavbar) {
         setShowNavbar(false);
       }
-    }, 100); // cada 100ms
+    }, 100);
 
     return () => clearInterval(interval);
   }, []);
 
-
   return (
     <nav
-      className={`w-full fixed z-50 shadow-md ${styles.glass} ${
-        showNavbar ? styles["navbar-visible"] : styles["navbar-hidden"]
-      }`}
+      className={`w-full fixed z-50 shadow-md ${
+        styles.glass
+      } ${showNavbar ? styles["navbar-visible"] : styles["navbar-hidden"]}`}
     >
       <div className="max-w-7xl mx-auto flex justify-between items-center px-6 py-4">
         {/* Logo */}
@@ -151,39 +166,100 @@ export default function Navbar() {
           </button>
         </div>
 
-        {/* Desktop Links */}
-        <ul className="hidden md:flex gap-8 font-titulos text-base font-medium">
-          {navLinks.map((link) => (
-            <li key={link.name}>
-              <button
-                onClick={() => handleScrollTo(link.href)}
-                className={`md:mr-6 font-medium ${
-                  activeSection === link.href.substring(1)
-                    ? styles["neon-underline"]
-                    : styles["neon-hover"]
-                }`}
-              >
-                {link.name}
-              </button>
-            </li>
-          ))}
-        </ul>
+        {/* Links + switch en desktop */}
+        <div className="hidden md:flex items-center gap-6">
+          <ul className="flex gap-8 font-titulos text-base font-medium">
+            {navLinks.map((link) => (
+              <li key={link.href}>
+                <button
+                  onClick={() => handleScrollTo(link.href)}
+                  className={`md:mr-6 font-medium ${
+                    activeSection === link.href.substring(1)
+                      ? styles["neon-underline"]
+                      : styles["neon-hover"]
+                  }`}
+                >
+                  {link.name}
+                </button>
+              </li>
+            ))}
+          </ul>
 
-        {/* Hamburger Icon */}
-        <button
-          className="md:hidden text-2xl text-white"
-          onClick={toggleMenu}
-          aria-label="Toggle menu"
-        >
-          {menuOpen ? <FaTimes /> : <FaBars />}
-        </button>
+          {/* Switch idioma desktop */}
+          <button
+            onClick={handleLangToggle}
+            className={styles.langSwitch}
+            aria-label="Toggle language"
+          >
+            <span
+              className={`${styles.langLabel} ${
+                lang === "en" ? styles.langActive : ""
+              }`}
+            >
+              EN
+            </span>
+            <div className={styles.langTrack}>
+              <div
+                className={`${styles.langThumb} ${
+                  lang === "es" ? styles.thumbRight : styles.thumbLeft
+                }`}
+              />
+            </div>
+            <span
+              className={`${styles.langLabel} ${
+                lang === "es" ? styles.langActive : ""
+              }`}
+            >
+              ES
+            </span>
+          </button>
+        </div>
+
+        {/* Switch + hamburguesa en mobile */}
+        <div className="flex items-center gap-3 md:hidden">
+          <button
+            onClick={handleLangToggle}
+            className={styles.langSwitch}
+            aria-label="Toggle language"
+          >
+            <span
+              className={`${styles.langLabelXs} ${
+                lang === "en" ? styles.langActive : ""
+              }`}
+            >
+              EN
+            </span>
+            <div className={styles.langTrackXs}>
+              <div
+                className={`${styles.langThumbXs} ${
+                  lang === "es" ? styles.thumbRight : styles.thumbLeft
+                }`}
+              />
+            </div>
+            <span
+              className={`${styles.langLabelXs} ${
+                lang === "es" ? styles.langActive : ""
+              }`}
+            >
+              ES
+            </span>
+          </button>
+
+          <button
+            className="text-2xl text-white"
+            onClick={toggleMenu}
+            aria-label="Toggle menu"
+          >
+            {menuOpen ? <FaTimes /> : <FaBars />}
+          </button>
+        </div>
       </div>
 
-      {/* Mobile Menu */}
+      {/* Menú mobile (lo dejas igual, solo usando navLinks) */}
       {menuOpen && (
         <ul className="md:hidden flex flex-col items-center gap-6 py-4 text-white font-titulos text-xl my-3">
           {navLinks.map((link) => (
-            <li key={link.name} className="my-2">
+            <li key={link.href} className="my-2">
               <button
                 onClick={() => {
                   handleScrollTo(link.href);

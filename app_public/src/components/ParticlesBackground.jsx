@@ -15,37 +15,42 @@ export default function ParticlesBackground() {
       options={{
         fullScreen: { enable: false },
         background: { color: "transparent" },
+        detectRetina: true,
         particles: {
-          number: { value: 100, density: { enable: true, area: 800 } },
+          number: {
+            value: 120, // un poco más que antes
+            density: { enable: true, area: 900 },
+          },
           color: { value: "#ffffff" },
           shape: { type: "circle" },
           opacity: {
             value: 0.3,
             random: true,
-            anim: { enable: true, speed: 0.5, opacity_min: 0.1, sync: false }
+            anim: {
+              enable: true,
+              speed: 0.15,   // MUCHO más lento
+              opacity_min: 0.15,
+              sync: false,
+            },
           },
           size: {
             value: { min: 1, max: 2 },
-            anim: { enable: true, speed: 2, size_min: 0.3, sync: false }
+            anim: {
+              enable: false, // ya NO cambian de tamaño
+            },
           },
           move: {
             enable: true,
-            speed: 0.2,
+            speed: 0.08,     // más lento, casi estático
             direction: "none",
             outModes: "out",
-            straight: false
+            straight: false,
           },
           links: {
-            enable: true,
-            distance: 120,
-            color: "#ffffff",
-            opacity: 0.05,
-            width: 1
-          }
+            enable: false,   // sin líneas, solo estrellas
+          },
         },
-        detectRetina: true
       }}
-      
       className="fixed inset-0 -z-1 pointer-events-none"
     />
   );

@@ -1,0 +1,7 @@
+/* QuienSoy.module.css */
+
+.mainTitle {
+  /* Mismo brillo que el título "Proyectos" */
+  color: #ffffff;
+  text-shadow: 0 0 6px #ffffff, 0 0 20px #9c65f2;
+}

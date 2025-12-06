@@ -1,14 +1,17 @@
+// src/components/Hero.jsx
 import { useEffect, useRef } from "react";
 import styles from "../components/styles/Hero.module.css";
 import LogoNombre from "../assets/icons/LogoNombre";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import ParticlesBackground from "./ParticlesBackground";
+import { useLang } from "../context/LanguageProvider";
 
 gsap.registerPlugin(ScrollTrigger);
 
 export default function Hero() {
   const logoRef = useRef(null);
+  const { t } = useLang();
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -18,7 +21,6 @@ export default function Hero() {
       const wrapper = logoRef.current.querySelector(".logoWrapper");
       const bienvenida = logoRef.current.querySelector(".bienvenida");
 
-      // Reset inicial de estilos
       gsap.set(letters, { y: -200, opacity: 0 });
       gsap.set(logoContainer, { filter: "none", scale: 1 });
       gsap.set(halo, { opacity: 0, scale: 1, y: 0, yPercent: 0 });
@@ -34,7 +36,7 @@ export default function Hero() {
           pin: true,
           markers: false,
           onUpdate: (self) => {
-            window.heroEnd = self.end; // Guardar el end globalmente
+            window.heroEnd = self.end;
           },
         },
       });
@@ -49,27 +51,44 @@ export default function Hero() {
       const glowStart = lastFallTime + 0.2;
 
       tl.to(letters, { fill: "#ffffff", stroke: "#ffffff" }, glowStart);
-      tl.to(logoContainer, {
-        filter: "drop-shadow(0 0 6px #ffffff) drop-shadow(0 0 20px #9c65f2)",
-      }, "<");
+      tl.to(
+        logoContainer,
+        {
+          filter:
+            "drop-shadow(0 0 6px #ffffff) drop-shadow(0 0 20px #9c65f2)",
+        },
+        "<"
+      );
       tl.to(halo, { opacity: 0.5 }, "<");
 
       tl.to(wrapper, { y: -200 }, "+=0.3");
 
-      tl.to([logoContainer, halo], {
-        scale: 0.5,
-        transformOrigin: "center center",
-      }, "<");
+      tl.to(
+        [logoContainer, halo],
+        {
+          scale: 0.5,
+          transformOrigin: "center center",
+        },
+        "<"
+      );
 
-      tl.to(halo, {
-        yPercent: -60,
-      }, "<");
+      tl.to(
+        halo,
+        {
+          yPercent: -60,
+        },
+        "<"
+      );
 
-      tl.to(bienvenida, {
-        y: 0,
-        opacity: 1,
-        ease: "power2.out",
-      }, "<+0.2");
+      tl.to(
+        bienvenida,
+        {
+          y: 0,
+          opacity: 1,
+          ease: "power2.out",
+        },
+        "<+0.2"
+      );
     }, logoRef);
 
     return () => {
@@ -78,7 +97,6 @@ export default function Hero() {
     };
   }, []);
 
-  // Oculta el ícono de scroll-down al hacer scroll
   useEffect(() => {
     const handleScroll = () => {
       const icon = document.querySelector(".scroll-down");
@@ -104,19 +122,28 @@ export default function Hero() {
         <div className={`${styles.logoHalo} logo-halo`}></div>
       </div>
 
-      <div className={`${styles.bienvenida} bienvenida`}>
-        <h1 className="text-white font-titulos font-bold text-5xl mb-7 mt-3">Bienvenido</h1>
+      <div
+        className={`${styles.bienvenida} bienvenida`}
+        style={{ marginTop: "3rem" }}
+      >
+        <h1 className="text-white font-titulos font-bold text-5xl mb-5 mt-3">
+          {t("hero.title")}
+        </h1>
+
         <h2 className="text-white font-titulos font-semibold text-3xl mb-5">
-          Desarrollo full stack | Ciencias de la Computación
+          <span className="text-accent">{t("hero.tagline.fs")}</span> ·{" "}
+          <span className="text-accent">{t("hero.tagline.dm")}</span>
         </h2>
-        <p className="text-white font-contenido text-xl leading-relaxed mb-4">
-          Este portafolio presenta una selección de mis proyectos y habilidades en desarrollo web,
-          diseño de interfaces y soluciones en ciencia de la computación. Aquí puedes explorar mis trabajos,
-          tecnologías que domino y experiencias destacadas.
+
+        <p className="text-white font-contenido text-lg md:text-xl leading-relaxed mb-3">
+          {t("hero.p1")}
+        </p>
+
+        <p className="text-gray-300 font-contenido text-base md:text-lg leading-relaxed">
+          {t("hero.p2")}
         </p>
       </div>
 
-      {/* Flecha animada de scroll */}
       <div className={`${styles.scrollDown} scroll-down`}>
         <span className={styles.arrow}></span>
       </div>

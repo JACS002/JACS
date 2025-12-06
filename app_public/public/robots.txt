@@ -1,0 +1,18 @@
+User-agent: *
+Allow: /
+
+# No permitir indexar archivos técnicos
+Disallow: /src/
+Disallow: /assets/
+Disallow: /node_modules/
+
+# Reglas para bots de búsqueda
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+# Sitemap
+Sitemap: https://jacs.vercel.app/sitemap.xml
+

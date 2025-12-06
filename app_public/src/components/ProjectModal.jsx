@@ -1,12 +1,24 @@
+// src/components/ProjectModal.jsx
 import styles from "./styles/Proyectos.module.css";
 import techColors from "../utils/techColors";
 import { useEffect, useState } from "react";
 import { FaGithub } from "react-icons/fa";
 
-export default function ProjectModal({ project, onClose }) {
+// helper local para campos bilingües
+const getLocalizedField = (field, lang) => {
+  if (!field) return "";
+  if (typeof field === "string") return field; // compat
+  if (lang === "es") return field.es || field.en || "";
+  return field.en || field.es || "";
+};
+
+export default function ProjectModal({ project, onClose, lang = "en" }) {
   const [closing, setClosing] = useState(false);
 
   if (!project) return null;
+
+  const localizedTitle = getLocalizedField(project.title, lang);
+  const localizedDescription = getLocalizedField(project.description, lang);
 
   useEffect(() => {
     document.body.style.overflow = "hidden";
@@ -20,25 +32,32 @@ export default function ProjectModal({ project, onClose }) {
       document.body.style.overflow = "";
       window.removeEventListener("keydown", handleKeyDown);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleClose = () => {
     setClosing(true);
     setTimeout(() => {
       onClose();
-    }, 300); // ⏱ tiempo igual a la duración de fadeOut
+    }, 300);
   };
 
   return (
     <div
-      className={`${styles.modalBackdrop} ${closing ? styles.fadeOut : styles.fadeIn}`}
+      className={`${styles.modalBackdrop} ${
+        closing ? styles.fadeOut : styles.fadeIn
+      }`}
       onClick={handleClose}
     >
       <div
         className={styles.modalContent}
         onClick={(e) => e.stopPropagation()}
       >
-        <button className={styles.modalClose} onClick={handleClose} aria-label="Cerrar">
+        <button
+          className={styles.modalClose}
+          onClick={handleClose}
+          aria-label={lang === "es" ? "Cerrar" : "Close"}
+        >
           <span aria-hidden="true">×</span>
         </button>
 
@@ -46,11 +65,15 @@ export default function ProjectModal({ project, onClose }) {
           {/* LADO IZQUIERDO */}
           <div className={styles.modalLeft}>
             <div className={styles.modalImageWrapper}>
-              <img src={project.image} alt={project.title} className={styles.modalImage} />
+              <img
+                src={project.image}
+                alt={localizedTitle}
+                className={styles.modalImage}
+              />
             </div>
 
             <div className={styles.modalTechList}>
-              {project.technologies.map((tech, i) => {
+              {project.technologies?.map((tech, i) => {
                 const color = techColors[tech] || "#ccc";
                 return (
                   <span
@@ -86,7 +109,7 @@ export default function ProjectModal({ project, onClose }) {
                   rel="noreferrer"
                   className={styles.buttonDemo}
                 >
-                  Ver Sitio
+                  {lang === "es" ? "Ver sitio" : "View site"}
                 </a>
               )}
             </div>
@@ -94,8 +117,17 @@ export default function ProjectModal({ project, onClose }) {
 
           {/* LADO DERECHO */}
           <div className={styles.modalRight}>
-            <h2 className="text-3xl font-titulos text-white mb-3">{project.title}</h2>
-            <p className="text-white font-contenido leading-relaxed">{project.description}</p>
+            <h2
+              className={`${styles.modalTitle} font-titulos text-2xl md:text-3xl mb-4`}
+            >
+              {localizedTitle}
+            </h2>
+
+            <p
+              className={`${styles.modalDescription} font-contenido text-base md:text-lg`}
+            >
+              {localizedDescription}
+            </p>
           </div>
         </div>
       </div>

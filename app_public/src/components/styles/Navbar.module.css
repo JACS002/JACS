@@ -59,3 +59,122 @@
   .neon-hover:hover::after {
     width: 100%;
   }
+
+  /* ───────────────────────────────
+   SWITCH DE IDIOMA – DISEÑO NUEVO
+   ─────────────────────────────── */
+
+/* Botón contenedor (desktop y mobile) */
+.langSwitch {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 4px 8px;
+  border-radius: 999px;
+  border: 1px solid rgba(148, 163, 255, 0.55);
+  background: radial-gradient(circle at top left, #020617 0%, #020617 40%, #020617 100%);
+  background-color: rgba(15, 23, 42, 0.95);
+  backdrop-filter: blur(10px);
+  cursor: pointer;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+
+.langSwitch:hover {
+  border-color: rgba(134, 76, 239, 0.9);
+  box-shadow: 0 0 12px rgba(134, 76, 239, 0.7);
+}
+
+/* Label texto EN / ES (desktop) */
+.langLabel {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #9ca3af;       /* inactivo */
+  z-index: 2;           /* por encima del track */
+  user-select: none;
+}
+
+/* Label activo */
+.langActive {
+  color: #f9fafb;
+}
+
+/* Track central donde se mueve la bolita (desktop) */
+.langTrack {
+  position: relative;
+  width: 46px;
+  height: 22px;
+  border-radius: 999px;
+  background: rgba(15, 23, 42, 1);
+  box-shadow: inset 0 0 0 1px rgba(15, 23, 42, 0.8);
+  overflow: hidden;
+}
+
+/* Bolita (desktop) */
+.langThumb {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 18px;
+  height: 16px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #a855f7, #22d3ee);
+  box-shadow: 0 0 10px rgba(34, 211, 238, 0.7);
+  transition: transform 0.25s ease;
+}
+
+/* Posición de la bolita */
+.thumbLeft {
+  transform: translateX(0);
+}
+
+.thumbRight {
+  transform: translateX(20px);
+}
+
+/* ─── Versión móvil ─── */
+
+/* Labels móviles (un poco más pequeños) */
+.langLabelXs {
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #9ca3af;
+  z-index: 2;
+  user-select: none;
+}
+
+/* Track móvil */
+.langTrackXs {
+  position: relative;
+  width: 42px;
+  height: 20px;
+  border-radius: 999px;
+  background: rgba(15, 23, 42, 1);
+  box-shadow: inset 0 0 0 1px rgba(15, 23, 42, 0.8);
+  overflow: hidden;
+}
+
+/* Bolita móvil */
+.langThumbXs {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 16px;
+  height: 14px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #a855f7, #22d3ee);
+  box-shadow: 0 0 10px rgba(34, 211, 238, 0.7);
+  transition: transform 0.25s ease;
+}
+
+/* Reutilizamos las mismas clases de posición */
+@media (max-width: 768px) {
+  .thumbRight {
+    transform: translateX(19px);
+  }
+}
+

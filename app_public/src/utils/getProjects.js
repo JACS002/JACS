@@ -1,8 +1,7 @@
 import axios from 'axios';
 
 const getProjects = async () => {
-  // Usa variable de entorno en Vercel (NEXT_PUBLIC_API_URL si usas Next,
-  // o VITE_API_URL si usas Vite)
+  // Usa variable de entorno en Vercel VITE_API_URL
   const serverURL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
   try {
