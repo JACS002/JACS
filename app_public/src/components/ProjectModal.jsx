@@ -1,58 +1,98 @@
+// ============================================================================
 // src/components/ProjectModal.jsx
+// -----------------------------------------------------------------------------
+// Modal de detalles de proyecto usado en la sección "Proyectos".
+// Se muestra cuando el usuario hace clic en una Card.
+//
+// FUNCIONALIDADES:
+//  - Deshabilita el scroll del body mientras el modal está abierto
+//  - Cierra al hacer clic fuera del contenido
+//  - Cierra con la tecla Escape
+//  - Soporta transiciones de entrada/salida
+//  - Presenta información bilingüe (EN/ES)
+//  - Colorea las tecnologías mediante techColors
+//  - Incluye botones dinámicos para GitHub y Demo
+//
+// Este componente se desmonta completamente cuando no hay proyecto seleccionado.
+// ============================================================================
+
 import styles from "./styles/Proyectos.module.css";
 import techColors from "../utils/techColors";
 import { useEffect, useState } from "react";
 import { FaGithub } from "react-icons/fa";
 
-// helper local para campos bilingües
+// -----------------------------------------------------------------------------
+// Helper para campos bilingües (title, description)
+// Soporta tanto objetos {es, en} como strings simples por compatibilidad.
+// -----------------------------------------------------------------------------
 const getLocalizedField = (field, lang) => {
   if (!field) return "";
-  if (typeof field === "string") return field; // compat
+  if (typeof field === "string") return field; // si ya viene como texto directo
   if (lang === "es") return field.es || field.en || "";
   return field.en || field.es || "";
 };
 
+// ============================================================================
+// COMPONENTE PRINCIPAL
+// ============================================================================
 export default function ProjectModal({ project, onClose, lang = "en" }) {
   const [closing, setClosing] = useState(false);
 
+  // Si no hay proyecto seleccionado, no renderizar el modal
   if (!project) return null;
 
+  // Campos traducidos
   const localizedTitle = getLocalizedField(project.title, lang);
   const localizedDescription = getLocalizedField(project.description, lang);
 
+  // ---------------------------------------------------------------------------
+  // EFECTO: Bloquear scroll del body y añadir listener para ESC
+  // ---------------------------------------------------------------------------
   useEffect(() => {
+    // bloquear scroll del body
     document.body.style.overflow = "hidden";
 
+    // permitir cerrar con tecla Escape
     const handleKeyDown = (e) => {
       if (e.key === "Escape") handleClose();
     };
     window.addEventListener("keydown", handleKeyDown);
 
+    // cleanup
     return () => {
-      document.body.style.overflow = "";
+      document.body.style.overflow = ""; // restaurar scroll
       window.removeEventListener("keydown", handleKeyDown);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // ---------------------------------------------------------------------------
+  // FUNCIÓN: cierre con animación
+  // ---------------------------------------------------------------------------
   const handleClose = () => {
-    setClosing(true);
+    setClosing(true); // activa clase fadeOut
     setTimeout(() => {
-      onClose();
-    }, 300);
+      onClose(); // desmonta el modal después de la animación
+    }, 300); // duración de fadeOut en CSS
   };
 
+  // ============================================================================
+  // RENDER
+  // ============================================================================
   return (
+    // Fondo semitransparente del modal (clic para cerrar)
     <div
       className={`${styles.modalBackdrop} ${
         closing ? styles.fadeOut : styles.fadeIn
       }`}
       onClick={handleClose}
     >
+      {/* Contenedor principal del modal (evita cerrar cuando se hace clic dentro) */}
       <div
         className={styles.modalContent}
         onClick={(e) => e.stopPropagation()}
       >
+        {/* Botón X para cerrar */}
         <button
           className={styles.modalClose}
           onClick={handleClose}
@@ -61,9 +101,14 @@ export default function ProjectModal({ project, onClose, lang = "en" }) {
           <span aria-hidden="true">×</span>
         </button>
 
+        {/* Grid responsivo del modal */}
         <div className={styles.modalGrid}>
-          {/* LADO IZQUIERDO */}
+          
+          {/* ------------------------------------------------------------------- */}
+          {/* LADO IZQUIERDO — IMAGEN, TECH STACK, BOTONES                       */}
+          {/* ------------------------------------------------------------------- */}
           <div className={styles.modalLeft}>
+            {/* Imagen del proyecto */}
             <div className={styles.modalImageWrapper}>
               <img
                 src={project.image}
@@ -72,6 +117,7 @@ export default function ProjectModal({ project, onClose, lang = "en" }) {
               />
             </div>
 
+            {/* Lista de tecnologías (colores dinámicos) */}
             <div className={styles.modalTechList}>
               {project.technologies?.map((tech, i) => {
                 const color = techColors[tech] || "#ccc";
@@ -91,6 +137,7 @@ export default function ProjectModal({ project, onClose, lang = "en" }) {
               })}
             </div>
 
+            {/* Botones de GitHub y Demo (solo si existen) */}
             <div className={styles.modalButtons}>
               {project.github && (
                 <a
@@ -102,6 +149,7 @@ export default function ProjectModal({ project, onClose, lang = "en" }) {
                   <FaGithub /> GitHub
                 </a>
               )}
+
               {project.demo && (
                 <a
                   href={project.demo}
@@ -115,7 +163,9 @@ export default function ProjectModal({ project, onClose, lang = "en" }) {
             </div>
           </div>
 
-          {/* LADO DERECHO */}
+          {/* ------------------------------------------------------------------- */}
+          {/* LADO DERECHO — TÍTULO + DESCRIPCIÓN                                */}
+          {/* ------------------------------------------------------------------- */}
           <div className={styles.modalRight}>
             <h2
               className={`${styles.modalTitle} font-titulos text-2xl md:text-3xl mb-4`}
@@ -129,6 +179,7 @@ export default function ProjectModal({ project, onClose, lang = "en" }) {
               {localizedDescription}
             </p>
           </div>
+
         </div>
       </div>
     </div>

@@ -10,6 +10,6 @@ const {
 router.get('/proyectos', getAllProjects);
 
 // Ruta para crear un nuevo proyecto
-router.post('/proyectos', createProject);
+// router.post('/proyectos', createProject);
 
 module.exports = router;

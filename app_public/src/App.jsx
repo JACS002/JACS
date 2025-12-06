@@ -1,5 +1,5 @@
 // src/App.jsx
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import "./App.css";
 import LogoIntro from "./pages/LogoIntro";
 import Home from "./pages/Home";
@@ -13,21 +13,8 @@ gsap.registerPlugin(ScrollTrigger);
 function App() {
   const [showIntro, setShowIntro] = useState(true);
 
-  useEffect(() => {
-    const handleResize = () => {
-      // Recalcula todos los ScrollTrigger cuando cambie el tamaño
-      ScrollTrigger.refresh();
-    };
-
-    window.addEventListener("resize", handleResize);
-
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
-  }, []);
-
   return (
-    <div className="relative min-h-screen overflow-hidden bg-dark">
+    <div className="relative min-h-screen overflow-x-hidden bg-dark">
       <ParticlesBackground />
 
       {showIntro ? (

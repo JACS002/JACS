@@ -1,40 +1,78 @@
+// app.js
 const express = require('express');
 const cors = require('cors');
+const helmet = require('helmet');
+const rateLimit = require('express-rate-limit');
 require('dotenv').config();
-
-// Conexión a base de datos (desde app_api)
 const connectDB = require('./app_api/config/db');
-
-// Importar rutas que maneja app_server
 const projectRoutes = require('./app_server/routes/projectServerRouter');
-
-// Importar rutas que maneja app_api (si es necesario, por ejemplo, para pruebas o desarrollo)
 const apiProjectRoutes = require('./app_api/routes/projectApiRouter');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// Conectar base de datos
+// orígenes permitidos
+const allowedOrigins = [
+  'http://localhost:5173',      // dev Vite
+  'https://jacs.vercel.app',    // frontend en producción
+  // 'https://jacs.dev',
+];
+
 connectDB();
 
-// Middlewares
-app.use(cors());
+// Middlewares de seguridad
+app.use(helmet({
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
+      fontSrc: ["'self'", "https://fonts.gstatic.com"],
+      imgSrc: ["'self'", "data:", "https:"],
+      connectSrc: ["'self'", "https://api.github.com"],
+    },
+  },
+}));
+
+// Rate limiting para la API
+const apiLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutos
+  max: 100, // máximo 100 requests por IP por ventana
+  message: {
+    error: 'Demasiadas peticiones desde esta IP, intenta de nuevo más tarde.',
+    retryAfter: '15 minutos'
+  },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
+// CORS restringido
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      // peticiones tipo curl / server-to-server no traen origin
+      if (!origin) return callback(null, true);
+      if (allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      } else {
+        return callback(new Error('Origen no permitido por CORS'));
+      }
+    },
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'Accept'],
+  })
+);
+
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-
-// Rutas del servidor
+// Rutas
 app.use('/proyectos', projectRoutes);
+app.use('/api', apiLimiter, apiProjectRoutes);
 
-// Rutas de la API (opcional, si necesitas exponer la API para pruebas o desarrollo)
-app.use('/api', apiProjectRoutes);
-
-// Ruta raíz
 app.get('/', (req, res) => {
   res.send('🚀 Backend de JACS corriendo perfectamente');
 });
 
-// Iniciar servidor
 app.listen(PORT, () => {
   console.log(`✅ Servidor escuchando en puerto:${PORT}`);
 });

@@ -1,3 +1,19 @@
+// ============================================================================
+// src/components/Navbar.jsx
+// -----------------------------------------------------------------------------
+// BARRA DE NAVEGACIÓN PRINCIPAL DEL PORTAFOLIO
+//
+// FUNCIONALIDADES PRINCIPALES
+// -----------------------------------------------------------------------------
+// ✔ Oculta/abre el menú móvil mediante un ícono hamburguesa
+// ✔ Detecta el scroll para ocultar la navbar al bajar y mostrarla al subir
+// ✔ Detecta automáticamente la sección activa (Inicio, Proyectos, Quién Soy, Contacto)
+// ✔ Se integra con las animaciones GSAP de Hero y Proyectos usando marcadores globales
+// ✔ Permite cambiar el idioma sin mover el scroll actual
+// ✔ Desaparece automáticamente cuando un modal está abierto (forceHideNavbar)
+// ✔ Animación suave de scroll usando GSAP ScrollToPlugin
+// ============================================================================
+
 import { useState, useEffect } from "react";
 import { FaBars, FaTimes } from "react-icons/fa";
 import logo from "../assets/icons/logo.svg";
@@ -9,17 +25,22 @@ import { useLang } from "../context/LanguageProvider";
 
 gsap.registerPlugin(ScrollToPlugin);
 
+// ============================================================================
+// COMPONENTE PRINCIPAL
+// ============================================================================
 export default function Navbar() {
   const { lang, toggleLang } = useLang();
 
-  const [menuOpen, setMenuOpen] = useState(false);
-  const [showNavbar, setShowNavbar] = useState(true);
-  const [lastScrollY, setLastScrollY] = useState(0);
-  const [activeSection, setActiveSection] = useState("");
-  const [isScrolling, setIsScrolling] = useState(false);
+  // Estados locales
+  const [menuOpen, setMenuOpen] = useState(false); // menú móvil abierto/cerrado
+  const [showNavbar, setShowNavbar] = useState(true); // visibilidad por scroll
+  const [lastScrollY, setLastScrollY] = useState(0); // posición previa de scroll
+  const [activeSection, setActiveSection] = useState(""); // sección activa actual
+  const [isScrolling, setIsScrolling] = useState(false); // bloquea eventos mientras GSAP hace scroll
 
   const toggleMenu = () => setMenuOpen(!menuOpen);
 
+  // Links multilenguaje
   const navLinks = [
     { name: lang === "es" ? "Inicio" : "Home", href: "#inicio" },
     { name: lang === "es" ? "Proyectos" : "Projects", href: "#proyectos" },
@@ -27,37 +48,44 @@ export default function Navbar() {
     { name: lang === "es" ? "Contacto" : "Contact", href: "#contacto" },
   ];
 
-  // NUEVO: handler para cambiar idioma sin mover el scroll
+  // ============================================================================
+  // CAMBIO DE IDIOMA SIN MOVER EL SCROLL
+  // ============================================================================
   const handleLangToggle = () => {
     const currentY = window.scrollY;
     toggleLang();
 
-    // Esperamos al siguiente frame para que React pinte el nuevo texto
+    // React renderiza nuevo texto → luego restauramos posición
     requestAnimationFrame(() => {
-      window.scrollTo({
-        top: currentY,
-        behavior: "auto",
-      });
+      window.scrollTo({ top: currentY, behavior: "auto" });
     });
   };
 
-  // Si al montar el navbar el modal ya está abierto, ocultarlo
+  // ============================================================================
+  // OCULTAR NAVBAR SI EL MODAL YA ESTÁ ABIERTO AL ENTRAR
+  // ============================================================================
   useEffect(() => {
     if (window.forceHideNavbar) {
       setShowNavbar(false);
     }
   }, []);
 
-  // Manejar scroll: ocultar al bajar, mostrar al subir (si no hay modal)
+  // ============================================================================
+  // OCULTAR NAVBAR AL BAJAR Y MOSTRAR AL SUBIR
+  // ============================================================================
   useEffect(() => {
     const handleScroll = () => {
-      if (isScrolling) return;
+      if (isScrolling) return; // evitar interferir con animaciones GSAP
+
+      // Cuando un modal está abierto, la navbar debe permanecer oculta
       if (window.forceHideNavbar) {
         setShowNavbar(false);
         return;
       }
 
       const currentScrollY = window.scrollY;
+
+      // Mostrar si sube, ocultar si baja
       setShowNavbar(currentScrollY < lastScrollY || currentScrollY <= 10);
       setLastScrollY(currentScrollY);
     };
@@ -66,16 +94,21 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [lastScrollY, isScrolling]);
 
-  // Detectar sección activa
+  // ============================================================================
+  // DETECTAR SECCIÓN ACTIVA SEGÚN EL SCROLL
+  // Se integra con Hero y Proyectos mediante window.heroEnd y window.proyectosStart/End
+  // ============================================================================
   useEffect(() => {
     const handleScroll = () => {
       const scrollTop = window.scrollY;
 
+      // --- REGIÓN HERO ---
       if (window.heroEnd && scrollTop < window.heroEnd) {
         setActiveSection("inicio");
         return;
       }
 
+      // --- REGIÓN PROYECTOS (pin + scroll largo) ---
       if (
         window.proyectosStart !== null &&
         window.proyectosEnd !== null &&
@@ -86,36 +119,47 @@ export default function Navbar() {
         return;
       }
 
+      // --- OTRAS SECCIONES ---
       const sections = ["quien-soy", "contacto"];
       for (const id of sections) {
         const section = document.getElementById(id);
-        if (section) {
-          const { offsetTop, offsetHeight } = section;
-          if (
-            scrollTop >= offsetTop - window.innerHeight * 0.3 &&
-            scrollTop < offsetTop + offsetHeight - window.innerHeight * 0.3
-          ) {
-            setActiveSection(id);
-            break;
-          }
+        if (!section) continue;
+        const { offsetTop, offsetHeight } = section;
+
+        // pequeña zona buffer (30% de la pantalla)
+        if (
+          scrollTop >= offsetTop - window.innerHeight * 0.3 &&
+          scrollTop < offsetTop + offsetHeight - window.innerHeight * 0.3
+        ) {
+          setActiveSection(id);
+          break;
         }
       }
     };
 
     window.addEventListener("scroll", handleScroll);
-    handleScroll();
+    handleScroll(); // establecer valor inicial
+
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Scroll animado con ocultación de navbar
+  // ============================================================================
+  // SCROLL ANIMADO CON GSAP A UNA SECCIÓN
+  // Respeta los offsets de Hero y Proyectos
+  // ============================================================================
   const handleScrollTo = (targetId) => {
     let target;
 
+    // Ajuste especial para Hero (debido al largo pin de animación)
     if (targetId === "#inicio" && window.heroEnd) {
       target = window.heroEnd - 1000;
-    } else if (targetId === "#proyectos" && window.proyectosStart !== undefined) {
+    }
+    // Ajuste para Proyectos (inicio exacto de la animación GSAP)
+    else if (targetId === "#proyectos" && window.proyectosStart !== undefined) {
       target = window.proyectosStart;
-    } else {
+    }
+    // Scroll normal a sección
+    else {
       target = targetId;
     }
 
@@ -126,7 +170,9 @@ export default function Navbar() {
       duration: 1,
       scrollTo: { y: target, offsetY: 0 },
       ease: "power2.inOut",
+
       onComplete: () => {
+        // retraso para permitir estabilización del scroll
         setTimeout(() => {
           if (!window.forceHideNavbar) {
             setShowNavbar(true);
@@ -137,17 +183,20 @@ export default function Navbar() {
     });
   };
 
-  // Vigilar window.forceHideNavbar constantemente
+  // ============================================================================
+  // MONITOREAR forceHideNavbar PARA OCULTAR LA NAVBAR DURANTE LOS MODALES
+  // ============================================================================
   useEffect(() => {
     const interval = setInterval(() => {
-      if (window.forceHideNavbar) {
-        setShowNavbar(false);
-      }
+      if (window.forceHideNavbar) setShowNavbar(false);
     }, 100);
 
     return () => clearInterval(interval);
   }, []);
 
+  // ============================================================================
+  // RENDER
+  // ============================================================================
   return (
     <nav
       className={`w-full fixed z-50 shadow-md ${
@@ -155,7 +204,10 @@ export default function Navbar() {
       } ${showNavbar ? styles["navbar-visible"] : styles["navbar-hidden"]}`}
     >
       <div className="max-w-7xl mx-auto flex justify-between items-center px-6 py-4">
-        {/* Logo */}
+
+        {/* ------------------------------------------------------------ */}
+        {/* LOGO (click = volver al inicio con animación GSAP)          */}
+        {/* ------------------------------------------------------------ */}
         <div className="md:mr-auto w-full md:w-auto text-center md:text-left">
           <button onClick={() => handleScrollTo("#inicio")} className="block">
             <img
@@ -166,7 +218,9 @@ export default function Navbar() {
           </button>
         </div>
 
-        {/* Links + switch en desktop */}
+        {/* ------------------------------------------------------------ */}
+        {/* LINKS + SWITCH DE IDIOMA — DESKTOP                          */}
+        {/* ------------------------------------------------------------ */}
         <div className="hidden md:flex items-center gap-6">
           <ul className="flex gap-8 font-titulos text-base font-medium">
             {navLinks.map((link) => (
@@ -175,8 +229,8 @@ export default function Navbar() {
                   onClick={() => handleScrollTo(link.href)}
                   className={`md:mr-6 font-medium ${
                     activeSection === link.href.substring(1)
-                      ? styles["neon-underline"]
-                      : styles["neon-hover"]
+                      ? styles["neon-underline"] // sección activa
+                      : styles["neon-hover"] // hover glow
                   }`}
                 >
                   {link.name}
@@ -185,7 +239,7 @@ export default function Navbar() {
             ))}
           </ul>
 
-          {/* Switch idioma desktop */}
+          {/* SWITCH DE IDIOMA (desktop) */}
           <button
             onClick={handleLangToggle}
             className={styles.langSwitch}
@@ -215,8 +269,11 @@ export default function Navbar() {
           </button>
         </div>
 
-        {/* Switch + hamburguesa en mobile */}
+        {/* ------------------------------------------------------------ */}
+        {/* MOBILE: SWITCH IDIOMA + MENÚ HAMBURGUESA                    */}
+        {/* ------------------------------------------------------------ */}
         <div className="flex items-center gap-3 md:hidden">
+          {/* switch idioma móvil */}
           <button
             onClick={handleLangToggle}
             className={styles.langSwitch}
@@ -245,6 +302,7 @@ export default function Navbar() {
             </span>
           </button>
 
+          {/* ícono hamburguesa */}
           <button
             className="text-2xl text-white"
             onClick={toggleMenu}
@@ -255,7 +313,9 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* Menú mobile (lo dejas igual, solo usando navLinks) */}
+      {/* ------------------------------------------------------------ */}
+      {/* MENÚ MOBILE (usando los mismos navLinks)                    */}
+      {/* ------------------------------------------------------------ */}
       {menuOpen && (
         <ul className="md:hidden flex flex-col items-center gap-6 py-4 text-white font-titulos text-xl my-3">
           {navLinks.map((link) => (
