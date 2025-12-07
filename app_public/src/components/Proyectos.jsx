@@ -18,6 +18,9 @@ export default function Proyectos() {
 
   const sectionRef = useRef(null);
 
+  // ✅ visibilidad en viewport para animación de entrada/salida
+  const [isVisible, setIsVisible] = useState(false);
+
   // hover desde lista
   const [externalHoverIndex, setExternalHoverIndex] = useState(null);
 
@@ -60,6 +63,31 @@ export default function Proyectos() {
     }
   }, [projects, activeIndex]);
 
+  // Animación de entrada/salida con IntersectionObserver
+  useEffect(() => {
+    const el = sectionRef.current;
+    if (!el) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          // si al menos 25% de la sección está visible → activar
+          if (entry.isIntersecting && entry.intersectionRatio >= 0.25) {
+            setIsVisible(true);
+          } else {
+            setIsVisible(false);
+          }
+        });
+      },
+      {
+        threshold: [0, 0.25, 0.6, 1],
+      }
+    );
+
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
   const handleSelectSphere = (index) => {
     setActiveIndex(index);
     const project = projects[index];
@@ -99,7 +127,9 @@ export default function Proyectos() {
     <section
       id="proyectos"
       ref={sectionRef}
-      className={styles.section}
+      className={`${styles.section} ${
+        isVisible ? styles.sectionVisible : styles.sectionHidden
+      }`}
     >
       {/* Canvas */}
       <div className={styles.canvasFull}>

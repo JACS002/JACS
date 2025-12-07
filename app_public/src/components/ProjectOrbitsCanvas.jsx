@@ -49,6 +49,57 @@ function getLocalizedField(field, lang) {
   return lang === "es" ? field.es || field.en || "" : field.en || field.es || "";
 }
 
+//Nombre corto y bonito para la etiqueta de cada luna
+function getMoonLabel(project) {
+  const titleObj = project?.title || "";
+  const raw =
+    typeof titleObj === "string"
+      ? titleObj
+      : titleObj.en || titleObj.es || "";
+
+  const title = raw.toLowerCase();
+
+  //Importante: condiciones bien específicas y sin solaparse
+
+  // Cenespe Industrias
+  if (title.includes("cenespe industrias") || title.includes("cenespe")) {
+    return "Cenespe";
+  }
+
+  // Global Print
+  if (title.includes("global print")) {
+    return "Global Print";
+  }
+
+  // NYC Taxi Analytics
+  if (title.includes("nyc taxi analytics")) {
+    return "NYC Analytics";
+  }
+
+  // TaxiFare – aquí ya NO usamos "nyc taxi" genérico
+  if (title.includes("taxifare")) {
+    return "TaxiFare";
+  }
+
+  // TradingML
+  if (title.includes("tradingml")) {
+    return "TradingML";
+  }
+
+  // Portafolio JACS (en/es)
+  if (
+    title.includes("portafolio personal jacs") ||
+    title.includes("jacs personal portfolio") ||
+    title.includes("jacs")
+  ) {
+    return "JACS";
+  }
+
+  // fallback: usa el título completo
+  return raw;
+}
+
+
 // =============================== SATURNO =====================================
 function Saturn() {
   const groupRef = useRef();
@@ -177,6 +228,7 @@ function SaturnMoons({
         const color = MOON_COLORS[index % MOON_COLORS.length];
         const params = orbitParamsRef.current[index];
         const texture = moonTextures[index];
+        const label = getMoonLabel(project);
 
         return (
           <Float
@@ -212,6 +264,34 @@ function SaturnMoons({
                 ) : (
                   <meshBasicMaterial color={color} />
                 )}
+
+                {/* Etiqueta grande sobre cada luna */}
+                {hoveredIndex === null && (<Html
+                  distanceFactor={10}
+                  position={[0, 0.75, 0]}
+                  style={{ pointerEvents: "none" }}
+                >
+                  <div
+                    style={{
+                      padding: "1.2rem",
+                      borderRadius: "999px",
+                      background: "rgba(0,0,0,0.9)",
+                      border: "1px solid rgba(156,101,242,0.95)",
+                      color: "#ffffff",
+                      fontFamily: "'Space Grotesk', system-ui, sans-serif",
+                      fontWeight: 600,
+                      fontSize: "clamp(0.9rem, 2.2vw, 1.2rem)",
+                      letterSpacing: "0.06em",
+                      textTransform: "uppercase",
+                      whiteSpace: "nowrap",
+                      boxShadow: "0 0 14px rgba(0,0,0,0.8)",
+                      backdropFilter: "blur(10)",
+                      textShadow: "0 0 6px #000000",
+                    }}
+                  >
+                    {label}
+                  </div>
+                </Html>)}
               </mesh>
             </group>
           </Float>
@@ -286,7 +366,7 @@ function Scene({
         lang={lang}
       />
 
-      {/* Nombre del proyecto al centro cuando está hover */}
+      {/* 🔹 Nombre del proyecto al centro cuando está hover */}
       {hoveredProject && (
         <Html
           fullscreen
@@ -330,8 +410,7 @@ function Scene({
         />
       )}
 
-      {/* En móvil: SIN OrbitControls → el scroll táctil funciona bien.
-          La animación del sistema la hacen Saturn + SaturnMoons con useFrame. */}
+      {/* En móvil: SIN OrbitControls → scroll táctil funciona bien */}
     </>
   );
 }
