@@ -103,9 +103,7 @@ export default function Proyectos() {
     <section
       id="proyectos"
       ref={sectionRef}
-      className={`${styles.section} ${
-        isVisible ? styles.sectionVisible : styles.sectionHidden
-      }`}
+      className={`${styles.section}`}
     >
       {/* Canvas */}
       <div className={styles.canvasFull}>
