@@ -230,7 +230,7 @@ export default function Contacto() {
     <section
       id="contacto"
       ref={sectionRef}
-      className="min-h-screen bg-dark flex flex-col pt-16 pb-20 px-6 md:px-10 mt-12 mb-12"
+      className="min-h-screen flex flex-col pt-16 pb-20 px-6 md:px-10 mt-12 mb-12"
     >
       {/* --------------------------------------------------------------------- */}
       {/* Header de la sección (título + descripción corta)                    */}

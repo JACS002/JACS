@@ -16,7 +16,7 @@ import styles from "../components/styles/Hero.module.css";
 import LogoNombre from "../assets/icons/LogoNombre";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import ParticlesBackground from "./ParticlesBackground";
+import StarBackground from "./StarBackground";
 import { useLang } from "../context/LanguageProvider";
 import { useScroll } from "../context/ScrollContext";
 
@@ -238,7 +238,7 @@ export default function Hero() {
   return (
     <section id="inicio" className={styles.heroSection} ref={logoRef}>
       {/* Fondo de partículas animadas */}
-      <ParticlesBackground />
+      {/* <StarBackground /> */}
 
       {/* Wrapper principal del logo */}
       <div className={`${styles.logoWrapper} logoWrapper`}>

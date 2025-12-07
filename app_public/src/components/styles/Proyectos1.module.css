@@ -1,0 +1,437 @@
+/* Proyectos.module.css */
+/* ============================================================================
+   SECCIÓN PRINCIPAL "PROYECTOS"
+   ============================================================================ */
+
+.steps {
+  position: relative;   /* clave para overlay */
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  z-index: 5;
+  min-height: 100vh;    /* asegura alto al inicio */
+}
+
+/* ============================================================================
+   TÍTULO Y SUBTÍTULO DINÁMICO
+   ============================================================================ */
+
+.cardTitleDynamic {
+  position: absolute;
+  top: 5%;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 5;
+  text-align: center;
+}
+
+.mainTitle {
+  color: white;
+  text-shadow: 0 0 6px #ffffff, 0 0 20px #9c65f2;
+  text-transform: none;
+}
+
+.subtitle {
+  color: #d7c1ff;
+  text-transform: uppercase;
+  transition: opacity 0.3s ease;
+  text-shadow: 0 0 2px #864cef, 0 0 6px #864cef, 0 0 36px #864cefbf;
+}
+
+@media (max-width: 768px) {
+  .mainTitle { font-size: 2.25rem; }
+  .subtitle { font-size: 1.5rem; }
+}
+
+/* ============================================================================
+   FLECHA DE SCROLL
+   ============================================================================ */
+
+.scrollDown {
+  position: absolute;
+  bottom: 52%;
+  left: 50%;
+  transform: translate(-50%, 50%);
+  z-index: 20;                /* sobre títulos pero bajo loader */
+  opacity: 1;
+  transition: opacity 0.5s ease;
+  pointer-events: none;
+}
+
+.arrow {
+  display: block;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-left: 5px solid white;
+  border-bottom: 5px solid white;
+  transform: rotate(-45deg);
+  animation: bounce 1.5s infinite;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0) rotate(-45deg); }
+  50% { transform: translateY(8px) rotate(-45deg); }
+}
+
+/* ============================================================================
+   CONTENEDOR DE CARDS (ARCO)
+   ============================================================================ */
+
+.cards {
+  position: absolute;
+  top: 60%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 150vw;
+  height: auto;
+  will-change: transform;
+  z-index: 10;
+}
+
+/* ============================================================================
+   CARD INDIVIDUAL (SOLO CAMBIO ESTÉTICO, NO TAMAÑOS/POSICIÓN)
+   ============================================================================ */
+
+.card {
+  position: absolute;
+  width: clamp(280px, 80vw, 17%);
+  height: clamp(400px, 100vw, 70%);
+  top: 50%;
+  left: 50%;
+  transform-origin: center center;
+  translate: -50% -50%;
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+
+  /* === DISEÑO NUEVO (manteniendo el layout) === */
+  background:
+    radial-gradient(circle at top left, #272035 0, #15151b 40%, #050308 100%);
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow:
+    0 0 20px rgba(0, 0, 0, 0.9),
+    0 0 26px rgba(156, 101, 242, 0.25);
+  /* ============================================ */
+
+  transition: box-shadow 0.4s ease;
+  cursor: pointer;
+  will-change: transform;
+}
+
+@media (max-width: 768px) {
+  .card {
+    width: clamp(280px, 80vw, 35%);
+    height: clamp(30rem, 100vw, 70%);
+  }
+}
+
+.card:hover {
+  /* NO tocamos transform para no interferir con GSAP */
+  box-shadow:
+    0 0 26px #ffffff,
+    0 0 40px #9c65f2;
+}
+
+/* Imagen de la card: mantenemos layout, añadimos fondo sutil */
+
+.cardImg {
+  flex: 1;
+  border-radius: 0.75em;
+  overflow: hidden;
+  background: radial-gradient(circle at center, #1f1f1f 0, #060608 100%);
+}
+
+.cardImg img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* Contenido inferior de la card */
+
+.cardContent {
+  width: 100%;
+  min-height: 80px;
+  padding: 0 1rem 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.cardContent p {
+  color: white;
+  text-align: center;
+}
+
+.empty { opacity: 0; pointer-events: none; }
+
+/* ============================================================================
+   GLOBOS DE TECNOLOGÍAS (NUEVO DISEÑO, MISMO LAYOUT)
+   ============================================================================ */
+
+.cardTech {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+  padding: 0.5rem;
+  max-width: 100%;
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+
+/**
+ * techTag:
+ *  - Mantiene padding, tamaño y comportamiento de layout
+ *  - Cambiamos solo estética: glass + glow basado en --tech-color
+ */
+.techTag {
+  --tech-color: #a26bf0; /* fallback visual */
+
+  padding: 0.35rem 1rem;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-family: 'Poppins', sans-serif;
+  letter-spacing: 0.4px;
+  white-space: nowrap;
+
+  text-transform: uppercase;
+  color: var(--tech-color);
+
+  background:
+    radial-gradient(circle at 0% 0%, rgba(255, 255, 255, 0.22), transparent 55%),
+    linear-gradient(135deg, rgba(12, 12, 20, 0.96), rgba(10, 10, 16, 0.9));
+
+  border: 1px solid rgba(162, 107, 240, 0.4); /* fallback */
+
+  /* Si el navegador soporta color-mix, adaptamos al color de la tech */
+  border-color: color-mix(in srgb, var(--tech-color) 45%, transparent);
+
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.03),
+    0 0 16px color-mix(in srgb, var(--tech-color) 35%, transparent);
+
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    background 0.25s ease;
+}
+
+.techTag::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(
+    circle at 50% 0%,
+    color-mix(in srgb, var(--tech-color) 65%, transparent) 0,
+    transparent 60%
+  );
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+
+.techTag:hover {
+  transform: scale(1.05);
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.07),
+    0 0 20px color-mix(in srgb, var(--tech-color) 50%, transparent);
+}
+
+.techTag:hover::before {
+  opacity: 1;
+}
+
+/* ============================================================================
+   MODAL
+   ============================================================================ */
+
+.modalBackdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(10px);
+  z-index: 200;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow-y: auto;
+  padding: 2rem;
+  animation: fadeIn 0.3s ease;
+}
+
+.modalContent {
+  border-radius: 1rem;
+  max-width: 960px;               /* un poco más estrecho para mejor lectura */
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  padding: 2.25rem 2.5rem;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background: radial-gradient(circle at top left, #28203a 0, #151515 45%, #070709 100%);
+  box-shadow: 0 0 40px rgba(156, 101, 242, 0.35);
+}
+
+.modalGrid { display: flex; gap: 2rem; flex-direction: row; }
+.modalLeft { flex: 1; display: flex; flex-direction: column; align-items: center; }
+.modalImageWrapper { width: 100%; height: auto; overflow: hidden; border-radius: 0.5rem; }
+.modalImage { width: 100%; height: 100%; object-fit: contain; background-color: #000; }
+.modalTechList { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.5rem; margin: 1rem 0; }
+
+.modalRight {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  padding-top: 0.25rem;
+}
+
+.modalTitle {
+  color: #ffffff;
+  text-shadow: 0 0 6px #ffffff, 0 0 20px #9c65f2;
+  letter-spacing: 0.03em;
+}
+
+.modalDescription {
+  color: #e5e7eb;                 /* gris muy claro */
+  line-height: 1.75;
+  max-width: 40rem;
+  text-align: left;
+  white-space: pre-line;          /* respeta saltos de línea del texto */
+  text-rendering: optimizeLegibility;
+}
+
+.modalClose {
+  position: absolute; top: 1rem; right: 1rem;
+  font-size: 2rem; font-weight: bold; background: transparent; border: none;
+  color: #bbb; cursor: pointer; transition: color 0.3s ease, transform 0.2s ease; z-index: 10;
+}
+.modalClose:hover { color: #fff; transform: scale(1.2); }
+
+.modalButtons { display: flex; gap: 1rem; margin-top: 1rem; justify-content: center; }
+.buttonGithub, .buttonDemo {
+  padding: 0.5rem 1rem; color: #ffffff; border-radius: 999px; font-weight: 500; text-decoration: none;
+  display: flex; align-items: center; gap: 0.5rem; background: linear-gradient(135deg, #2a2a2a, #1f1f1f);
+  border: none; box-shadow: 0 0 10px rgba(156, 101, 242, 0.2); transition: all 0.3s ease;
+}
+.buttonGithub:hover, .buttonDemo:hover { background: #9c65f2; color: black; box-shadow: 0 0 20px #9c65f2aa; }
+
+/* ============================================================================
+   SCROLLBARS MODAL
+   ============================================================================ */
+
+.modalContent::-webkit-scrollbar { width: 10px; }
+.modalContent::-webkit-scrollbar-track { background: transparent; }
+.modalContent::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, rgba(255,255,255,0.1), rgba(255,255,255,0.3));
+  border-radius: 10px; box-shadow: 0 0 8px rgba(255, 255, 255, 0.25); backdrop-filter: blur(2px);
+  transition: background 0.3s ease, box-shadow 0.3s ease;
+}
+.modalContent::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, rgba(255,255,255,0.4), rgba(255,255,255,0.6));
+  box-shadow: 0 0 12px rgba(255, 255, 255, 0.4);
+}
+.modalContent { scrollbar-width: thin; scrollbar-color: rgba(255, 255, 255, 0.3) transparent; }
+
+/* ============================================================================
+   ANIMACIONES MODAL / LOADER
+   ============================================================================ */
+
+@keyframes fadeOut { from { opacity: 1; transform: scale(1); } to { opacity: 0; transform: scale(0.95); } }
+.fadeOut { animation: fadeOut 0.3s ease forwards; }
+
+@keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+
+/* LOADER (overlay por encima de todo) */
+
+.loaderWrap {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  background: rgba(4, 6, 22, 0.55);
+  backdrop-filter: blur(2px);
+  z-index: 100;          /* sube por encima de flecha y cards */
+  pointer-events: none;  /* no bloquea scroll/pin */
+}
+.retryBtn { pointer-events: auto; }
+
+.spinner {
+  width: 44px;
+  height: 44px;
+  border-radius: 9999px;
+  border: 4px solid rgba(215, 193, 255, 0.25);
+  border-top-color: #864cef;
+  animation: spin 0.9s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.loaderText {
+  color: #d7c1ff;
+  font-family: var(--font-contenido, sans-serif);
+  font-weight: 600;
+  text-shadow: 0 0 6px #864cef66;
+}
+
+.errorText { color: #ffb4c1; font-weight: 600; text-align: center; }
+
+.retryBtn {
+  margin-top: 4px;
+  padding: 10px 16px;
+  border-radius: 12px;
+  background: #864cef;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  transition: transform 0.12s ease;
+}
+.retryBtn:hover { transform: translateY(-1px); }
+
+/* ============================================================================
+   MEDIA QUERIES EXTRA (MODAL)
+   ============================================================================ */
+
+@media (max-width: 768px) {
+  .modalGrid { flex-direction: column; }
+
+  .modalImageWrapper {
+    width: 100%;
+    height: auto !important; 
+  }
+
+  .modalImage {
+    width: 100%;
+    height: auto;
+    object-fit: contain; 
+  }
+
+  .modalLeft {
+    width: 100%;
+  }
+
+  .modalButtons { flex-direction: column; width: 100%; }
+  .buttonGithub, .buttonDemo { justify-content: center; width: 100%; }
+}
+
+
+/* Globo especial para "..." cuando hay más de 5 tecnologías */
+.techTagMore {
+  --tech-color: #d7c1ff;
+  opacity: 0.85;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+}

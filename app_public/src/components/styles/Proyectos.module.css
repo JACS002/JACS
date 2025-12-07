@@ -1,308 +1,850 @@
-/* Proyectos.module.css */
-.steps {
-  position: relative;   /* clave para overlay */
-  width: 100vw;
-  height: 100vh;
+/* ============================================================================
+ *  SECCIÓN PROYECTOS – SHELL GENERAL
+ * ==========================================================================*/
+
+.section {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
   overflow: hidden;
-  z-index: 5;
-  min-height: 100vh;    /* asegura alto al inicio */
+
+  /* estado base: oculto + un poco abajo */
+  opacity: 0;
+  transform: translateY(40px);
+  transition:
+    opacity 0.6s ease-out,
+    transform 0.6s ease-out;
 }
 
-.cardTitleDynamic {
+/* cuando está visible en viewport */
+.sectionVisible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* cuando sale del viewport (para que haga fade out) */
+.sectionHidden {
+  opacity: 0;
+  transform: translateY(40px);
+}
+
+
+/* ============================================================================
+ *  CANVAS 3D (SATURNO + LUNAS)
+ * ==========================================================================*/
+
+.canvasFull {
   position: absolute;
-  top: 5%;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 5;
+  inset: 0;
+  z-index: 0;
+}
+
+/* Fuerza al canvas a ocupar todo el contenedor */
+.canvasFull > canvas {
+  width: 100% !important;
+  height: 100% !important;
+  display: block;
+}
+
+/* ============================================================================
+ *  OVERLAY DE TÍTULO Y ESTADO (ENCIMA DEL CANVAS)
+ * ==========================================================================*/
+
+.overlay {
+  position: relative;
+  z-index: 1;
+  pointer-events: none; /* no bloquea clicks en el 3D */
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding-top: 5rem;
+  padding-bottom: 3rem;
+}
+
+.overlayInner {
+  pointer-events: auto; /* por si luego agregas botones aquí */
   text-align: center;
 }
 
+/* ===================== TÍTULO PRINCIPAL ===================== */
+
 .mainTitle {
-  color: white;
-  text-shadow: 0 0 6px #ffffff, 0 0 20px #9c65f2;
-  text-transform: none;
+  color: #ffffff;
+
+  /* Animación ligera flotante (la tuya) */
+  animation: floatTitle 4s ease-in-out infinite;
+
+  /* Brillos */
+  text-shadow:
+    0 0 10px rgba(255,255,255,0.85),
+    0 0 25px rgba(156,101,242,0.55),
+    0 0 55px rgba(156,101,242,0.35);
+
+  /* Tamaño */
+  font-size: clamp(2.3rem, 6vw, 4rem);
+  letter-spacing: 0.02em;
+
+  /* Estado inicial (antes del fade-in) */
+  opacity: 0;
+  transform: translateY(20px);
+  transition:
+    opacity 0.6s ease-out 0.15s,
+    transform 0.6s ease-out 0.15s;
 }
 
-.subtitle {
-  color: #d7c1ff;
-  text-transform: uppercase;
-  transition: opacity 0.3s ease;
-  text-shadow: 0 0 2px #864cef, 0 0 6px #864cef, 0 0 36px #864cefbf;
-}
-
-@media (max-width: 768px) {
-  .mainTitle { font-size: 2.25rem; }
-  .subtitle { font-size: 1.5rem; }
-}
-
-.scrollDown {
-  position: absolute;
-  bottom: 52%;
-  left: 50%;
-  transform: translate(-50%, 50%);
-  z-index: 20;                /* sobre títulos pero bajo loader */
+/* Cuando la sección está visible → aparece */
+.sectionVisible .mainTitle {
   opacity: 1;
-  transition: opacity 0.5s ease;
-  pointer-events: none;
+  transform: translateY(0);
 }
 
-.arrow {
-  display: block;
-  width: 2.5rem;
-  height: 2.5rem;
-  border-left: 5px solid white;
-  border-bottom: 5px solid white;
-  transform: rotate(-45deg);
-  animation: bounce 1.5s infinite;
+/* --- movimiento flotante suave --- */
+@keyframes floatTitle {
+  0%   { transform: translateY(0px); }
+  50%  { transform: translateY(-6px); }
+  100% { transform: translateY(0px); }
 }
 
-@keyframes bounce {
-  0%, 100% { transform: translateY(0) rotate(-45deg); }
-  50% { transform: translateY(8px) rotate(-45deg); }
-}
+/* ============================================================================
+ * BOTÓN FLOTANTE PARA LISTA DE PROYECTOS
+ * ==========================================================================*/
 
-.cards {
+.projectListToggle {
   position: absolute;
-  top: 60%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 150vw;
-  height: auto;
-  will-change: transform;
-  z-index: 10;
-}
+  z-index: 3;
+  right: 1.1rem;
+  bottom: 1.4rem;
 
-.card {
-  position: absolute;
-  width: clamp(280px, 80vw, 17%);
-  height: clamp(400px, 100vw, 70%);
-  top: 50%;
-  left: 50%;
-  transform-origin: center center;
-  translate: -50% -50%;
+  width: 2.8rem;
+  height: 2.8rem;
+  border-radius: 999px;
+  border: 1px solid rgba(148, 163, 184, 0.7);
+
+  background:
+    radial-gradient(circle at 0% 0%, rgba(0, 240, 255, 0.16), transparent 60%),
+    rgba(8, 8, 20, 0.94);
+
+  color: #e5e7eb;
   display: flex;
-  flex-direction: column;
-  gap: 1em;
-  background-color: #1a1a1a;
-  border-radius: 10px;
-  box-shadow: 0 0 20px rgba(255, 255, 255, 0.212);
-  transition: box-shadow 0.4s ease;
+  align-items: center;
+  justify-content: center;
+
+  box-shadow:
+    0 0 12px rgba(15, 23, 42, 0.95),
+    0 0 18px rgba(0, 0, 0, 0.9);
+
   cursor: pointer;
-  will-change: transform;
+  transition:
+    transform 0.15s ease-out,
+    box-shadow 0.15s ease-out,
+    border-color 0.15s ease-out,
+    background 0.15s ease-out;
 }
 
+.projectListToggle:hover {
+  transform: translateY(-1px) scale(1.03);
+  border-color: rgba(156, 101, 242, 0.95);
+  box-shadow:
+    0 0 18px rgba(15, 23, 42, 0.98),
+    0 0 30px rgba(156, 101, 242, 0.6);
+}
+
+/* Ajuste en móvil: un poco más grande y más separado del borde */
 @media (max-width: 768px) {
-  .card {
-    width: clamp(280px, 80vw, 35%);
-    height: clamp(30rem, 100vw, 70%);
+  .projectListToggle {
+    right: 1rem;
+    bottom: 1.1rem;
+    width: 3rem;
+    height: 3rem;
   }
 }
 
-.card:hover { box-shadow: 0 0 25px #ffffff, 0 0 35px #9c65f2; }
+/* ============================================================================
+ * PANEL DE LISTA DE PROYECTOS (GLASS PANEL)
+ * ==========================================================================*/
 
-.cardImg { flex: 1; border-radius: 0.5em; overflow: hidden; }
-.cardImg img { width: 100%; height: 100%; object-fit: contain; }
+.projectListPanel {
+  position: absolute;
+  z-index: 3;
+  right: 1.25rem;
+  bottom: 4.2rem;
 
-.cardContent {
-  width: 100%;
-  min-height: 80px;
-  padding: 0 1rem 1rem;
+  width: min(320px, 80vw);
+  max-height: 60vh;
+  padding: 0.9rem 0.9rem 0.8rem;
+
+  border-radius: 1rem;
+  border: 1px solid rgba(148, 163, 184, 0.7);
+
+  background:
+    radial-gradient(circle at 0% 0%, rgba(134, 76, 239, 0.24), transparent 55%),
+    rgba(5, 7, 16, 0.96);
+
+  box-shadow:
+    0 18px 45px rgba(0, 0, 0, 0.95),
+    0 0 24px rgba(15, 23, 42, 0.9);
+
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
+  gap: 0.4rem;
+
+  animation: projectListIn 0.18s ease-out;
 }
 
-.cardContent p { color: white; text-align: center; }
+/* móvil: subir más el panel para que no choque con el borde inferior */
+@media (max-width: 768px) {
+  .projectListPanel {
+    right: 0.9rem;
+    left: 0.9rem;
+    width: auto;
+    bottom: 4.6rem;
+  }
+}
 
-.empty { opacity: 0; pointer-events: none; }
-
-.cardTech {
+.projectListHeader {
   display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.4rem;
+}
+
+.projectListTitle {
+  font-size: 0.85rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(209, 213, 219, 0.9);
+}
+
+.projectListClose {
+  border: none;
+  background: transparent;
+  color: #e5e7eb;
+  font-size: 1.4rem;
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+  opacity: 0.8;
+  transition: opacity 0.12s ease-out, transform 0.12s ease-out;
+}
+
+.projectListClose:hover {
+  opacity: 1;
+  transform: scale(1.05);
+}
+
+.projectListItems {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  margin-top: 0.2rem;
+
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+
+  overflow-y: auto;
+  max-height: 46vh;
+}
+
+/* Scroll suave del panel */
+.projectListItems::-webkit-scrollbar {
+  width: 5px;
+}
+.projectListItems::-webkit-scrollbar-track {
+  background: transparent;
+}
+.projectListItems::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.7);
+  border-radius: 999px;
+}
+
+/* Cada ítem de la lista */
+.projectListItem {
+  width: 100%;
+  border-radius: 0.75rem;
+  padding: 0.45rem 0.55rem;
+
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+
+  background: rgba(15, 23, 42, 0.9);
+  border: 1px solid rgba(30, 64, 175, 0.45);
+
+  color: #e5e7eb;
+  font-size: 0.86rem;
+  text-align: left;
+
+  cursor: pointer;
+  transition:
+    background 0.12s ease-out,
+    border-color 0.12s ease-out,
+    transform 0.1s ease-out;
+}
+
+.projectListItem:hover {
+  background: radial-gradient(circle at 0% 0%, rgba(0, 240, 255, 0.2), transparent 55%),
+    rgba(15, 23, 42, 0.95);
+  border-color: rgba(56, 189, 248, 0.9);
+  transform: translateY(-1px);
+}
+
+/* Ítem activo (sincronizado con activeIndex) */
+.projectListItemActive {
+  background: radial-gradient(circle at 0% 0%, rgba(134, 76, 239, 0.32), transparent 60%),
+    rgba(15, 23, 42, 0.96);
+  border-color: rgba(147, 51, 234, 0.9);
+}
+
+/* numerito a la izquierda */
+.projectBullet {
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 999px;
+  background: rgba(15, 23, 42, 1);
+  border: 1px solid rgba(148, 163, 184, 0.9);
+  display: flex;
+  align-items: center;
   justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #cbd5f5;
+}
+
+/* nombre del proyecto */
+.projectName {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* animación de entrada del panel */
+@keyframes projectListIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+
+/* Fila título + icono */
+.overlayInnerRow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+}
+
+/* Botón de lista al lado del título */
+.projectListToggleInline {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.4rem;
+  height: 2.4rem;
+  border-radius: 999px;
+  border: 1px solid rgba(148, 163, 184, 0.6);
+  background: radial-gradient(circle at 0% 0%, #00f0ff20, #111827f0);
+  color: #e5e7eb;
+  cursor: pointer;
+  font-size: 1.1rem;
+  box-shadow: 0 0 12px rgba(15, 23, 42, 0.8);
+  transition: transform 0.15s ease, box-shadow 0.15s ease,
+    border-color 0.15s ease, background 0.15s ease;
+}
+
+.projectListToggleInline:hover {
+  transform: translateY(-1px) scale(1.05);
+  box-shadow: 0 0 20px rgba(0, 240, 255, 0.6);
+  border-color: rgba(156, 101, 242, 0.9);
+  background: radial-gradient(circle at 0% 0%, #00f0ff40, #111827);
+}
+
+
+/* Móvil: título más pequeño, ícono más grande */
+@media (max-width: 768px) {
+  .projectListToggleInline {
+    width: 2.6rem;
+    height: 2.6rem;
+  }
+}
+
+
+
+/* Subtítulo (si lo vuelves a usar) */
+.subtitle {
+  color: #ffffff;
+  font-size: 1rem;
+  text-shadow: 0 0 10px rgba(0, 0, 0, 0.9);
+}
+
+/* Loading / error */
+.loaderWrap {
+  margin-top: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.errorText {
+  color: #ff7b7b;
+}
+
+/* Responsive título */
+@media (min-width: 900px) {
+  .overlay {
+    padding-top: 6rem;
+  }
+
+  .subtitle {
+    font-size: 1.1rem;
+  }
+}
+
+/* ============================================================================
+ *  LAYOUTS ANTIGUOS (CARDS / MOBILE LIST) – OPCIONALES
+ *  (los puedes borrar si ya no usas el layout anterior)
+ * ==========================================================================*/
+
+.sectionInner {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 2.5rem;
+}
+
+.desktopLayout {
+  display: none;
+}
+
+.mobileLayout {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* Canvas anterior en card */
+.canvasWrapper {
+  flex: 1.1;
+  min-height: 420px;
+  border-radius: 24px;
+  overflow: hidden;
+  background: radial-gradient(circle at top, #20123a, #050509);
+  border: 1px solid rgba(156, 101, 242, 0.4);
+  box-shadow: 0 0 30px rgba(156, 101, 242, 0.4);
+}
+
+/* Panel de texto anterior */
+.infoPanel {
+  flex: 0.9;
+  padding: 1.75rem;
+  border-radius: 24px;
+  background: radial-gradient(circle at top left, #1a1028, #050509);
+  border: 1px solid rgba(111, 66, 193, 0.6);
+  box-shadow: 0 0 30px rgba(111, 66, 193, 0.4);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 1.25rem;
+}
+
+/* Botones “view more” antiguos */
+.moreButton,
+.moreButtonMobile {
+  align-self: flex-start;
+  padding: 0.6rem 1.4rem;
+  border-radius: 999px;
+  border: none;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #050509;
+  background: linear-gradient(90deg, #00f0ff, #9c65f2);
+  box-shadow: 0 0 18px rgba(0, 240, 255, 0.7);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.moreButton:hover,
+.moreButtonMobile:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 24px rgba(0, 240, 255, 0.9);
+}
+
+/* Listado móvil anterior */
+.mobileSphere {
+  width: 100%;
+  height: 260px;
+  border-radius: 24px;
+  overflow: hidden;
+  border: 1px solid rgba(156, 101, 242, 0.5);
+  box-shadow: 0 0 24px rgba(156, 101, 242, 0.6);
+  background: radial-gradient(circle at top, #20123a, #050509);
+}
+
+.mobileList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.mobileItem {
+  width: 100%;
+  border-radius: 16px;
+  padding: 0.75rem 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(10, 10, 20, 0.7);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #e5e7ff;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease,
+    transform 0.1s ease;
+}
+
+.mobileItemActive {
+  border-color: rgba(156, 101, 242, 0.9);
+  background: radial-gradient(circle at top left, #1f1136, #050509);
+  transform: translateY(-1px);
+}
+
+.mobileTechHint {
+  font-size: 0.75rem;
+  opacity: 0.8;
+}
+
+/* Desktop breakpoint antiguo */
+@media (min-width: 900px) {
+  .section {
+    padding-top: 6rem;
+  }
+
+  .header {
+    margin-bottom: 3rem;
+  }
+
+  .desktopLayout {
+    display: flex;
+    align-items: stretch;
+    gap: 2.5rem;
+  }
+
+  .mobileLayout {
+    display: none;
+  }
+}
+
+/* ============================================================================
+ *  CHIPS GENÉRICOS DE TECNOLOGÍAS (BASE)
+ *  – En el modal se sobreescriben con .modalTechList .techTag
+ * ==========================================================================*/
+
+.techList {
+  display: flex;
   flex-wrap: wrap;
   gap: 0.5rem;
-  margin-top: 0.75rem;
-  padding: 0.5rem;
-  max-width: 100%;
-  overflow-wrap: break-word;
-  word-break: break-word;
 }
 
 .techTag {
-  padding: 0.35rem 1rem;
+  padding: 4px 10px;
   border-radius: 999px;
-  font-size: 0.85rem;
-  font-family: 'Poppins', sans-serif;
-  letter-spacing: 0.4px;
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(2px);
-  transition: transform 0.2s ease;
-  white-space: nowrap;
+  font-size: 0.75rem;
+  color: #e5e7ff;
+  background: radial-gradient(circle at top, #6f42c1, #3b1d78);
+  box-shadow: 0 0 12px rgba(111, 66, 193, 0.7);
 }
 
-.techTag:hover { transform: scale(1.05); }
+/* ============================================================================
+ *  MODAL PROYECTOS
+ * ==========================================================================*/
 
-.modalBackdrop {
+/* Overlay oscuro + blur por encima del canvas */
+.modalOverlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.85);
-  backdrop-filter: blur(10px);
-  z-index: 200;
+  z-index: 60;
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  background: rgba(3, 0, 20, 0.82);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  animation: modalFadeIn 0.25s ease-out;
+  /* permite scroll cuando el contenido es muy largo (móvil) */
   overflow-y: auto;
-  padding: 2rem;
-  animation: fadeIn 0.3s ease;
 }
 
-.modalContent {
-  border-radius: 1rem;
-  max-width: 960px;               /* un poco más estrecho para mejor lectura */
-  width: 100%;
-  max-height: 90vh;
-  overflow-y: auto;
-  padding: 2.25rem 2.5rem;
+
+.modalOverlayClosing {
+  animation: modalFadeOut 0.2s ease-in forwards;
+}
+
+/* Card principal del modal */
+.modalCard {
   position: relative;
-  display: flex;
-  flex-direction: column;
-  background: radial-gradient(circle at top left, #28203a 0, #151515 45%, #070709 100%);
-  box-shadow: 0 0 40px rgba(156, 101, 242, 0.35);
+  width: 100%;
+  max-width: 960px;
+  max-height: 82vh;
+  border-radius: 1.5rem;
+  padding: 1.75rem 2rem;
+  background:
+    radial-gradient(circle at top, rgba(134, 76, 239, 0.24), transparent 55%),
+    rgba(6, 6, 10, 0.98);
+  border: 1px solid rgba(134, 76, 239, 0.7);
+  box-shadow: 0 28px 80px rgba(0, 0, 0, 0.9);
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 1.4fr);
+  gap: 1.5rem;
+  color: #f9fafb;
+  /* asegura que nada se salga del borde verticalmente */
+  overflow: hidden;
 }
 
 
-.modalGrid { display: flex; gap: 2rem; flex-direction: row; }
-.modalLeft { flex: 1; display: flex; flex-direction: column; align-items: center; }
-.modalImageWrapper { width: 100%; height: auto; overflow: hidden; border-radius: 0.5rem; }
-.modalImage { width: 100%; height: 100%; object-fit: contain; background-color: #000; }
-.modalTechList { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.5rem; margin: 1rem 0; }
-.modalRight {
-  flex: 1;
+@media (max-width: 900px) {
+  .modalCard {
+    grid-template-columns: minmax(0, 1fr);
+    max-height: 90vh;
+    padding: 1.25rem 1.4rem;
+    overflow-y: auto;
+  }
+}
+
+.modalLayout {
+  display: contents; /* dejan que .modalLeft/.modalRight gobiernen el grid */
+}
+
+/* Botón de cerrar (X) */
+.modalCloseButton {
+  position: absolute;
+  top: 0.9rem;
+  right: 0.9rem;
+  width: 2.4rem;
+  height: 2.4rem;
+  border-radius: 999px;
+  border: 1px solid rgba(248, 250, 252, 0.25);
+  background: rgba(15, 23, 42, 0.9);
+  color: #f9fafb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 1.4rem;
+  line-height: 1;
+  transition: transform 0.12s ease-out, background 0.12s ease-out,
+    border-color 0.12s ease-out;
+}
+
+.modalCloseButton:hover {
+  transform: scale(1.06);
+  background: rgba(15, 23, 42, 0.98);
+  border-color: rgba(134, 76, 239, 0.9);
+}
+
+/* ---------------- Lado izquierdo: imagen + tech + botones ---------------- */
+
+.modalLeft {
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
-  padding-top: 0.25rem;
+}
+
+.modalImageWrapper {
+  border-radius: 1rem;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: #020617;
+}
+
+.modalImage {
+  width: 100%;
+  display: block;
+  object-fit: cover;
+}
+
+.modalTechList {
+  margin-top: 1rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+}
+
+.modalButtons {
+  margin-top: 1.25rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+/* Chips dentro del modal – usan los colores de techColors */
+/* Chips dentro del modal – versión más suave y menos brillante */
+.modalTechList .techTag {
+  --chip-color: var(--tech-color, #864cef);
+
+  padding: 0.32rem 0.9rem;
+  border-radius: 999px;
+  font-size: 0.82rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  color: #f3f4f6;
+
+  /* Fondo suave */
+  background: rgba(20, 20, 30, 0.75);
+
+  /* Borde sutil usando el color del tech */
+  border: 1px solid color-mix(in srgb, var(--chip-color) 70%, #ffffff 10%);
+
+  /* Glow muchísimo más bajo */
+  box-shadow:
+    0 0 4px color-mix(in srgb, var(--chip-color) 35%, transparent),
+    inset 0 0 6px rgba(255, 255, 255, 0.08);
+
+  transition:
+    transform 0.12s ease-out,
+    box-shadow 0.12s ease-out,
+    border-color 0.12s ease-out,
+    background 0.12s ease-out;
+}
+
+.modalTechList .techTag:hover {
+  transform: translateY(-1px);
+
+  /* Hover más elegante y sin brillo excesivo */
+  background: rgba(35, 35, 45, 0.85);
+
+  box-shadow:
+    0 0 6px color-mix(in srgb, var(--chip-color) 50%, transparent),
+    inset 0 0 10px rgba(255, 255, 255, 0.1);
+}
+
+
+/* Botones GitHub / Demo */
+
+.buttonGithub,
+.buttonDemo {
+  border-radius: 999px;
+  padding: 0.55rem 1.2rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  cursor: pointer;
+  text-decoration: none;
+  transition: transform 0.12s ease-out, box-shadow 0.12s ease-out,
+    background 0.12s ease-out;
+}
+
+.buttonGithub {
+  background: rgba(15, 23, 42, 0.95);
+  border: 1px solid rgba(148, 163, 184, 0.8);
+  color: #e5e7eb;
+}
+
+.buttonGithub:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.9);
+}
+
+.buttonDemo {
+  background: radial-gradient(circle at 0% 0%, #00f0ff, #864cef);
+  border: 1px solid rgba(0, 240, 255, 0.9);
+  color: #0b1020;
+}
+
+.buttonDemo:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 35px rgba(0, 240, 255, 0.8);
+}
+
+/* ---------------- Lado derecho: texto ------------------------------------- */
+
+.modalRight {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  max-height: 100%;
+}
+
+.modalEyebrow {
+  font-size: 0.85rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(209, 213, 219, 0.85);
+  margin-bottom: 0.45rem;
 }
 
 .modalTitle {
-  color: #ffffff;
-  text-shadow: 0 0 6px #ffffff, 0 0 20px #9c65f2;
-  letter-spacing: 0.03em;
+  font-size: clamp(1.6rem, 2.8vw, 2.2rem); /* más grande */
+  font-weight: 700;
+  margin-bottom: 1rem;
+  text-shadow: 0 0 18px rgba(134, 76, 239, 0.9);
 }
 
 .modalDescription {
-  color: #e5e7eb;                 /* gris muy claro */
-  line-height: 1.75;
-  max-width: 40rem;
-  text-align: left;
-  white-space: pre-line;          /* respeta saltos de línea del texto */
-  text-rendering: optimizeLegibility;
+  font-size: clamp(1rem, 1.2vw, 1.08rem);  /* texto más grande */
+  line-height: 1.8;
+  color: #e5e7eb;
+  overflow-y: auto;                         /* scroll interno */
+  padding-right: 0.45rem;
+  max-height: 100%;
 }
 
-
-.modalClose {
-  position: absolute; top: 1rem; right: 1rem;
-  font-size: 2rem; font-weight: bold; background: transparent; border: none;
-  color: #bbb; cursor: pointer; transition: color 0.3s ease, transform 0.2s ease; z-index: 10;
+/* Scrollbar sutil para descripción */
+.modalDescription::-webkit-scrollbar {
+  width: 6px;
 }
-.modalClose:hover { color: #fff; transform: scale(1.2); }
-
-.modalButtons { display: flex; gap: 1rem; margin-top: 1rem; justify-content: center; }
-.buttonGithub, .buttonDemo {
-  padding: 0.5rem 1rem; color: #ffffff; border-radius: 999px; font-weight: 500; text-decoration: none;
-  display: flex; align-items: center; gap: 0.5rem; background: linear-gradient(135deg, #2a2a2a, #1f1f1f);
-  border: none; box-shadow: 0 0 10px rgba(156, 101, 242, 0.2); transition: all 0.3s ease;
+.modalDescription::-webkit-scrollbar-track {
+  background: transparent;
 }
-.buttonGithub:hover, .buttonDemo:hover { background: #9c65f2; color: black; box-shadow: 0 0 20px #9c65f2aa; }
-
-/* Scrollbars */
-.modalContent::-webkit-scrollbar { width: 10px; }
-.modalContent::-webkit-scrollbar-track { background: transparent; }
-.modalContent::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg, rgba(255,255,255,0.1), rgba(255,255,255,0.3));
-  border-radius: 10px; box-shadow: 0 0 8px rgba(255, 255, 255, 0.25); backdrop-filter: blur(2px);
-  transition: background 0.3s ease, box-shadow 0.3s ease;
+.modalDescription::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.7);
+  border-radius: 999px;
 }
-.modalContent::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(180deg, rgba(255,255,255,0.4), rgba(255,255,255,0.6));
-  box-shadow: 0 0 12px rgba(255, 255, 255, 0.4);
-}
-.modalContent { scrollbar-width: thin; scrollbar-color: rgba(255, 255, 255, 0.3) transparent; }
 
-@keyframes fadeOut { from { opacity: 1; transform: scale(1); } to { opacity: 0; transform: scale(0.95); } }
-.fadeOut { animation: fadeOut 0.3s ease forwards; }
-
-@media (max-width: 768px) {
-  .modalGrid { flex-direction: column; }
-  @media (max-width: 768px) {
-  .modalImageWrapper {
-    width: 100%;
-    height: auto !important; 
+@media (max-width: 900px) {
+  .modalTitle {
+    font-size: 1.55rem;
   }
 
-  .modalImage {
-    width: 100%;
-    height: auto;
-    object-fit: contain; 
-  }
-
-  .modalLeft {
-    width: 100%;
+  .modalDescription {
+    font-size: 0.98rem;
+    line-height: 1.75;
   }
 }
 
-  .modalButtons { flex-direction: column; width: 100%; }
-  .buttonGithub, .buttonDemo { justify-content: center; width: 100%; }
+/* Animaciones de entrada / salida del modal */
+
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
-@keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
-
-/* LOADER (overlay por encima de todo) */
-.loaderWrap {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 14px;
-  background: rgba(4, 6, 22, 0.55);
-  backdrop-filter: blur(2px);
-  z-index: 100;          /* sube por encima de flecha y cards */
-  pointer-events: none;  /* no bloquea scroll/pin */
+@keyframes modalFadeOut {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.97);
+  }
 }
-.retryBtn { pointer-events: auto; }
-
-.spinner {
-  width: 44px;
-  height: 44px;
-  border-radius: 9999px;
-  border: 4px solid rgba(215, 193, 255, 0.25);
-  border-top-color: #864cef;
-  animation: spin 0.9s linear infinite;
-}
-@keyframes spin { to { transform: rotate(360deg); } }
-
-.loaderText {
-  color: #d7c1ff;
-  font-family: var(--font-contenido, sans-serif);
-  font-weight: 600;
-  text-shadow: 0 0 6px #864cef66;
-}
-
-.errorText { color: #ffb4c1; font-weight: 600; text-align: center; }
-
-.retryBtn {
-  margin-top: 4px;
-  padding: 10px 16px;
-  border-radius: 12px;
-  background: #864cef;
-  color: white;
-  border: none;
-  cursor: pointer;
-  font-weight: 600;
-  transition: transform 0.12s ease;
-}
-.retryBtn:hover { transform: translateY(-1px); }

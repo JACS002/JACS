@@ -6,7 +6,7 @@ import Home from "./pages/Home";
 
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import ParticlesBackground from "./components/ParticlesBackground";
+import StarBackground from "./components/StarBackground";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -14,15 +14,16 @@ function App() {
   const [showIntro, setShowIntro] = useState(true);
 
   return (
-    <div className="relative min-h-screen overflow-x-hidden bg-dark">
-      <ParticlesBackground />
-
-      {showIntro ? (
-        <LogoIntro onComplete={() => setShowIntro(false)} />
-      ) : (
-        <Home />
-      )}
-    </div>
+    <>
+      <StarBackground />
+      <div className="relative min-h-screen overflow-x-hidden">
+        {showIntro ? (
+          <LogoIntro onComplete={() => setShowIntro(false)} />
+        ) : (
+          <Home />
+        )}
+      </div>
+    </>
   );
 }
 

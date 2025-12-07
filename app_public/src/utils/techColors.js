@@ -1,60 +1,64 @@
 // utils/techColors.js
 const techColors = {
-    // Frontend Frameworks & Libraries
-    React: '#00eded',
-    Angular: '#c54b45',
-    
-    // Backend & Server
-    "Node.js": "#33b900",
-    Node: '#218c00',
-    Express: '#e0e025',
-    FastAPI: '#009688',
-    
-    // Databases
-    MongoDB: '#4ff016',
-    PostgreSQL: '#336791',
-    Snowflake: '#29b5e8',
-    
-    // Styling & UI
-    Bootstrap: '#7b61ff',
-    TailwindCSS: '#00b4d8',
-    CSS3: '#1572b6',
-    HTML5: '#e34f26',
-    
-    // Build Tools & Dev
-    Vite: '#a66bff',
-    Docker: '#2496ed',
-    "Docker Compose": '#2496ed',
-    
-    // Data & ML
-    Python: '#3776ab',
-    "Apache Spark": '#e25a1c',
-    PySpark: '#e25a1c',
-    Jupyter: '#f37626',
-    
-    // Database Tools
-    Mongoose: '#4ff016',
-    SQL: '#336791',
-    
-    // Cloud & Infrastructure
-    AWS: '#ff9900',
-    
-    // Authentication & Security
-    JWT: '#f0a500',
-    
-    // Email & Payments
-    Nodemailer: '#0078d4',
-    PayPhone: '#00d4aa',
-    
-    // Design & Frontend
-    Figma: '#f24e1e',
-    JavaScript: '#f7df1e',
-    Pug: '#a86454',
-    
-    // Animation & 3D
-    ThreeJS: '#dddddd',
-    GSAP: '#50fa7b',
-  };
-  
-  export default techColors;
-  
+  // --- Frontend Frameworks & Libraries ---
+  React: "#61DAFB",
+  "React Three Fiber": "#61DAFB",
+  Angular: "#DD0031",
+  JavaScript: "#F7DF1E",
+  TypeScript: "#3178C6",
+
+  // --- Backend & Server ---
+  "Node.js": "#3C873A",
+  Node: "#3C873A",
+  Express: "#BBBBBB", // Gris porque Express no tiene color oficial
+  FastAPI: "#009688",
+
+  // --- Databases ---
+  MongoDB: "#4FAA41",
+  PostgreSQL: "#336791",
+  Mongoose: "#880000",
+  Snowflake: "#29B5E8",
+  SQL: "#D4D4D4",
+
+  // --- Styling & UI ---
+  TailwindCSS: "#06B6D4",
+  Bootstrap: "#7952B3",
+  CSS3: "#1572B6",
+  HTML5: "#E34F26",
+
+  // --- Build Tools, Bundlers & DevTools ---
+  Vite: "#646CFF",
+  Webpack: "#8ED5FA",
+
+  // --- Containers / Infra ---
+  Docker: "#2496ED",
+  "Docker Compose": "#2496ED",
+
+  // --- Data & Machine Learning ---
+  Python: "#3776AB",
+  "Apache Spark": "#E25A1C",
+  PySpark: "#E25A1C",
+  Jupyter: "#F37626",
+
+  // --- Cloud & Infrastructure ---
+  AWS: "#FF9900",
+
+  // --- Auth / Security ---
+  JWT: "#F0A500",
+
+  // --- Email & Payments ---
+  Nodemailer: "#0095D5",
+  PayPhone: "#00D4AA",
+
+  // --- Design ---
+  Figma: "#F24E1E",
+
+  // --- Templates / Engines ---
+  Pug: "#A86454",
+
+  // --- 3D & Animation ---
+  "Three.js": "#FFFFFF",
+  GSAP: "#88CE02"
+};
+
+export default techColors;

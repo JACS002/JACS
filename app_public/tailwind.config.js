@@ -7,8 +7,8 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        titulos: ['Manrope', 'sans-serif'],
-        contenido: ['Poppins', 'sans-serif'],
+        titulos: ['Space Grotesk', 'sans-serif'],
+        contenido: ['system-ui', 'sans-serif'],
       },
       colors: {
         dark: '#0a0a0a',        // fondo oscuro
