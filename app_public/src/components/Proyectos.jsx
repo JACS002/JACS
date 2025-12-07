@@ -101,13 +101,22 @@ export default function Proyectos() {
     >
       {/* Canvas */}
       <div className={styles.canvasFull}>
+        {loading && !error && (
+          <div className={styles.loaderWrapper}>
+            <div className={styles.loaderSpinner} />
+            <span className={styles.loaderText}>
+              {lang === "es" ? "Cargando proyectos..." : "Loading projects..."}
+            </span>
+          </div>
+        )}
+
         {!loading && !error && projects.length > 0 && (
           <ProjectOrbitsCanvas
             projects={projects}
             activeIndex={activeIndex}
             onSelect={handleSelectSphere}
             lang={lang}
-            externalHoverIndex={externalHoverIndex} 
+            externalHoverIndex={externalHoverIndex}
           />
         )}
       </div>
@@ -152,8 +161,8 @@ export default function Proyectos() {
                   className={`${styles.projectListItem} ${
                     index === activeIndex ? styles.projectListItemActive : ""
                   }`}
-                  onMouseEnter={() => setExternalHoverIndex(index)}   // <<< 🔥 AQUÍ
-                  onMouseLeave={() => setExternalHoverIndex(null)}    // <<< 🔥 AQUÍ
+                  onMouseEnter={() => setExternalHoverIndex(index)}
+                  onMouseLeave={() => setExternalHoverIndex(null)} 
                   onClick={() => handleSelectFromList(index)}
                 >
                   <span className={styles.projectBullet}>{index + 1}</span>
