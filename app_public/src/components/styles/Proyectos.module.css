@@ -8,24 +8,7 @@
   min-height: 100vh;
   overflow: hidden;
   opacity: 1;
-  transform: translateY(40px);
-  transition:
-    opacity 0.6s ease-out,
-    transform 0.6s ease-out;
 }
-
-/* cuando está visible en viewport */
-.sectionVisible {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-/* cuando sale del viewport (para que haga fade out) */
-.sectionHidden {
-  opacity: 0;
-  transform: translateY(40px);
-}
-
 
 /* ============================================================================
  *  CANVAS 3D (SATURNO + LUNAS)
