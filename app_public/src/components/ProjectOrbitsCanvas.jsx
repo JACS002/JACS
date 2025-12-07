@@ -412,7 +412,6 @@ export default function ProjectOrbitsCanvas({
       style={{
         width: "100%",
         height: "100%",
-        // 👇 muy importante en móvil: permitir scroll vertical
         touchAction: "pan-y",
       }}
     >
