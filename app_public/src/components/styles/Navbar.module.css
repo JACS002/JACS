@@ -418,25 +418,144 @@
    RESPONSIVE
    =========================================================== */
 
+/* Tablets y móviles medianos */
 @media (max-width: 768px) {
+  /* HEADER -------------------------------------------------- */
   .headerInner {
-    padding-inline: 1rem;
+    padding: 0.6rem 0.9rem;
   }
 
   .headerLogo {
-    height: 58px;
+    height: 52px;
   }
 
-  .visorHudTop {
-    padding-inline: 1.5rem;
+  .headerLogoButton {
+    top: 60%; /* logo un poco más arriba para no chocar con el visor */
+  }
+
+  .headerRight {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+  }
+
+  .visorToggle {
+    padding: 0.32rem 0.7rem;
+    font-size: 0.6rem;
+    letter-spacing: 0.18em;
+  }
+
+  .visorToggleLabel {
+    font-size: 0.63rem;
+  }
+
+  .visorToggleDot {
+    width: 5px;
+    height: 5px;
+    box-shadow: 0 0 6px rgba(0, 255, 255, 0.5);
+  }
+
+  /* VISOR --------------------------------------------------- */
+  .visorFrame {
+    padding: 1.25rem 0.9rem;
+  }
+
+  .visorFrame::before {
+    inset: 0.7rem 0.7rem 1rem;           /* casco un poco más estrecho */
+    border-radius: 999px 999px 55% 55%;  /* curva más pronunciada */
   }
 
   .visorCenter {
-    padding-inline: 1.5rem;
+    gap: 1.6rem;
+    padding-inline: 1.2rem;
+    padding-top: 1.2rem;                 /* espacio entre logo y switch */
+  }
+
+  .langSwitchCenter {
+    transform: scale(0.95);
+    margin-bottom: 0.8rem;
+  }
+
+  .visorTitle {
+    font-size: clamp(1.2rem, 4vw, 1.4rem);
+    letter-spacing: 0.18em;
+  }
+
+  .visorSubtitle {
+    max-width: 90%;
+    font-size: 0.9rem;
   }
 
   .visorNavList {
-    gap: 0.9rem;
+    gap: 0.8rem;
+  }
+
+  .visorNavItem {
+    flex: 1 1 100%;     /* cada botón ocupa el ancho */
+    min-width: 0;
+  }
+
+  .visorNavButton {
+    padding: 0.7rem 1rem;
+    font-size: 0.9rem;
+  }
+
+  .visorHelmetMeta {
+    margin-top: 1.4rem;
+  }
+}
+
+/* Móviles pequeños (320–400px aprox.) */
+@media (max-width: 480px) {
+  /* HEADER -------------------------------------------------- */
+  .headerInner {
+    padding: 0.4rem 0.7rem;
+  }
+
+  .headerLogo {
+    height: 44px;
+  }
+
+  .headerLogoButton {
+    top: 52%;            /* un poquito más arriba en pantallas muy pequeñas */
+  }
+
+  /* VISOR --------------------------------------------------- */
+  .visorFrame {
+    padding: 1rem 0.7rem;
+  }
+
+  .visorFrame::before {
+    inset: 0.55rem 0.5rem 0.8rem;
+  }
+
+  .visorCenter {
+    gap: 1.3rem;
+    padding-inline: 0.9rem;
+    padding-top: 1.3rem;
+  }
+
+  .langSwitchCenter {
+    transform: scale(0.85);
+  }
+
+  .visorTitle {
+    font-size: 1rem;
+    letter-spacing: 0.14em;
+  }
+
+  .visorSubtitle {
+    font-size: 0.8rem;
+  }
+
+  .visorNavButton {
+    padding: 0.55rem 0.85rem;
+    font-size: 0.8rem;
+  }
+
+  .visorHint {
+    font-size: 0.7rem;
+    letter-spacing: 0.14em;
   }
 }
 
@@ -487,36 +606,32 @@
   text-align: center;
 }
 
+/* Tablets y móviles medianos */
 @media (max-width: 768px) {
-  .visorToggle {
-    padding: 0.32rem 0.7rem;        /* antes era más grande */
-    font-size: 0.6rem;              /* reduce tamaño del texto */
-    letter-spacing: 0.18em;
+  .fixedHeader {
+    top: 0.2rem;            /* antes 0 -> ahora un poco más abajo */
   }
 
-  .visorToggleLabel {
-    font-size: 0.63rem;
+  .headerInner {
+    padding: 0.8rem 0.9rem; /* un pelín más alto */
   }
 
-  .visorToggleDot {
-    width: 5px;
-    height: 5px;
-    box-shadow: 0 0 6px rgba(0, 255, 255, 0.5);
-  }
-}
-
-@media (max-width: 768px) {
-  .headerRight {
-    position: absolute;
-    top: 0.6rem;
-    right: 0.6rem;
-  }
-}
-
-
-@media (max-width: 768px) {
   .headerLogoButton {
-    margin-top: 0.3rem;
+    top: 65%;               /* antes ~55%, baja el logo dentro del header */
   }
 }
 
+/* Móviles pequeños (muy estrechos) */
+@media (max-width: 480px) {
+  .fixedHeader {
+    top: 1rem;            /* baja aún más todo el conjunto */
+  }
+
+  .headerInner {
+    padding: 0.9rem 0.7rem; 
+  }
+
+  .headerLogoButton {
+    top: 60%;               /* logo aún un poco más abajo */
+  }
+}
