@@ -25,6 +25,8 @@
   width: 100% !important;
   height: 100% !important;
   display: block;
+  /* Evita el zoom con gesto de pellizco en dispositivos táctiles */
+  touch-action: pan-y;
 }
 
 /* ============================================================================

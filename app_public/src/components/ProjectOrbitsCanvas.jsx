@@ -330,15 +330,8 @@ function Scene({
         />
       )}
 
-      {/* Móvil / touch: sin controles, pero con autorrotación activa */}
-      {isMobile && (
-        <OrbitControls
-          enabled={false}
-          autoRotate
-          autoRotateSpeed={0.25}
-          target={[0, 0, 0]}
-        />
-      )}
+      {/* En móvil: SIN OrbitControls → el scroll táctil funciona bien.
+          La animación del sistema la hacen Saturn + SaturnMoons con useFrame. */}
     </>
   );
 }
@@ -416,7 +409,12 @@ export default function ProjectOrbitsCanvas({
       dpr={[1, 1.5]}
       camera={{ position: [0, 0, 15], fov: 45 }}
       gl={{ alpha: true, antialias: true }}
-      style={{ width: "100%", height: "100%" }}
+      style={{
+        width: "100%",
+        height: "100%",
+        // 👇 muy importante en móvil: permitir scroll vertical
+        touchAction: "pan-y",
+      }}
     >
       {/* escucha progreso de carga y avisa al padre */}
       <AssetProgress onAssetsLoaded={onAssetsLoaded} />
