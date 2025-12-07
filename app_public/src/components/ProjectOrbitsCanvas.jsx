@@ -5,8 +5,8 @@ import {
   Float,
   Html,
   useTexture,
-  Stars,
-  useProgress,        // 👈 NUEVO
+  // Stars,
+  useProgress,
 } from "@react-three/drei";
 import { useRef, useState, useEffect } from "react";
 import * as THREE from "three";
@@ -231,6 +231,23 @@ function Scene({
 }) {
   const [hoveredIndex, setHoveredIndex] = useState(null);
 
+  // detectar si es dispositivo móvil / táctil
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const check = () => {
+      const isTouch =
+        "ontouchstart" in window || navigator.maxTouchPoints > 0;
+      setIsMobile(isTouch || window.innerWidth <= 768);
+    };
+
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
+  }, []);
+
   // si viene un hover desde la lista, tiene prioridad
   const effectiveHover =
     externalHoverIndex !== null ? externalHoverIndex : hoveredIndex;
@@ -302,13 +319,26 @@ function Scene({
         </Html>
       )}
 
-      <OrbitControls
-        enablePan={false}
-        enableZoom={false}
-        autoRotate={!effectiveHover}
-        autoRotateSpeed={0.25}
-        target={[0, 0, 0]}
-      />
+      {/* Desktop / tablet: controles normales sin zoom/pan */}
+      {!isMobile && (
+        <OrbitControls
+          enablePan={false}
+          enableZoom={false}
+          autoRotate={!effectiveHover}
+          autoRotateSpeed={0.25}
+          target={[0, 0, 0]}
+        />
+      )}
+
+      {/* Móvil / touch: sin controles, pero con autorrotación activa */}
+      {isMobile && (
+        <OrbitControls
+          enabled={false}
+          autoRotate
+          autoRotateSpeed={0.25}
+          target={[0, 0, 0]}
+        />
+      )}
     </>
   );
 }
@@ -364,9 +394,7 @@ function TextureLoadingOverlay({ lang }) {
         <span>
           {lang === "es" ? "Cargando texturas..." : "Loading textures..."}
         </span>
-        <span style={{ opacity: 0.8 }}>
-          {Math.round(progress)}%
-        </span>
+        <span style={{ opacity: 0.8 }}>{Math.round(progress)}%</span>
       </div>
     </Html>
   );
@@ -379,7 +407,7 @@ export default function ProjectOrbitsCanvas({
   onSelect,
   lang,
   externalHoverIndex = null,
-  onAssetsLoaded,          // 👈 nuevo prop
+  onAssetsLoaded,
 }) {
   if (!projects || projects.length === 0) return null;
 
@@ -390,8 +418,11 @@ export default function ProjectOrbitsCanvas({
       gl={{ alpha: true, antialias: true }}
       style={{ width: "100%", height: "100%" }}
     >
-      {/* 🔹 este componente solo escucha el progreso de carga */}
+      {/* escucha progreso de carga y avisa al padre */}
       <AssetProgress onAssetsLoaded={onAssetsLoaded} />
+
+      {/* overlay de carga de texturas */}
+      <TextureLoadingOverlay lang={lang} />
 
       {/* Escena principal */}
       <Scene

@@ -17,7 +17,6 @@ export default function Proyectos() {
   const [error, setError] = useState("");
 
   const sectionRef = useRef(null);
-  const [isVisible, setIsVisible] = useState(false);
 
   // hover desde lista
   const [externalHoverIndex, setExternalHoverIndex] = useState(null);
@@ -25,7 +24,7 @@ export default function Proyectos() {
   // lista simple
   const [showList, setShowList] = useState(false);
 
-  // ✅ nuevo: saber cuándo el sistema 3D (texturas) ya está listo
+  // saber cuándo el sistema 3D (texturas) ya está listo
   const [is3DReady, setIs3DReady] = useState(false);
 
   const getLocalizedField = (field) => {
@@ -38,10 +37,9 @@ export default function Proyectos() {
     try {
       setLoading(true);
       setError("");
-      setIs3DReady(false); // cuando vuelvas a pedir del backend, resetea el 3D
+      setIs3DReady(false);
 
       const data = await getProjects();
-      // await new Promise((resolve) => setTimeout(resolve, 3000));
       setProjects(data || []);
       setActiveIndex(0);
     } catch (e) {
@@ -62,24 +60,6 @@ export default function Proyectos() {
     }
   }, [projects, activeIndex]);
 
-  // Fade-in section
-  useEffect(() => {
-    const el = sectionRef.current;
-    if (!el) return;
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          setIsVisible(entry.isIntersecting && entry.intersectionRatio >= 0.25);
-        });
-      },
-      { threshold: [0, 0.25, 0.5, 1] }
-    );
-
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, []);
-
   const handleSelectSphere = (index) => {
     setActiveIndex(index);
     const project = projects[index];
@@ -90,7 +70,7 @@ export default function Proyectos() {
   };
 
   const handleSelectFromList = (index) => {
-    //limpia el hover al seleccionar desde la lista
+    // limpia el hover al seleccionar desde la lista
     setExternalHoverIndex(null);
     handleSelectSphere(index);
     setShowList(false);
@@ -101,14 +81,14 @@ export default function Proyectos() {
     setShowList((prev) => {
       const next = !prev;
 
-      if(next && sectionRef.current){
+      if (next && sectionRef.current) {
         sectionRef.current.scrollIntoView({
           behavior: "smooth",
-          block: "start"
+          block: "start",
         });
       }
 
-      if(!next){
+      if (!next) {
         setExternalHoverIndex(null);
       }
       return next;
@@ -119,28 +99,44 @@ export default function Proyectos() {
     <section
       id="proyectos"
       ref={sectionRef}
-      className={`${styles.section}`}
+      className={styles.section}
     >
       {/* Canvas */}
       <div className={styles.canvasFull}>
-        {/* 🔹 Loader mientras esperamos al backend */}
+        {/* Loader mientras esperamos al backend */}
         {loading && !error && (
           <div className={styles.loaderWrapper}>
             <div className={styles.loaderSpinner} />
-            <span className={`${styles.loaderText} font-titulos font-bold text-3xl text-white`}>
+            <span
+              className={`
+                ${styles.loaderText}
+                font-titulos font-bold text-white
+                text-xl
+                sm:text-2xl
+                md:text-3xl
+              `}
+            >
               {lang === "es" ? "Cargando proyectos..." : "Loading projects..."}
             </span>
           </div>
         )}
 
-        {/* 🔹 Canvas 3D, se monta cuando ya hay proyectos */}
+        {/* Canvas 3D, se monta cuando ya hay proyectos */}
         {!loading && !error && projects.length > 0 && (
           <>
             {/* Overlay extra mientras el 3D/texturas se preparan */}
             {!is3DReady && (
               <div className={styles.loaderWrapper}>
                 <div className={styles.loaderSpinner} />
-                <span className={`${styles.loaderText} font-titulos font-bold text-2xl text-white`}>
+                <span
+                  className={`
+                    ${styles.loaderText}
+                    font-titulos font-bold text-white
+                    text-lg
+                    sm:text-xl
+                    md:text-2xl
+                  `}
+                >
                   {lang === "es"
                     ? "Preparando sistema planetario..."
                     : "Preparing 3D system..."}
@@ -154,7 +150,6 @@ export default function Proyectos() {
               onSelect={handleSelectSphere}
               lang={lang}
               externalHoverIndex={externalHoverIndex}
-              // 👇 callback: el canvas avisa cuando las texturas ya están listas
               onAssetsLoaded={() => setIs3DReady(true)}
             />
           </>
@@ -165,7 +160,17 @@ export default function Proyectos() {
       <div className={styles.overlay}>
         <div className={styles.overlayInner}>
           <div className={styles.overlayInnerRow}>
-            <h1 className={`${styles.mainTitle} font-titulos font-bold text-6xl`}>
+            <h1
+              className={`
+                ${styles.mainTitle} 
+                font-titulos 
+                font-bold 
+                text-4xl
+                sm:text-5xl
+                md:text-6xl
+                lg:text-7xl
+              `}
+            >
               {t("projects.title")}
             </h1>
 
@@ -189,7 +194,13 @@ export default function Proyectos() {
             <span className={styles.projectListTitle}>
               {lang === "es" ? "Proyectos" : "Projects"}
             </span>
-            <button className={styles.projectListClose} onClick={() => setShowList(false)}>
+            <button
+              className={styles.projectListClose}
+              onClick={() => {
+                setShowList(false);
+                setExternalHoverIndex(null);
+              }}
+            >
               ×
             </button>
           </div>
@@ -206,7 +217,9 @@ export default function Proyectos() {
                   onClick={() => handleSelectFromList(index)}
                 >
                   <span className={styles.projectBullet}>{index + 1}</span>
-                  <span className={styles.projectName}>{getLocalizedField(project.title)}</span>
+                  <span className={styles.projectName}>
+                    {getLocalizedField(project.title)}
+                  </span>
                 </button>
               </li>
             ))}
