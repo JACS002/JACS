@@ -31,16 +31,16 @@ function getMoonTexturePath(project) {
       ? titleObj
       : (titleObj.en || titleObj.es || "").toLowerCase();
 
-  if (title.includes("cenespe")) return "/images/projects/luna-cenespe.png";
-  if (title.includes("global print")) return "/images/projects/luna-global.png";
+  if (title.includes("cenespe")) return "/images/projects/luna-cenespe.webp";
+  if (title.includes("global print")) return "/images/projects/luna-global.webp";
   if (title.includes("nyc taxi analytics"))
-    return "/images/projects/luna-nyc-taxi.png";
-  if (title.includes("taxifare")) return "/images/projects/luna-taxifare.png";
-  if (title.includes("tradingml")) return "/images/projects/luna-trading.png";
-  if (title.includes("portfolio")) return "/images/projects/luna-jacs.png";
+    return "/images/projects/luna-nyc-taxi.webp";
+  if (title.includes("taxifare")) return "/images/projects/luna-taxifare.webp";
+  if (title.includes("tradingml")) return "/images/projects/luna-trading.webp";
+  if (title.includes("portfolio")) return "/images/projects/luna-jacs.webp";
 
   // fallback: reutilizamos la de JACS
-  return "/images/projects/luna-jacs.png";
+  return "/images/projects/luna-jacs.webp";
 }
 
 function getLocalizedField(field, lang) {
@@ -54,8 +54,8 @@ function Saturn() {
   const groupRef = useRef();
   const ringMeshRef = useRef();
 
-  const saturnMap = useTexture("/images/projects/saturno.png");
-  const ringMap = useTexture("/images/projects/anillo.png");
+  const saturnMap = useTexture("/images/projects/saturno.webp");
+  const ringMap = useTexture("/images/projects/anillo.webp");
 
   const setupRingUVs = () => {
     if (!ringMeshRef.current) return;
