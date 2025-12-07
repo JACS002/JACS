@@ -1,29 +1,21 @@
 // src/components/QuienSoy.jsx
 // -----------------------------------------------------------------------------
 // Sección "Quién soy" del portfolio
-// - Combina texto descriptivo con una escena 3D interactiva (React Three Fiber)
+// - Texto + escena 3D de constelación de skills
 // - Usa GSAP + ScrollTrigger para animaciones de entrada/salida con scroll
-// - Compatible con el sistema de idiomas mediante useLang()
 // -----------------------------------------------------------------------------
 
 import React, {
   Suspense,
   useRef,
-  useState,
   useLayoutEffect,
-  forwardRef,
   useMemo,
 } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
-import {
-  OrbitControls,
-  Float,
-  Html,
-  Points,
-  PointMaterial,
-} from "@react-three/drei";
+import { OrbitControls, Html } from "@react-three/drei";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import * as THREE from "three";               // 👈 NUEVO
 import techColors from "../utils/techColors";
 import styles from "./styles/QuienSoy.module.css";
 import { useLang } from "../context/LanguageProvider";
@@ -31,301 +23,213 @@ import { useLang } from "../context/LanguageProvider";
 gsap.registerPlugin(ScrollTrigger);
 
 // ============================================================================
-// HELPERS Y COMPONENTES 3D
+// 3D: CONSTELACIÓN DE SKILLS
 // ============================================================================
 
-/**
- * softenColor
- * - Recibe un color HEX y lo mezcla con blanco para obtener un tono más suave.
- * - Se usa para los "moons" de skills alrededor del planeta principal.
- */
-function softenColor(hex, amount = 0.2) {
-  if (!hex) return "#ffffff";
-  const num = parseInt(hex.replace("#", ""), 16);
-  const r = (num >> 16) & 255;
-  const g = (num >> 8) & 255;
-  const b = num & 255;
-  const mix = (c) => Math.round(c + (255 - c) * amount);
-  return `rgb(${mix(r)}, ${mix(g)}, ${mix(b)})`;
+// Nodo de skill (núcleo + halo + etiqueta)
+function SkillBubble({ name, position, size = 0.3 }) {
+  const [hovered, setHovered] = React.useState(false);
+  const coreRef = useRef();
+  const haloRef = useRef();
+
+  const baseColor = techColors[name] || "#9d6bff";
+
+  // suavizamos el color base hacia blanco
+  const softColor = useMemo(() => {
+    const hex = baseColor.replace("#", "");
+    const num = parseInt(hex, 16);
+    const r = (num >> 16) & 255;
+    const g = (num >> 8) & 255;
+    const b = num & 255;
+    const mix = (c) => Math.round(c + (255 - c) * 0.25);
+    return `rgb(${mix(r)}, ${mix(g)}, ${mix(b)})`;
+  }, [baseColor]);
+
+  // pequeña animación suave de escala núcleo/halo en hover
+  useFrame(() => {
+    const targetCore = hovered ? 1.1 : 1;
+    const targetHalo = hovered ? 1.7 : 1.4;
+
+    if (coreRef.current) {
+      const s = THREE.MathUtils.lerp(coreRef.current.scale.x, targetCore, 0.12);
+      coreRef.current.scale.setScalar(s);
+    }
+    if (haloRef.current) {
+      const s = THREE.MathUtils.lerp(haloRef.current.scale.x, targetHalo, 0.12);
+      haloRef.current.scale.setScalar(s);
+    }
+  });
+
+  return (
+    <group
+      position={position}
+      onPointerOver={(e) => {
+        e.stopPropagation();
+        setHovered(true);
+        document.body.style.cursor = "pointer";
+      }}
+      onPointerOut={() => {
+        setHovered(false);
+        document.body.style.cursor = "auto";
+      }}
+    >
+      {/* Halo / glow exterior */}
+      <mesh ref={haloRef}>
+        <sphereGeometry args={[size, 32, 32]} />
+        <meshBasicMaterial
+          color={baseColor}
+          transparent
+          opacity={hovered ? 0.25 : 0.1}
+          blending={THREE.AdditiveBlending}
+          depthWrite={false}
+        />
+      </mesh>
+
+      {/* Núcleo más mate, sin look de plástico */}
+      <mesh ref={coreRef}>
+        <sphereGeometry args={[size * 0.9, 32, 32]} />
+        <meshStandardMaterial
+          color={softColor}
+          emissive={softColor}
+          emissiveIntensity={hovered ? 0.7 : 0.35}
+          roughness={0.80}      // más rugoso → menos “caricatura”
+          metalness={0.15}      // poco metal
+        />
+      </mesh>
+
+      {/* Etiqueta */}
+      <Html
+        distanceFactor={6}
+        position={[0, size + 0.4, 0]}
+        style={{ pointerEvents: "none" }}
+      >
+        <div
+          style={{
+            padding: "0.24rem 0.75rem",
+            borderRadius: "999px",
+            background: "rgba(0,0,0,0.9)",
+            border: "1px solid rgba(199,210,254,0.45)",
+            color: "#ffffff",
+            fontFamily: "'Space Grotesk', system-ui, sans-serif",
+            fontWeight: 600,
+            fontSize: "0.55rem",
+            letterSpacing: "0.09em",
+            textTransform: "uppercase",
+            whiteSpace: "nowrap",
+            boxShadow: "0 0 12px rgba(0,0,0,0.9)",
+            backdropFilter: "blur(10px)",
+          }}
+        >
+          {name}
+        </div>
+      </Html>
+    </group>
+  );
 }
 
-/**
- * MainPlanet
- * - Esfera central flotante con un anillo tipo “saturno”.
- * - El Float agrega movimiento suave de flotación/rotación.
- */
-const MainPlanet = forwardRef(function MainPlanet(_props, ref) {
-  return (
-    <Float speed={2} rotationIntensity={0.6} floatIntensity={1.2}>
-      <group ref={ref}>
-        <mesh>
-          <sphereGeometry args={[1.2, 48, 48]} />
-          <meshStandardMaterial
-            color="#9d6bff"
-            emissive="#864cef"
-            emissiveIntensity={1.5}
-            metalness={0.6}
-            roughness={0.25}
-          />
-        </mesh>
-        <mesh rotation={[Math.PI / 2, 0, 0]}>
-          <torusGeometry args={[1.7, 0.04, 24, 96]} />
-          <meshStandardMaterial color="#c7d2fe" transparent opacity={0.6} />
-        </mesh>
-      </group>
-    </Float>
-  );
-});
+// Líneas que conectan los nodos de la constelación
+function SkillLinks({ nodes }) {
+  const lineRef = useRef();
 
-/**
- * SkillMoon
- * - Pequeñas esferas orbitando el planeta que representan tecnologías.
- * - Al pasar el mouse: se agrandan y brillan más (hover state).
- */
-const SkillMoon = forwardRef(function SkillMoon(
-  { name, color, position },
-  ref
-) {
-  const [hovered, setHovered] = useState(false);
-
-  return (
-    <Float
-      speed={hovered ? 3 : 2}
-      rotationIntensity={1.0}
-      floatIntensity={hovered ? 1.8 : 1.2}
-    >
-      <mesh
-        ref={ref}
-        position={position}
-        scale={hovered ? 1.2 : 1}
-        onPointerOver={(e) => {
-          e.stopPropagation();
-          setHovered(true);
-          document.body.style.cursor = "pointer";
-        }}
-        onPointerOut={() => {
-          setHovered(false);
-          document.body.style.cursor = "auto";
-        }}
-      >
-        <sphereGeometry args={[0.28, 24, 24]} />
-        <meshStandardMaterial
-          color={color}
-          emissive={color}
-          emissiveIntensity={hovered ? 1.1 : 0.7}
-          roughness={0.35}
-          metalness={0.35}
-        />
-        <Html distanceFactor={8} position={[0, 0.6, 0]}>
-          <div className="px-2 py-1 rounded-full bg-black/80 text-[10px] text-white border border-white/10">
-            {name}
-          </div>
-        </Html>
-      </mesh>
-    </Float>
-  );
-});
-
-/**
- * InnerStars
- * - Nube de puntos girando lentamente alrededor del sistema.
- * - Añade profundidad y sensación espacial.
- */
-function InnerStars() {
-  const groupRef = useRef();
-  const count = 120;
+  const edges = useMemo(() => {
+    const e = [];
+    for (let i = 0; i < nodes.length - 1; i++) {
+      e.push([i, i + 1]);
+    }
+    if (nodes.length > 4) {
+      const mid = Math.floor(nodes.length / 2);
+      e.push([0, mid]);
+      e.push([mid, nodes.length - 1]);
+    }
+    return e;
+  }, [nodes]);
 
   const positions = useMemo(() => {
-    const arr = new Float32Array(count * 3);
-    for (let i = 0; i < count; i++) {
-      const r = 2.4 + Math.random() * 2.2;
-      const a = Math.random() * Math.PI * 2;
-      const y = (Math.random() - 0.5) * 2.4;
-      const x = Math.cos(a) * r;
-      const z = Math.sin(a) * r;
-      arr[i * 3 + 0] = x;
-      arr[i * 3 + 1] = y;
-      arr[i * 3 + 2] = z;
-    }
-    return arr;
-  }, []);
+    const arr = [];
+    edges.forEach(([a, b]) => {
+      const pa = nodes[a].position;
+      const pb = nodes[b].position;
+      arr.push(pa[0], pa[1], pa[2], pb[0], pb[1], pb[2]);
+    });
+    return new Float32Array(arr);
+  }, [edges, nodes]);
+
+  return (
+    <lineSegments ref={lineRef}>
+      <bufferGeometry>
+        <bufferAttribute
+          attach="attributes-position"
+          array={positions}
+          count={positions.length / 3}
+          itemSize={3}
+        />
+      </bufferGeometry>
+      <lineBasicMaterial
+        color="#a5b4fc"
+        transparent
+        opacity={0.65}
+      />
+    </lineSegments>
+  );
+}
+
+// Escena principal de la constelación
+function SkillConstellationScene() {
+  const groupRef = useRef();
+  const { mouse } = useThree();
+
+  const nodes = useMemo(
+    () => [
+      { name: "React",      position: [ 1.9,  0.9,  0.3] },
+      { name: "Node.js",    position: [ 1.0, -0.1,  0.9] },
+      { name: "Express",    position: [ 0.1, -0.7,  0.4] },
+      { name: "MongoDB",    position: [-1.0, -0.3,  0.1] },
+      { name: "PostgreSQL", position: [-1.7,  0.4,  0.3] },
+      { name: "Python",     position: [-1.0,  1.1,  0.7] },
+      { name: "SQL",        position: [ 0.0,  1.6,  0.4] },
+      { name: "Docker",     position: [ 1.4,  1.4, -0.1] },
+      { name: "APIRest",    position: [ 0.7,  0.7, -0.9] },
+      { name: "Git",        position: [ 2.1,  0.1, -0.6] },
+    ],
+    []
+  );
 
   useFrame((_, delta) => {
     if (!groupRef.current) return;
-    groupRef.current.rotation.y += delta * 0.03;
+
+    const targetX = mouse.y * 0.25;
+    const targetY = mouse.x * 0.4;
+
+    groupRef.current.rotation.x +=
+      (targetX - groupRef.current.rotation.x) * 0.08;
+    groupRef.current.rotation.y +=
+      (targetY - groupRef.current.rotation.y) * 0.08;
+
+    groupRef.current.rotation.z += delta * 0.02; // giro global suave
   });
-
-  return (
-    <group ref={groupRef}>
-      <Points positions={positions} stride={3} frustumCulled={false}>
-        <PointMaterial
-          size={0.04}
-          sizeAttenuation
-          depthWrite={false}
-          transparent
-          opacity={0.35}
-          color="#ffffff"
-        />
-      </Points>
-    </group>
-  );
-}
-
-/**
- * OrbitingSkills
- * - Mapea la lista de tecnologías a “moons” orbitando alrededor del planeta.
- * - Cada skill toma su color desde techColors y se suaviza un poco.
- */
-function OrbitingSkills({ moonsRef }) {
-  const groupRef = useRef();
-
-  // Rotación constante del grupo de skills
-  useFrame((_, delta) => {
-    if (groupRef.current) {
-      groupRef.current.rotation.y += delta * 0.25;
-    }
-  });
-
-  const skills = [
-    { name: "React", position: [2.3, 0.4, 0] },
-    { name: "Node.js", position: [-2.1, -0.3, 0.4] },
-    { name: "Express", position: [0.2, 1.9, -0.6] },
-    { name: "MongoDB", position: [1.4, -1.7, -0.3] },
-    { name: "Docker", position: [-1.8, 1.4, 0.7] },
-    { name: "AWS", position: [0.5, -2.2, 1.1] },
-  ];
-
-  return (
-    <group ref={groupRef}>
-      {skills.map((skill, i) => {
-        const baseColor = techColors[skill.name] || "#ffffff";
-        const softColor = softenColor(baseColor, 0.2);
-        return (
-          <SkillMoon
-            key={skill.name}
-            name={skill.name}
-            color={softColor}
-            position={skill.position}
-            ref={(el) => (moonsRef.current[i] = el)}
-          />
-        );
-      })}
-    </group>
-  );
-}
-
-// ============================================================================
-// ESCENA 3D + ANIMACIÓN CON SCROLL (GSAP + ScrollTrigger)
-// ============================================================================
-
-/**
- * OrbitScene
- * - Combina el planeta, skills y estrellas en una sola escena.
- * - Parallax suave usando la posición del mouse.
- * - Animación de entrada de planeta + moons controlada por ScrollTrigger (scrub).
- */
-function OrbitScene() {
-  const planetRef = useRef();
-  const moonsRef = useRef([]);
-  const sceneGroupRef = useRef();
-  const { mouse } = useThree();
-
-  // Parallax con movimiento del mouse
-  useFrame(() => {
-    if (!sceneGroupRef.current) return;
-    const targetRotX = mouse.y * 0.1;
-    const targetRotY = mouse.x * 0.15;
-    sceneGroupRef.current.rotation.x +=
-      (targetRotX - sceneGroupRef.current.rotation.x) * 0.08;
-    sceneGroupRef.current.rotation.y +=
-      (targetRotY - sceneGroupRef.current.rotation.y) * 0.08;
-  });
-
-  // Animación de planeta + moons vinculada al scroll
-  useLayoutEffect(() => {
-    const ctx = gsap.context(() => {
-      if (!planetRef.current) return;
-
-      const tl = gsap.timeline();
-
-      // Estado inicial (planeta alejado y moons ocultas)
-      gsap.set(planetRef.current.position, { z: -2 });
-      gsap.set(planetRef.current.scale, { x: 0.8, y: 0.8, z: 0.8 });
-      moonsRef.current.forEach((moon) => {
-        if (moon) gsap.set(moon.scale, { x: 0, y: 0, z: 0 });
-      });
-
-      // Entrada del planeta
-      tl.to(
-        planetRef.current.position,
-        {
-          z: 0,
-          duration: 1.6,
-          ease: "power2.out",
-        },
-        0
-      ).to(
-        planetRef.current.scale,
-        {
-          x: 1,
-          y: 1,
-          z: 1,
-          duration: 1.6,
-          ease: "power2.out",
-        },
-        0
-      );
-
-      // Entrada escalonada de las moons (skills)
-      moonsRef.current.forEach((moon, index) => {
-        if (!moon) return;
-        tl.to(
-          moon.scale,
-          {
-            x: 1,
-            y: 1,
-            z: 1,
-            duration: 0.9,
-            ease: "back.out(1.4)",
-          },
-          0.3 + index * 0.12
-        );
-      });
-
-      // ScrollTrigger con scrub:
-      // - La animación progresa conforme el usuario hace scroll.
-      ScrollTrigger.create({
-        trigger: "#quien-soy",
-        start: "top bottom",   // inicia cuando la sección toca la parte baja
-        end: "center center",  // termina cuando el centro de la sección está centrado
-        animation: tl,
-        scrub: 1.5,            // suaviza el vínculo scroll <-> timeline
-      });
-    });
-
-    return () => ctx.revert();
-  }, []);
 
   return (
     <>
-      {/* Luces básicas de la escena */}
-      <ambientLight intensity={0.2} />
-      <directionalLight position={[3, 4, 2]} intensity={0.5} />
-      <pointLight position={[-3, -2, -3]} intensity={0.3} />
+      <ambientLight intensity={0.5} />
+      <directionalLight position={[3, 4, 2]} intensity={0.3} />
+      <pointLight position={[-3, -2, -3]} intensity={0.2} />
 
-      {/* Sistema completo (planeta + skills + estrellas) */}
-      <group ref={sceneGroupRef} scale={0.85} position={[0, -0.1, 0]}>
-        <MainPlanet ref={planetRef} />
-        <OrbitingSkills moonsRef={moonsRef} />
-        <InnerStars />
+      <group ref={groupRef} scale={0.95} position={[0, 0, 0]}>
+        <SkillLinks nodes={nodes} />
+        {nodes.map((node) => (
+          <SkillBubble
+            key={node.name}
+            name={node.name}
+            position={node.position}
+          />
+        ))}
       </group>
 
-      {/* Controles de órbita (solo rotación automática y rotación manual) */}
       <OrbitControls
         enablePan={false}
         enableZoom={false}
         autoRotate
-        autoRotateSpeed={0.5}
+        autoRotateSpeed={0.35}
       />
     </>
   );
@@ -335,15 +239,6 @@ function OrbitScene() {
 // COMPONENTE PRINCIPAL: SECCIÓN "QUIÉN SOY"
 // ============================================================================
 
-/**
- * QuienSoy
- * - Sección de texto + canvas 3D.
- * - Usa GSAP + ScrollTrigger para animar:
- *   - Título → fade in/out vertical.
- *   - Párrafos → entrada en zigzag (izquierda/derecha) + fade in/out.
- *   - Canvas → fade in/out del contenedor, mientras la escena interna
- *              tiene su propia animación de scroll (OrbitScene).
- */
 export default function QuienSoy() {
   const { t } = useLang();
   const sectionRef = useRef(null);
@@ -351,9 +246,6 @@ export default function QuienSoy() {
 
   useLayoutEffect(() => {
     const ctx = gsap.context(() => {
-      // -------------------------------
-      // Animación del TÍTULO principal
-      // -------------------------------
       const title = sectionRef.current?.querySelector(".about-title");
       if (title) {
         gsap.set(title, { autoAlpha: 0, y: 24 });
@@ -393,13 +285,8 @@ export default function QuienSoy() {
         });
       }
 
-      // -------------------------------------------------
-      // Animación de PÁRRAFOS en zigzag (izq/der) + fade
-      // -------------------------------------------------
       paragraphRefs.current.forEach((el, index) => {
         if (!el) return;
-
-        // Alternar dirección: par → izquierda, impar → derecha
         const fromX = index % 2 === 0 ? -40 : 40;
 
         gsap.set(el, {
@@ -447,10 +334,6 @@ export default function QuienSoy() {
         });
       });
 
-      // -------------------------------------------------
-      // Animación del CONTENEDOR del Canvas 3D
-      // (la escena interna tiene su propio ScrollTrigger)
-      // -------------------------------------------------
       const canvasContainer =
         sectionRef.current?.querySelector(".about-canvas");
       if (canvasContainer) {
@@ -491,7 +374,6 @@ export default function QuienSoy() {
         });
       }
 
-      // Refresco de seguridad por si el layout cambia (imágenes, etc.)
       ScrollTrigger.refresh();
     }, sectionRef);
 
@@ -505,9 +387,7 @@ export default function QuienSoy() {
       className="min-h-screen flex items-center justify-center mb-12"
     >
       <div className="max-w-6xl w-full grid md:grid-cols-2 gap-10 items-center">
-        {/* ------------------------------------------------------------------ */}
-        {/* COLUMNA DE TEXTO                                                   */}
-        {/* ------------------------------------------------------------------ */}
+        {/* TEXTO */}
         <div className="text-white font-contenido px-8 py-9 md:px-10 md:py-6">
           <h1
             className={`about-title ${styles.mainTitle} font-titulos text-4xl md:text-5xl font-bold mb-12`}
@@ -586,12 +466,10 @@ export default function QuienSoy() {
           </p>
         </div>
 
-        {/* ------------------------------------------------------------------ */}
-        {/* COLUMNA DEL CANVAS 3D                                             */}
-        {/* ------------------------------------------------------------------ */}
-        <div className="about-canvas w-full h-[360px] sm:h-[400px] md:h-[480px] overflow-visible">
+        {/* CANVAS 3D */}
+        <div className="about-canvas w-full h-[420px] sm:h-[460px] md:h-[520px] overflow-visible">
           <Canvas
-            camera={{ position: [0, 0, 5.6], fov: 45 }}
+            camera={{ position: [0, 0, 6], fov: 48 }}
             gl={{ alpha: true }}
             style={{
               background: "transparent",
@@ -601,7 +479,7 @@ export default function QuienSoy() {
             }}
           >
             <Suspense fallback={null}>
-              <OrbitScene />
+              <SkillConstellationScene />
             </Suspense>
           </Canvas>
         </div>
