@@ -37,7 +37,7 @@ export default function Proyectos() {
       setError("");
       const data = await getProjects();
 
-      // await new Promise((resolve) => setTimeout(resolve, 3000));
+      //await new Promise((resolve) => setTimeout(resolve, 3000));
       setProjects(data || []);
       setActiveIndex(0);
     } catch (e) {

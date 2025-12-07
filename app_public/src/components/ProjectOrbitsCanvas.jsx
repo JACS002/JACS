@@ -6,6 +6,7 @@ import {
   Html,
   useTexture,
   Stars,
+  useProgress,        // 👈 NUEVO
 } from "@react-three/drei";
 import { useRef, useState } from "react";
 import * as THREE from "three";
@@ -245,7 +246,7 @@ function Scene({
 
   return (
     <>
-      {/* Fondo de estrellas */}
+      {/* Fondo de estrellas opcional */}
       {/* <Stars
         radius={60}
         depth={40}
@@ -268,7 +269,7 @@ function Scene({
         lang={lang}
       />
 
-      {/* Rectángulo centrado con el nombre del proyecto */}
+      {/* Nombre del proyecto al centro cuando está hover */}
       {hoveredProject && (
         <Html
           fullscreen
@@ -287,7 +288,7 @@ function Scene({
               background: "rgba(0,0,0,0.9)",
               border: "1px solid rgba(156,101,242,0.95)",
               color: "#ffffff",
-              fontFamily: "'Poppins', system-ui, sans-serif",
+              fontFamily: "'Space Grotesk', system-ui, sans-serif",
               fontWeight: 600,
               fontSize: "clamp(1.1rem, 2.4vw, 1.5rem)",
               whiteSpace: "nowrap",
@@ -312,13 +313,59 @@ function Scene({
   );
 }
 
+// ===================== OVERLAY "CARGANDO TEXTURAS" ===========================
+function TextureLoadingOverlay({ lang }) {
+  const { active, progress } = useProgress();
+
+  if (!active) return null; // ya cargó todo
+
+  return (
+    <Html
+      fullscreen
+      style={{
+        pointerEvents: "none",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        zIndex: 30,
+      }}
+    >
+      <div
+        style={{
+          padding: "1rem 2.5rem",
+          borderRadius: "999px",
+          background: "rgba(0,0,0,0.85)",
+          border: "1px solid rgba(156,101,242,0.95)",
+          color: "#ffffff",
+          fontFamily: "'Space Grotesk', system-ui, sans-serif",
+          fontWeight: 600,
+          fontSize: "1rem",
+          boxShadow: "0 0 18px rgba(0,0,0,0.8)",
+          backdropFilter: "blur(14px)",
+          textShadow: "0 0 10px #000000",
+          display: "flex",
+          gap: "0.75rem",
+          alignItems: "center",
+        }}
+      >
+        <span>
+          {lang === "es" ? "Cargando texturas..." : "Loading textures..."}
+        </span>
+        <span style={{ opacity: 0.8 }}>
+          {Math.round(progress)}%
+        </span>
+      </div>
+    </Html>
+  );
+}
+
 // =============================== WRAPPER DEL CANVAS ==========================
 export default function ProjectOrbitsCanvas({
   projects,
   activeIndex,
   onSelect,
   lang,
-  externalHoverIndex = null, // <- nuevo prop
+  externalHoverIndex = null,
 }) {
   if (!projects || projects.length === 0) return null;
 
@@ -329,6 +376,10 @@ export default function ProjectOrbitsCanvas({
       gl={{ alpha: true, antialias: true }}
       style={{ width: "100%", height: "100%" }}
     >
+      {/* 🔵 Overlay de carga de texturas */}
+      <TextureLoadingOverlay lang={lang} />
+
+      {/* Escena principal */}
       <Scene
         projects={projects}
         activeIndex={activeIndex}
