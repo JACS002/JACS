@@ -25,6 +25,9 @@ export default function Proyectos() {
   // lista simple
   const [showList, setShowList] = useState(false);
 
+  // ✅ nuevo: saber cuándo el sistema 3D (texturas) ya está listo
+  const [is3DReady, setIs3DReady] = useState(false);
+
   const getLocalizedField = (field) => {
     if (!field) return "";
     if (typeof field === "string") return field;
@@ -35,9 +38,10 @@ export default function Proyectos() {
     try {
       setLoading(true);
       setError("");
-      const data = await getProjects();
+      setIs3DReady(false); // cuando vuelvas a pedir del backend, resetea el 3D
 
-      //await new Promise((resolve) => setTimeout(resolve, 3000));
+      const data = await getProjects();
+      // await new Promise((resolve) => setTimeout(resolve, 3000));
       setProjects(data || []);
       setActiveIndex(0);
     } catch (e) {
@@ -99,10 +103,13 @@ export default function Proyectos() {
     <section
       id="proyectos"
       ref={sectionRef}
-      className={`${styles.section} ${isVisible ? styles.sectionVisible : styles.sectionHidden}`}
+      className={`${styles.section} ${
+        isVisible ? styles.sectionVisible : styles.sectionHidden
+      }`}
     >
       {/* Canvas */}
       <div className={styles.canvasFull}>
+        {/* 🔹 Loader mientras esperamos al backend */}
         {loading && !error && (
           <div className={styles.loaderWrapper}>
             <div className={styles.loaderSpinner} />
@@ -112,14 +119,31 @@ export default function Proyectos() {
           </div>
         )}
 
+        {/* 🔹 Canvas 3D, se monta cuando ya hay proyectos */}
         {!loading && !error && projects.length > 0 && (
-          <ProjectOrbitsCanvas
-            projects={projects}
-            activeIndex={activeIndex}
-            onSelect={handleSelectSphere}
-            lang={lang}
-            externalHoverIndex={externalHoverIndex}
-          />
+          <>
+            {/* Overlay extra mientras el 3D/texturas se preparan */}
+            {!is3DReady && (
+              <div className={styles.loaderWrapper}>
+                <div className={styles.loaderSpinner} />
+                <span className={`${styles.loaderText} font-titulos font-bold text-2xl text-white`}>
+                  {lang === "es"
+                    ? "Preparando sistema planetario..."
+                    : "Preparing 3D system..."}
+                </span>
+              </div>
+            )}
+
+            <ProjectOrbitsCanvas
+              projects={projects}
+              activeIndex={activeIndex}
+              onSelect={handleSelectSphere}
+              lang={lang}
+              externalHoverIndex={externalHoverIndex}
+              // 👇 callback: el canvas avisa cuando las texturas ya están listas
+              onAssetsLoaded={() => setIs3DReady(true)}
+            />
+          </>
         )}
       </div>
 
@@ -164,7 +188,7 @@ export default function Proyectos() {
                     index === activeIndex ? styles.projectListItemActive : ""
                   }`}
                   onMouseEnter={() => setExternalHoverIndex(index)}
-                  onMouseLeave={() => setExternalHoverIndex(null)} 
+                  onMouseLeave={() => setExternalHoverIndex(null)}
                   onClick={() => handleSelectFromList(index)}
                 >
                   <span className={styles.projectBullet}>{index + 1}</span>

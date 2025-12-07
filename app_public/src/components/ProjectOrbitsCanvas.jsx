@@ -8,7 +8,7 @@ import {
   Stars,
   useProgress,        // 👈 NUEVO
 } from "@react-three/drei";
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import * as THREE from "three";
 
 // Colores fallback para las lunas (por si algún día falta textura)
@@ -313,6 +313,19 @@ function Scene({
   );
 }
 
+// =================== COMPONENTE PARA AVISAR AL PADRE ========================
+function AssetProgress({ onAssetsLoaded }) {
+  const { active } = useProgress();
+
+  useEffect(() => {
+    if (!active && onAssetsLoaded) {
+      onAssetsLoaded(); // ✅ ya cargaron texturas / assets
+    }
+  }, [active, onAssetsLoaded]);
+
+  return null; // no dibuja nada dentro del canvas
+}
+
 // ===================== OVERLAY "CARGANDO TEXTURAS" ===========================
 function TextureLoadingOverlay({ lang }) {
   const { active, progress } = useProgress();
@@ -366,6 +379,7 @@ export default function ProjectOrbitsCanvas({
   onSelect,
   lang,
   externalHoverIndex = null,
+  onAssetsLoaded,          // 👈 nuevo prop
 }) {
   if (!projects || projects.length === 0) return null;
 
@@ -376,8 +390,8 @@ export default function ProjectOrbitsCanvas({
       gl={{ alpha: true, antialias: true }}
       style={{ width: "100%", height: "100%" }}
     >
-      {/* 🔵 Overlay de carga de texturas */}
-      <TextureLoadingOverlay lang={lang} />
+      {/* 🔹 este componente solo escucha el progreso de carga */}
+      <AssetProgress onAssetsLoaded={onAssetsLoaded} />
 
       {/* Escena principal */}
       <Scene
