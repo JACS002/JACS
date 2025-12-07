@@ -850,13 +850,6 @@
 }
 
 
-.canvasFull {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  /* lo que ya tengas aquí */
-}
-
 .loaderWrapper {
   position: absolute;
   inset: 0; /* top/right/bottom/left: 0 */

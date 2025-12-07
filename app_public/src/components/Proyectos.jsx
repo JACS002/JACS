@@ -161,7 +161,7 @@ export default function Proyectos() {
                   className={`${styles.projectListItem} ${
                     index === activeIndex ? styles.projectListItemActive : ""
                   }`}
-                  onMouseEnter={() => setExternalHoverIndex(index)}
+                  onMouseEnter={() => setExternalHoverIndex(index)}   // <<< 🔥 AQUÍ
                   onMouseLeave={() => setExternalHoverIndex(null)} 
                   onClick={() => handleSelectFromList(index)}
                 >
