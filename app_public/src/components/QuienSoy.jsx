@@ -10,13 +10,13 @@ import React, {
   useRef,
   useLayoutEffect,
   useMemo,
+  useState,
 } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
-import { OrbitControls, Html } from "@react-three/drei";
+import { OrbitControls, Html, useTexture } from "@react-three/drei";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import * as THREE from "three";               // 👈 NUEVO
-import techColors from "../utils/techColors";
+import * as THREE from "three";
 import styles from "./styles/QuienSoy.module.css";
 import { useLang } from "../context/LanguageProvider";
 
@@ -26,39 +26,9 @@ gsap.registerPlugin(ScrollTrigger);
 // 3D: CONSTELACIÓN DE SKILLS
 // ============================================================================
 
-// Nodo de skill (núcleo + halo + etiqueta)
-function SkillBubble({ name, position, size = 0.3 }) {
-  const [hovered, setHovered] = React.useState(false);
-  const coreRef = useRef();
-  const haloRef = useRef();
-
-  const baseColor = techColors[name] || "#9d6bff";
-
-  // suavizamos el color base hacia blanco
-  const softColor = useMemo(() => {
-    const hex = baseColor.replace("#", "");
-    const num = parseInt(hex, 16);
-    const r = (num >> 16) & 255;
-    const g = (num >> 8) & 255;
-    const b = num & 255;
-    const mix = (c) => Math.round(c + (255 - c) * 0.25);
-    return `rgb(${mix(r)}, ${mix(g)}, ${mix(b)})`;
-  }, [baseColor]);
-
-  // pequeña animación suave de escala núcleo/halo en hover
-  useFrame(() => {
-    const targetCore = hovered ? 1.1 : 1;
-    const targetHalo = hovered ? 1.7 : 1.4;
-
-    if (coreRef.current) {
-      const s = THREE.MathUtils.lerp(coreRef.current.scale.x, targetCore, 0.12);
-      coreRef.current.scale.setScalar(s);
-    }
-    if (haloRef.current) {
-      const s = THREE.MathUtils.lerp(haloRef.current.scale.x, targetHalo, 0.12);
-      haloRef.current.scale.setScalar(s);
-    }
-  });
+// Nodo de skill: esfera con textura + etiqueta encima
+function SkillBubble({ name, position, size = 0.3, baseTexture, hoverTexture }) {
+  const [hovered, setHovered] = useState(false);
 
   return (
     <group
@@ -73,27 +43,12 @@ function SkillBubble({ name, position, size = 0.3 }) {
         document.body.style.cursor = "auto";
       }}
     >
-      {/* Halo / glow exterior */}
-      <mesh ref={haloRef}>
+      {/* Esfera con textura (sin halos ni brillos extra) */}
+      <mesh scale={hovered ? 1.05 : 1}>
         <sphereGeometry args={[size, 32, 32]} />
         <meshBasicMaterial
-          color={baseColor}
+          map={hovered ? hoverTexture : baseTexture}
           transparent
-          opacity={hovered ? 0.25 : 0.1}
-          blending={THREE.AdditiveBlending}
-          depthWrite={false}
-        />
-      </mesh>
-
-      {/* Núcleo más mate, sin look de plástico */}
-      <mesh ref={coreRef}>
-        <sphereGeometry args={[size * 0.9, 32, 32]} />
-        <meshStandardMaterial
-          color={softColor}
-          emissive={softColor}
-          emissiveIntensity={hovered ? 0.7 : 0.35}
-          roughness={0.80}      // más rugoso → menos “caricatura”
-          metalness={0.15}      // poco metal
         />
       </mesh>
 
@@ -164,11 +119,7 @@ function SkillLinks({ nodes }) {
           itemSize={3}
         />
       </bufferGeometry>
-      <lineBasicMaterial
-        color="#a5b4fc"
-        transparent
-        opacity={0.65}
-      />
+      <lineBasicMaterial color="#a5b4fc" transparent opacity={0.65} />
     </lineSegments>
   );
 }
@@ -177,6 +128,14 @@ function SkillLinks({ nodes }) {
 function SkillConstellationScene() {
   const groupRef = useRef();
   const { mouse } = useThree();
+
+  // Texturas base / hover (como en ProjectOrbits)
+  const baseTexture = useTexture("/images/projects/estrellabase.png");
+  const hoverTexture = useTexture("/images/projects/estrellahover.png");
+
+  // aseguramos espacio de color correcto
+  baseTexture.colorSpace = THREE.SRGBColorSpace;
+  hoverTexture.colorSpace = THREE.SRGBColorSpace;
 
   const nodes = useMemo(
     () => [
@@ -221,6 +180,8 @@ function SkillConstellationScene() {
             key={node.name}
             name={node.name}
             position={node.position}
+            baseTexture={baseTexture}
+            hoverTexture={hoverTexture}
           />
         ))}
       </group>
