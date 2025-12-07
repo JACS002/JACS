@@ -90,13 +90,29 @@ export default function Proyectos() {
   };
 
   const handleSelectFromList = (index) => {
+    //limpia el hover al seleccionar desde la lista
+    setExternalHoverIndex(null);
     handleSelectSphere(index);
     setShowList(false);
   };
 
   const toggleList = () => {
     if (loading || error || projects.length === 0) return;
-    setShowList((prev) => !prev);
+    setShowList((prev) => {
+      const next = !prev;
+
+      if(next && sectionRef.current){
+        sectionRef.current.scrollIntoView({
+          behavior: "smooth",
+          block: "start"
+        });
+      }
+
+      if(!next){
+        setExternalHoverIndex(null);
+      }
+      return next;
+    });
   };
 
   return (
@@ -206,6 +222,7 @@ export default function Proyectos() {
           onClose={() => {
             window.forceHideNavbar = false;
             setSelectedProject(null);
+            setExternalHoverIndex(null);
           }}
         />
       )}
