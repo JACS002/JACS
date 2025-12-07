@@ -36,6 +36,8 @@ export default function Proyectos() {
       setLoading(true);
       setError("");
       const data = await getProjects();
+
+      await new Promise((resolve) => setTimeout(resolve, 3000));
       setProjects(data || []);
       setActiveIndex(0);
     } catch (e) {
@@ -104,7 +106,7 @@ export default function Proyectos() {
         {loading && !error && (
           <div className={styles.loaderWrapper}>
             <div className={styles.loaderSpinner} />
-            <span className={styles.loaderText}>
+            <span className={`${styles.loaderText} font-titulos font-bold text-3xl text-white`}>
               {lang === "es" ? "Cargando proyectos..." : "Loading projects..."}
             </span>
           </div>
@@ -161,7 +163,7 @@ export default function Proyectos() {
                   className={`${styles.projectListItem} ${
                     index === activeIndex ? styles.projectListItemActive : ""
                   }`}
-                  onMouseEnter={() => setExternalHoverIndex(index)}   // <<< 🔥 AQUÍ
+                  onMouseEnter={() => setExternalHoverIndex(index)}
                   onMouseLeave={() => setExternalHoverIndex(null)} 
                   onClick={() => handleSelectFromList(index)}
                 >
