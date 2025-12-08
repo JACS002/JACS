@@ -16,7 +16,6 @@ import styles from "../components/styles/Hero.module.css";
 import LogoNombre from "../assets/icons/LogoNombre";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import StarBackground from "./StarBackground";
 import { useLang } from "../context/LanguageProvider";
 import { useScroll } from "../context/ScrollContext";
 
@@ -51,7 +50,7 @@ export default function Hero() {
       const halo = logoRef.current.querySelector(".logo-halo");              // halo brillante detrás del logo
       const wrapper = logoRef.current.querySelector(".logoWrapper");         // wrapper general del logo
       const bienvenida = logoRef.current.querySelector(".bienvenida");       // bloque de texto de bienvenida
-
+      const isSmallViewport = window.innerHeight < 740 || window.innerWidth < 400;
       // -----------------------------
       // Estado inicial de la animación
       // -----------------------------
@@ -65,43 +64,18 @@ export default function Hero() {
       // Timeline principal del Hero (vinculada a ScrollTrigger)
       // ----------------------------------------------------------------------
       const tl = gsap.timeline({
-        scrollTrigger: {
-          // El trigger es el propio hero (section)
-          trigger: logoRef.current,
-          start: "top top",
-
-          // Distancia extendida de scroll para tener una intro larga (tipo “timelapse”)
-          end: "+=2000",
-
-          // scrub:
-          // - vincula el avance del timeline al scroll del usuario
-          scrub: 1,
-
-          // pin:
-          // - fija el Hero en la pantalla mientras dura la animación
-          pin: true,
-
-          // refreshPriority:
-          // - indica a GSAP que calcule este ScrollTrigger primero.
-          // - útil cuando otras secciones dependen de la posición (ej. Proyectos).
-          refreshPriority: 10,
-
-          // markers:
-          // - solo para depuración visual (se pueden desactivar en producción)
-          // markers: true,
-
-          // Recalcular posiciones al hacer refresh (resize, etc.)
-          invalidateOnRefresh: true,
-
-          // Guardamos el end global en window.heroEnd (por si el resto del layout lo necesita)
-          onRefresh: (self) => {
-            window.heroEnd = self.end;
-          },
-          onUpdate: (self) => {
-            window.heroEnd = self.end;
-          },
-        },
-      });
+      scrollTrigger: {
+        trigger: logoRef.current,
+        start: "top top",
+        end: isSmallViewport ? "+=800" : "+=2000",
+        scrub: 1,
+        pin: true,       // pantallas bajas NO pin
+        invalidateOnRefresh: true,
+        refreshPriority: 10,
+        onRefresh: (self) => { window.heroEnd = self.end; },
+        onUpdate: (self) => { window.heroEnd = self.end; },
+      },
+    });
 
       // ------------------------------------------------------------------
       // 1. Caída de letras del logo (entrada individual con pequeño delay)
@@ -156,7 +130,7 @@ export default function Hero() {
       // ------------------------------------------------------------------
       tl.to(
         wrapper,
-        { y: "-20vh", duration: 3, ease: "power1.inOut" },
+        { y: isSmallViewport ? "-30vh" : "-20vh", duration: 3, ease: "power1.inOut" },
         "+=0.5" // pequeño delay después del glow
       );
 
