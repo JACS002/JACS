@@ -26,12 +26,37 @@ gsap.registerPlugin(ScrollTrigger);
 // 3D: CONSTELACIÓN DE SKILLS
 // ============================================================================
 
-// Nodo de skill: esfera con textura + etiqueta encima
+// Nodo de skill: esfera con cross-fade de texturas + etiqueta
 function SkillBubble({ name, position, size = 0.3, baseTexture, hoverTexture }) {
   const [hovered, setHovered] = useState(false);
 
+  const groupRef = useRef();
+  const blendRef = useRef(0);          // 0 = solo base, 1 = solo hover
+  const baseMatRef = useRef();
+  const hoverMatRef = useRef();
+
+  useFrame(() => {
+    const target = hovered ? 1 : 0;
+    // qué tan rápido se mezcla (ajusta 0.12 si quieres más/menos suave)
+    blendRef.current = THREE.MathUtils.lerp(blendRef.current, target, 0.12);
+
+    const b = 1 - blendRef.current; // opacidad base
+    const h = blendRef.current;     // opacidad hover
+
+    if (baseMatRef.current) baseMatRef.current.opacity = b;
+    if (hoverMatRef.current) hoverMatRef.current.opacity = h;
+
+    // pequeño scale suave en hover
+    if (groupRef.current) {
+      const targetScale = 1 + blendRef.current * 0.06; // hasta ~1.06
+      const s = THREE.MathUtils.lerp(groupRef.current.scale.x, targetScale, 0.12);
+      groupRef.current.scale.setScalar(s);
+    }
+  });
+
   return (
     <group
+      ref={groupRef}
       position={position}
       onPointerOver={(e) => {
         e.stopPropagation();
@@ -43,12 +68,26 @@ function SkillBubble({ name, position, size = 0.3, baseTexture, hoverTexture }) 
         document.body.style.cursor = "auto";
       }}
     >
-      {/* Esfera con textura (sin halos ni brillos extra) */}
-      <mesh scale={hovered ? 1.05 : 1}>
+      {/* Esfera base */}
+      <mesh>
         <sphereGeometry args={[size, 32, 32]} />
         <meshBasicMaterial
-          map={hovered ? hoverTexture : baseTexture}
+          ref={baseMatRef}
+          map={baseTexture}
           transparent
+          depthWrite={false}
+        />
+      </mesh>
+
+      {/* Esfera hover (encima de la base) */}
+      <mesh>
+        <sphereGeometry args={[size, 32, 32]} />
+        <meshBasicMaterial
+          ref={hoverMatRef}
+          map={hoverTexture}
+          transparent
+          opacity={0}      // empieza invisible
+          depthWrite={false}
         />
       </mesh>
 
@@ -67,7 +106,7 @@ function SkillBubble({ name, position, size = 0.3, baseTexture, hoverTexture }) 
             color: "#ffffff",
             fontFamily: "'Space Grotesk', system-ui, sans-serif",
             fontWeight: 600,
-            fontSize: "0.55rem",
+            fontSize: "1.7rem",
             letterSpacing: "0.09em",
             textTransform: "uppercase",
             whiteSpace: "nowrap",
@@ -81,6 +120,7 @@ function SkillBubble({ name, position, size = 0.3, baseTexture, hoverTexture }) 
     </group>
   );
 }
+
 
 // Líneas que conectan los nodos de la constelación
 function SkillLinks({ nodes }) {
@@ -129,29 +169,29 @@ function SkillConstellationScene() {
   const groupRef = useRef();
   const { mouse } = useThree();
 
-  // Texturas base / hover (como en ProjectOrbits)
-  const baseTexture = useTexture("/images/projects/estrellabase.png");
-  const hoverTexture = useTexture("/images/projects/estrellahover.png");
+  const baseTexture = useTexture("/images/projects/estrellabase.webp");
+  const hoverTexture = useTexture("/images/projects/estrellahover.webp");
 
-  // aseguramos espacio de color correcto
   baseTexture.colorSpace = THREE.SRGBColorSpace;
   hoverTexture.colorSpace = THREE.SRGBColorSpace;
 
+  // 🔹 Nodos más separados y mejor distribuidos en X / Y / Z
   const nodes = useMemo(
     () => [
-      { name: "React",      position: [ 1.9,  0.9,  0.3] },
-      { name: "Node.js",    position: [ 1.0, -0.1,  0.9] },
-      { name: "Express",    position: [ 0.1, -0.7,  0.4] },
-      { name: "MongoDB",    position: [-1.0, -0.3,  0.1] },
-      { name: "PostgreSQL", position: [-1.7,  0.4,  0.3] },
-      { name: "Python",     position: [-1.0,  1.1,  0.7] },
-      { name: "SQL",        position: [ 0.0,  1.6,  0.4] },
-      { name: "Docker",     position: [ 1.4,  1.4, -0.1] },
-      { name: "APIRest",    position: [ 0.7,  0.7, -0.9] },
-      { name: "Git",        position: [ 2.1,  0.1, -0.6] },
+      { name: "React",      position: [-2.2, -1.6,  0.2] },
+      { name: "Node.js",    position: [-0.8, -0.9,  1.0] },
+      { name: "Express",    position: [ 1.0, -0.3, -0.7] },
+      { name: "MongoDB",    position: [ 2.3, -1.2,  0.4] },
+      { name: "PostgreSQL", position: [ 2.5,  0.7,  0.9] },
+      { name: "Python",     position: [ 0.8,  1.5, -0.5] },
+      { name: "SQL",        position: [-1.4,  2.0,  0.4] },
+      { name: "Docker",     position: [-2.6,  0.4, -1.0] },
+      { name: "APIRest",    position: [ 0.0,  0.1,  1.4] },
+      { name: "Git",        position: [-0.5, -2.2, -0.6] },
     ],
     []
   );
+
 
   useFrame((_, delta) => {
     if (!groupRef.current) return;
@@ -173,7 +213,8 @@ function SkillConstellationScene() {
       <directionalLight position={[3, 4, 2]} intensity={0.3} />
       <pointLight position={[-3, -2, -3]} intensity={0.2} />
 
-      <group ref={groupRef} scale={0.95} position={[0, 0, 0]}>
+      {/* ↑ aquí aumentamos el scale para separar más las estrellas */}
+      <group ref={groupRef} scale={1.4} position={[0, 0, 0]}>
         <SkillLinks nodes={nodes} />
         {nodes.map((node) => (
           <SkillBubble
@@ -428,9 +469,9 @@ export default function QuienSoy() {
         </div>
 
         {/* CANVAS 3D */}
-        <div className="about-canvas w-full h-[420px] sm:h-[460px] md:h-[520px] overflow-visible">
+        <div className="about-canvas w-full h-[520px] sm:h-[580px] md:h-[700px] lg:h-[800px] overflow-visible">
           <Canvas
-            camera={{ position: [0, 0, 6], fov: 48 }}
+            camera={{ position: [0, 0, 14], fov: 50 }}
             gl={{ alpha: true }}
             style={{
               background: "transparent",
