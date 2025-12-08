@@ -12,7 +12,7 @@ const translations = {
 
     // HERO
     "hero.title": "Hi, I'm JACS",
-    "hero.tagline.fs": "Full stack development",
+    "hero.tagline.fs": "Full stack developer",
     "hero.tagline.dm": "Data mining",
     "hero.p1":
       "Computer Science Engineer focused on building modern interfaces with React, solid backends with Node.js and well-designed APIs.",
@@ -109,7 +109,7 @@ const translations = {
 
     // HERO
     "hero.title": "Hola, soy JACS",
-    "hero.tagline.fs": "Desarrollo full stack",
+    "hero.tagline.fs": "Desarrollador full stack",
     "hero.tagline.dm": "Minería de datos",
     "hero.p1":
       "Ingeniero en Ciencias de la Computación, enfocado en construir interfaces modernas con React, backends sólidos con Node.js y APIs bien diseñadas.",

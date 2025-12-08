@@ -10,7 +10,7 @@
   z-index: 50;
   display: flex;
   justify-content: center;
-  pointer-events: none; /* el contenido interior activa los eventos */
+  pointer-events: none;
   transition: opacity 0.35s ease;
 }
 
@@ -40,14 +40,13 @@
 
 .headerMetaSmall {
   font-family: "Space Grotesk", system-ui, -apple-system, sans-serif;
-  font-size: 0.9rem;
+  font-size: clamp(0.65rem, 1.5vw, 0.9rem);
   letter-spacing: 0.21em;
   text-transform: uppercase;
   color: rgba(255, 255, 255, 0.55);
 }
 
 /* Logo centrado */
-
 
 .headerLogoButton {
   position: absolute; 
@@ -57,20 +56,17 @@
   transform-origin: center;
   border: none;
   background: transparent;
-  /* padding: 0.35rem; */
   cursor: pointer;
   transition: transform 0.18s ease;
 }
 
-/* SOLO escala, sin glow ni fondo */
 .headerLogoButton:hover {
   transform: translateX(-50%) translateY(-50%) scale(1.06);
 }
 
 .headerLogo {
-  height: 76px;
+  height: 4rem;
 }
-
 
 .headerRight {
   display: flex;
@@ -85,7 +81,7 @@
   border-radius: 999px;
   border: 1px solid rgba(0, 255, 255, 0.5);
   background: rgba(5, 15, 30, 0.85);
-  padding: 0.55rem 1.1rem;
+  padding: clamp(0.35rem, 0.8vh, 0.55rem) clamp(0.7rem, 1.5vw, 1.1rem);
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
@@ -93,7 +89,7 @@
   overflow: hidden;
   font-family: "Space Grotesk", system-ui, -apple-system, sans-serif;
   text-transform: uppercase;
-  font-size: 0.9rem;
+  font-size: clamp(0.65rem, 1.3vw, 0.9rem);
   letter-spacing: 0.25em;
   color: rgba(220, 255, 255, 0.95);
   box-shadow: 0 0 14px rgba(0, 255, 255, 0.35);
@@ -139,8 +135,8 @@
 .visorToggleDot {
   position: relative;
   z-index: 1;
-  width: 7px;
-  height: 7px;
+  width: clamp(5px, 1vh, 7px);
+  height: clamp(5px, 1vh, 7px);
   border-radius: 999px;
   background: radial-gradient(circle at center, #00ffff, #0080ff);
   box-shadow: 0 0 12px rgba(0, 255, 255, 0.9);
@@ -166,8 +162,6 @@
   pointer-events: auto;
 }
 
-/* Fondo POV + viñeta
-   -> MUCHO MÁS TRANSPARENTE para ver el exterior */
 .visorBackdrop {
   position: absolute;
   inset: 0;
@@ -176,7 +170,6 @@
     rgba(30, 41, 59, 0.4),
     rgba(2, 6, 23, 0.9) 90%
   );
-  /* si quieres aún más transparencia, baja los alfa de arriba */
   background-size: cover;
   pointer-events: none;
 }
@@ -185,18 +178,16 @@
   position: relative;
   z-index: 1;
   height: 100%;
-  padding: clamp(1.5rem, 4vw, 3rem);
+  padding: clamp(1rem, 3vh, 3rem) clamp(0.8rem, 3vw, 2rem);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
 }
 
-/* Vidrio del casco: más claro y transparente */
-
 .visorFrame::before {
   content: "";
   position: absolute;
-  inset: clamp(0.8rem, 3vw, 1.4rem);
+  inset: clamp(0.5rem, 2vh, 1.4rem);
   border-radius: 999px 999px 45% 45%;
   background:
     radial-gradient(
@@ -230,8 +221,8 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding-inline: clamp(1.2rem, 7vw, 4rem);
-  padding-top: clamp(1rem, 3vw, 1.8rem);
+  padding-inline: clamp(0.8rem, 5vw, 4rem);
+  padding-top: clamp(0.6rem, 2vh, 1.8rem);
 }
 
 .hudMetaBlock {
@@ -242,7 +233,7 @@
 
 .hudLabel {
   font-family: "Space Grotesk", system-ui, -apple-system, sans-serif;
-  font-size: 1rem;
+  font-size: clamp(0.75rem, 1.5vw, 1rem);
   letter-spacing: 0.32em;
   text-transform: uppercase;
   color: rgba(148, 163, 184, 0.95);
@@ -250,13 +241,13 @@
 
 .hudSubLabel {
   font-family: "Space Grotesk", system-ui, -apple-system, sans-serif;
-  font-size: 0.85rem;
+  font-size: clamp(0.65rem, 1.3vw, 0.85rem);
   letter-spacing: 0.22em;
   text-transform: uppercase;
   color: rgba(148, 163, 184, 0.75);
 }
 
-/* Switch de idioma (reutilizable) */
+/* Switch de idioma */
 
 .langSwitch {
   position: relative;
@@ -266,19 +257,18 @@
   border-radius: 999px;
   border: 1px solid rgba(148, 163, 184, 0.7);
   background: rgba(15, 23, 42, 0.9);
-  padding: 0.35rem 0.65rem;
+  padding: clamp(0.25rem, 0.6vh, 0.35rem) clamp(0.45rem, 1vw, 0.65rem);
   cursor: pointer;
   font-family: "Space Grotesk", system-ui, -apple-system, sans-serif;
 }
 
 .langLabel {
-  font-size: 0.85rem;
+  font-size: clamp(0.65rem, 1.2vw, 0.85rem);
   letter-spacing: 0.2em;
   text-transform: uppercase;
   color: rgba(148, 163, 184, 0.7);
 }
 
-/* Para que se note MÁS el cambio de idioma */
 .langActive {
   color: #f9fafb;
   text-shadow: 0 0 10px rgba(56, 189, 248, 0.8);
@@ -286,8 +276,8 @@
 
 .langTrack {
   position: relative;
-  width: 38px;
-  height: 20px;
+  width: clamp(30px, 5vw, 38px);
+  height: clamp(16px, 3vh, 20px);
   border-radius: 999px;
   border: 1px solid rgba(148, 163, 184, 0.7);
   background: #020617;
@@ -297,8 +287,8 @@
 .langThumb {
   position: absolute;
   top: 2px;
-  width: 15px;
-  height: 15px;
+  width: clamp(12px, 2vw, 15px);
+  height: clamp(12px, 2vh, 15px);
   border-radius: 999px;
   background: radial-gradient(circle at center, #22d3ee, #0ea5e9);
   box-shadow: 0 0 12px rgba(34, 211, 238, 0.9);
@@ -310,10 +300,10 @@
 }
 
 .thumbRight {
-  transform: translateX(20px);
+  transform: translateX(clamp(16px, 3vw, 20px));
 }
 
-/* Centro del visor: navegación */
+/* Centro del visor */
 
 .visorCenter {
   flex: 1;
@@ -321,14 +311,14 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 2rem;
+  gap: clamp(1.2rem, 3vh, 2rem);
   text-align: center;
-  padding-inline: clamp(1rem, 7vw, 4rem);
+  padding-inline: clamp(1rem, 5vw, 4rem);
 }
 
 .visorTitle {
   font-family: "Space Grotesk", system-ui, -apple-system, sans-serif;
-  font-size: clamp(1.5rem, 2.7vw, 2rem);
+  font-size: clamp(1.2rem, 3vw, 2rem);
   letter-spacing: 0.25em;
   text-transform: uppercase;
   color: #e2e8f0;
@@ -336,7 +326,7 @@
 
 .visorSubtitle {
   max-width: 460px;
-  font-size: 1.05rem;
+  font-size: clamp(0.85rem, 1.8vw, 1.05rem);
   color: rgba(148, 163, 184, 0.9);
 }
 
@@ -344,12 +334,12 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 1rem;
+  gap: clamp(0.6rem, 1.5vh, 1rem);
   width: 100%;
 }
 
 .visorNavItem {
-  flex: 0 1 160px;   /* <— mismo ancho para todos */
+  flex: 0 1 160px;
   display: flex;
   justify-content: center;
   min-width: 150px;
@@ -360,7 +350,7 @@
   border-radius: 999px;
   border: 1px solid rgba(148, 163, 184, 0.6);
   background: radial-gradient(circle at top, rgba(15, 23, 42, 0.9), #020617);
-  padding: 0.9rem 1.2rem;
+  padding: clamp(0.6rem, 1.2vh, 0.9rem) clamp(0.8rem, 2vw, 1.2rem);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -371,7 +361,7 @@
   transition: border-color 0.18s ease, box-shadow 0.18s ease,
     transform 0.18s ease, background 0.18s ease;
   color: #e2e8f0;
-  font-size: 1rem;
+  font-size: clamp(0.8rem, 1.5vw, 1rem);
   letter-spacing: 0.16em;
 }
 
@@ -392,7 +382,7 @@
 }
 
 .visorNavCode {
-  font-size: 0.82rem;
+  font-size: clamp(0.7rem, 1.3vw, 0.82rem);
   letter-spacing: 0.22em;
   text-transform: uppercase;
   color: rgba(148, 163, 184, 0.9);
@@ -401,168 +391,20 @@
 /* Footer del visor */
 
 .visorFooter {
-  padding-inline: clamp(1.2rem, 7vw, 4rem);
-  padding-bottom: clamp(1.2rem, 3vw, 2rem);
+  padding-inline: clamp(0.8rem, 5vw, 4rem);
+  padding-bottom: clamp(0.8rem, 2vh, 2rem);
   display: flex;
   justify-content: center;
 }
 
 .visorHint {
-  font-size: 0.85rem;
+  font-size: clamp(0.7rem, 1.3vw, 0.85rem);
   letter-spacing: 0.18em;
   text-transform: uppercase;
   color: rgba(148, 163, 184, 0.8);
 }
 
-/* ===========================================================
-   RESPONSIVE
-   =========================================================== */
-
-/* Tablets y móviles medianos */
-@media (max-width: 768px) {
-  /* HEADER -------------------------------------------------- */
-  .headerInner {
-    padding: 0.6rem 0.9rem;
-  }
-
-  .headerLogo {
-    height: 52px;
-  }
-
-  .headerLogoButton {
-    top: 60%; /* logo un poco más arriba para no chocar con el visor */
-  }
-
-  .headerRight {
-    position: absolute;
-    top: 0.5rem;
-    right: 0.5rem;
-  }
-
-  .visorToggle {
-    padding: 0.32rem 0.7rem;
-    font-size: 0.6rem;
-    letter-spacing: 0.18em;
-  }
-
-  .visorToggleLabel {
-    font-size: 0.63rem;
-  }
-
-  .visorToggleDot {
-    width: 5px;
-    height: 5px;
-    box-shadow: 0 0 6px rgba(0, 255, 255, 0.5);
-  }
-
-  /* VISOR --------------------------------------------------- */
-  .visorFrame {
-    padding: 1.25rem 0.9rem;
-  }
-
-  .visorFrame::before {
-    inset: 0.7rem 0.7rem 1rem;           /* casco un poco más estrecho */
-    border-radius: 999px 999px 55% 55%;  /* curva más pronunciada */
-  }
-
-  .visorCenter {
-    gap: 1.6rem;
-    padding-inline: 1.2rem;
-    padding-top: 1.2rem;                 /* espacio entre logo y switch */
-  }
-
-  .langSwitchCenter {
-    transform: scale(0.95);
-    margin-bottom: 0.8rem;
-  }
-
-  .visorTitle {
-    font-size: clamp(1.2rem, 4vw, 1.4rem);
-    letter-spacing: 0.18em;
-  }
-
-  .visorSubtitle {
-    max-width: 90%;
-    font-size: 0.9rem;
-  }
-
-  .visorNavList {
-    gap: 0.8rem;
-  }
-
-  .visorNavItem {
-    flex: 1 1 100%;     /* cada botón ocupa el ancho */
-    min-width: 0;
-  }
-
-  .visorNavButton {
-    padding: 0.7rem 1rem;
-    font-size: 0.9rem;
-  }
-
-  .visorHelmetMeta {
-    margin-top: 1.4rem;
-  }
-}
-
-/* Móviles pequeños (320–400px aprox.) */
-@media (max-width: 480px) {
-  /* HEADER -------------------------------------------------- */
-  .headerInner {
-    padding: 0.4rem 0.7rem;
-  }
-
-  .headerLogo {
-    height: 44px;
-  }
-
-  .headerLogoButton {
-    top: 52%;            /* un poquito más arriba en pantallas muy pequeñas */
-  }
-
-  /* VISOR --------------------------------------------------- */
-  .visorFrame {
-    padding: 1rem 0.7rem;
-  }
-
-  .visorFrame::before {
-    inset: 0.55rem 0.5rem 0.8rem;
-  }
-
-  .visorCenter {
-    gap: 1.3rem;
-    padding-inline: 0.9rem;
-    padding-top: 1.3rem;
-  }
-
-  .langSwitchCenter {
-    transform: scale(0.85);
-  }
-
-  .visorTitle {
-    font-size: 1rem;
-    letter-spacing: 0.14em;
-  }
-
-  .visorSubtitle {
-    font-size: 0.8rem;
-  }
-
-  .visorNavButton {
-    padding: 0.55rem 0.85rem;
-    font-size: 0.8rem;
-  }
-
-  .visorHint {
-    font-size: 0.7rem;
-    letter-spacing: 0.14em;
-  }
-}
-
-
-/* ===========================================================
-   SWITCH DE IDIOMA CENTRADO SOBRE EL TÍTULO
-   =========================================================== */
+/* Switch de idioma centrado */
 
 .langSwitchCenter {
   position: relative;
@@ -571,8 +413,8 @@
   gap: 0.5rem;
   border-radius: 999px;
   border: 1px solid rgba(148, 163, 184, 0.5);
-  padding: 0.35rem 0.8rem;
-  margin-bottom: 1rem;
+  padding: clamp(0.25rem, 0.6vh, 0.35rem) clamp(0.6rem, 1.5vw, 0.8rem);
+  margin-bottom: clamp(0.6rem, 1.5vh, 1rem);
   background: rgba(15, 23, 42, 0.65);
   backdrop-filter: blur(6px);
   cursor: pointer;
@@ -584,7 +426,7 @@
   background: rgba(15, 23, 42, 0.8);
 }
 
-/* Meta del casco al final de las secciones */
+/* Meta del casco */
 
 .visorHelmetMeta {
   position: relative;
@@ -593,12 +435,11 @@
   flex-direction: column;
   align-items: center;
   gap: 0.15rem;
-  margin-top: 1.8rem;
-  margin-bottom: 0.9rem;
+  margin-top: clamp(1rem, 2vh, 1.8rem);
+  margin-bottom: clamp(0.5rem, 1vh, 0.9rem);
 }
 
 .visorHelmetMeta .hudLabel {
-  /* reutiliza tipografía del HUD pero centrado */
   text-align: center;
 }
 
@@ -606,32 +447,203 @@
   text-align: center;
 }
 
-/* Tablets y móviles medianos */
-@media (max-width: 768px) {
-  .fixedHeader {
-    top: 0.2rem;            /* antes 0 -> ahora un poco más abajo */
-  }
+/* ===========================================================
+   RESPONSIVE: ALTURA PEQUEÑA (HORIZONTAL)
+   =========================================================== */
 
+@media (max-height: 500px) {
   .headerInner {
-    padding: 0.8rem 0.9rem; /* un pelín más alto */
+    padding: 0.4rem 1rem;
   }
 
-  .headerLogoButton {
-    top: 65%;               /* antes ~55%, baja el logo dentro del header */
+  .headerLogo {
+    height: clamp(40px, 7vh, 52px);
+  }
+
+  .visorToggle {
+    padding: 0.25rem 0.6rem;
+    font-size: 0.65rem;
+  }
+
+  .visorFrame {
+    padding: 0.8rem 1rem;
+  }
+
+  .visorHudTop {
+    padding-inline: 1rem;
+    padding-top: 0.5rem;
+  }
+
+  .visorCenter {
+    gap: 0.8rem;
+    padding-inline: 1rem;
+  }
+
+  .visorTitle {
+    font-size: clamp(1rem, 3vw, 1.3rem);
+  }
+
+  .visorSubtitle {
+    font-size: 0.75rem;
+    max-width: 90%;
+  }
+
+  .visorNavList {
+    gap: 0.5rem;
+  }
+
+  .visorNavButton {
+    padding: 0.45rem 0.7rem;
+    font-size: 0.75rem;
+  }
+
+  .visorHelmetMeta {
+    margin-top: 0.6rem;
+    margin-bottom: 0.4rem;
+  }
+
+  .hudLabel {
+    font-size: 0.7rem;
+  }
+
+  .hudSubLabel {
+    font-size: 0.6rem;
   }
 }
 
-/* Móviles pequeños (muy estrechos) */
-@media (max-width: 480px) {
-  .fixedHeader {
-    top: 1rem;            /* baja aún más todo el conjunto */
-  }
+/* ===========================================================
+   RESPONSIVE: ANCHO MEDIANO (TABLETS)
+   =========================================================== */
 
+@media (max-width: 768px) {
   .headerInner {
-    padding: 0.9rem 0.7rem; 
+    padding: 0.6rem 0.9rem;
   }
 
   .headerLogoButton {
-    top: 60%;               /* logo aún un poco más abajo */
+    top: 60%;
+  }
+
+  .headerRight {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+  }
+
+  .visorNavItem {
+    flex: 1 1 100%;
+    min-width: 0;
+  }
+}
+
+/* ===========================================================
+   RESPONSIVE: MÓVILES PEQUEÑOS
+   =========================================================== */
+
+@media (max-width: 480px) {
+  .headerInner {
+    padding: 0.4rem 0.7rem;
+  }
+
+  .headerLogoButton {
+    top: 110%;
+  }
+
+  .headerLogo {
+    height: 3rem;
+  }
+
+  .visorFrame::before {
+    inset: 0.55rem 0.5rem 0.8rem;
+  }
+
+  .langSwitchCenter {
+    transform: scale(0.85);
+  }
+}
+
+/* ===========================================================
+   RESPONSIVE: ALTURA MUY PEQUEÑA + ANCHO PEQUEÑO (HORIZONTAL MÓVIL)
+   =========================================================== */
+
+@media (max-width: 768px) and (max-height: 450px) {
+  .fixedHeader {
+    top: 0;
+  }
+
+  .headerInner {
+    padding: 0.3rem 0.6rem;
+  }
+
+  .headerLogo {
+    height: 36px;
+  }
+
+  .headerMetaSmall {
+    font-size: 0.55rem;
+  }
+
+  .visorToggle {
+    padding: 0.2rem 0.5rem;
+    font-size: 0.55rem;
+  }
+
+  .visorToggleDot {
+    width: 4px;
+    height: 4px;
+  }
+
+  .visorFrame {
+    padding: 0.5rem 0.8rem;
+  }
+
+  .visorHudTop {
+    padding-inline: 0.8rem;
+    padding-top: 0.3rem;
+  }
+
+  .visorCenter {
+    gap: 0.5rem;
+    padding-inline: 0.8rem;
+  }
+
+  .visorTitle {
+    font-size: 0.9rem;
+    letter-spacing: 0.14em;
+  }
+
+  .visorSubtitle {
+    font-size: 0.65rem;
+    display: none; /* ocultar en espacios muy limitados */
+  }
+
+  .visorNavList {
+    gap: 0.4rem;
+  }
+
+  .visorNavButton {
+    padding: 0.35rem 0.55rem;
+    font-size: 0.65rem;
+  }
+
+  .visorHelmetMeta {
+    margin-top: 0.4rem;
+    margin-bottom: 0.2rem;
+  }
+
+  .hudLabel {
+    font-size: 0.6rem;
+  }
+
+  .hudSubLabel {
+    font-size: 0.55rem;
+  }
+
+  .visorFooter {
+    padding-bottom: 0.5rem;
+  }
+
+  .visorHint {
+    font-size: 0.6rem;
   }
 }

@@ -8,7 +8,7 @@ module.exports = {
     extend: {
       fontFamily: {
         titulos: ['Space Grotesk', 'sans-serif'],
-        contenido: ['system-ui', 'sans-serif'],
+        contenido: ['Space Grotesk','system-ui', 'sans-serif'],
       },
       colors: {
         dark: '#0a0a0a',        // fondo oscuro

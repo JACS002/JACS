@@ -156,7 +156,7 @@ export default function Hero() {
       // ------------------------------------------------------------------
       tl.to(
         wrapper,
-        { y: -200, duration: 3, ease: "power1.inOut" },
+        { y: "-20vh", duration: 3, ease: "power1.inOut" },
         "+=0.5" // pequeño delay después del glow
       );
 
@@ -237,9 +237,6 @@ export default function Hero() {
 
   return (
     <section id="inicio" className={styles.heroSection} ref={logoRef}>
-      {/* Fondo de partículas animadas */}
-      {/* <StarBackground /> */}
-
       {/* Wrapper principal del logo */}
       <div className={`${styles.logoWrapper} logoWrapper`}>
         {/* Contenedor del SVG del logo (cada letra tiene clase .logo-letra) */}
