@@ -9,16 +9,24 @@ import { Stars } from "@react-three/drei";
 export default function StarBackground() {
   const mouseRef = useRef({ x: 0, y: 0 });
   const scrollRef = useRef({ y: 0 });
-  const [isTouch, setIsTouch] = useState(false);
+  const [screenSize, setScreenSize] = useState({ width: 0, height: 0 });
 
-  // Detectar dispositivo táctil
+  // Detectar tamaño de pantalla
   useEffect(() => {
-    const touch =
-      "ontouchstart" in window || navigator.maxTouchPoints > 0;
-    setIsTouch(touch);
+    const updateSize = () => {
+      setScreenSize({
+        width: window.innerWidth,
+        height: window.innerHeight,
+      });
+    };
+    
+    updateSize();
+    window.addEventListener("resize", updateSize);
+    
+    return () => window.removeEventListener("resize", updateSize);
   }, []);
 
-  // Eventos globales: scroll + mouse (solo desktop)
+  // Eventos globales: scroll + mouse (siempre habilitado)
   useEffect(() => {
     const handleScroll = () => {
       if (!scrollRef.current) return;
@@ -29,28 +37,22 @@ export default function StarBackground() {
         0;
     };
 
-    window.addEventListener("scroll", handleScroll, { passive: true });
+    const handleMouseMove = (e) => {
+      mouseRef.current.x = (e.clientX / window.innerWidth) * 2 - 1;
+      mouseRef.current.y = (e.clientY / window.innerHeight) * 2 - 1;
+    };
 
-    let handleMouseMove;
-    if (!isTouch) {
-      // Desktop: parallax con mouse
-      handleMouseMove = (e) => {
-        mouseRef.current.x = (e.clientX / window.innerWidth) * 2 - 1;
-        mouseRef.current.y = (e.clientY / window.innerHeight) * 2 - 1;
-      };
-      window.addEventListener("mousemove", handleMouseMove);
-    }
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    window.addEventListener("mousemove", handleMouseMove);
 
     // inicial
     handleScroll();
 
     return () => {
       window.removeEventListener("scroll", handleScroll);
-      if (handleMouseMove) {
-        window.removeEventListener("mousemove", handleMouseMove);
-      }
+      window.removeEventListener("mousemove", handleMouseMove);
     };
-  }, [isTouch]);
+  }, []);
 
   return (
     <Canvas
@@ -69,12 +71,8 @@ export default function StarBackground() {
     >
       <color attach="background" args={["#02030a"]} />
 
-      <CameraRig
-        mouseRef={mouseRef}
-        scrollRef={scrollRef}
-        isTouch={isTouch}
-      />
-      <StarField scrollRef={scrollRef} />
+      <CameraRig mouseRef={mouseRef} scrollRef={scrollRef} />
+      <StarField scrollRef={scrollRef} screenSize={screenSize} />
     </Canvas>
   );
 }
@@ -82,7 +80,7 @@ export default function StarBackground() {
 // -----------------------------------------------------------------------------
 // Cámara: pequeño parallax + ligera respuesta al scroll
 // -----------------------------------------------------------------------------
-function CameraRig({ mouseRef, scrollRef, isTouch }) {
+function CameraRig({ mouseRef, scrollRef }) {
   const { camera } = useThree();
 
   useFrame(() => {
@@ -97,13 +95,9 @@ function CameraRig({ mouseRef, scrollRef, isTouch }) {
     const targetZ = baseZ - warp * 1.2;
     const targetY = warp * 0.6;
 
-    let mouseX = 0;
-    let mouseY = 0;
-
-    if (!isTouch) {
-      mouseX = mouseRef.current.x * 0.8;
-      mouseY = mouseRef.current.y * 0.6;
-    }
+    // Parallax del mouse (siempre habilitado, será 0,0 si no hay mouse)
+    const mouseX = mouseRef.current.x * 0.8;
+    const mouseY = mouseRef.current.y * 0.6;
 
     // mezcla suave
     camera.position.x += (mouseX - camera.position.x) * 0.06;
@@ -119,9 +113,43 @@ function CameraRig({ mouseRef, scrollRef, isTouch }) {
 // -----------------------------------------------------------------------------
 // Campo estelar: rotación suave según velocidad de scroll
 // -----------------------------------------------------------------------------
-function StarField({ scrollRef }) {
+function StarField({ scrollRef, screenSize }) {
   const groupRef = useRef();
   const lastScroll = useRef(0);
+
+  // Calcular densidad de estrellas según tamaño de pantalla
+  const getStarConfig = () => {
+    const width = screenSize.width || 1920;
+    
+    // Móvil pequeño
+    if (width <= 640) {
+      return {
+        deep: { count: 3000, radius: 180, depth: 90 },
+        mid: { count: 1500, radius: 100, depth: 50 },
+      };
+    }
+    // Tablet / laptop pequeño
+    if (width <= 1024) {
+      return {
+        deep: { count: 4500, radius: 200, depth: 100 },
+        mid: { count: 2200, radius: 120, depth: 60 },
+      };
+    }
+    // Desktop / laptop grande
+    if (width <= 1920) {
+      return {
+        deep: { count: 6000, radius: 220, depth: 110 },
+        mid: { count: 3000, radius: 140, depth: 70 },
+      };
+    }
+    // Pantallas muy grandes (4K+)
+    return {
+      deep: { count: 8000, radius: 250, depth: 120 },
+      mid: { count: 4000, radius: 160, depth: 80 },
+    };
+  };
+
+  const config = getStarConfig();
 
   useFrame(() => {
     const scrollY = scrollRef.current?.y || 0;
@@ -145,9 +173,9 @@ function StarField({ scrollRef }) {
     <group ref={groupRef}>
       {/* Capa profunda */}
       <Stars
-        radius={180}
-        depth={90}
-        count={3000}
+        radius={config.deep.radius}
+        depth={config.deep.depth}
+        count={config.deep.count}
         factor={4.2}
         saturation={0.2}
         speed={0.1}
@@ -155,9 +183,9 @@ function StarField({ scrollRef }) {
       />
       {/* Capa media */}
       <Stars
-        radius={100}
-        depth={50}
-        count={1500}
+        radius={config.mid.radius}
+        depth={config.mid.depth}
+        count={config.mid.count}
         factor={2.4}
         saturation={0.4}
         speed={0.15}

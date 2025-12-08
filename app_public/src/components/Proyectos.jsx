@@ -193,10 +193,7 @@ export default function Proyectos() {
                 ${styles.mainTitle} 
                 font-titulos 
                 font-bold 
-                text-3xl
-                sm:text-4xl
-                md:text-5xl
-                lg:text-6xl
+                text-4xl md:text-5xl sm:text-3xl
               `}
             >
               {t("projects.title")}

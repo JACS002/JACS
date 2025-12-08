@@ -392,7 +392,7 @@ export default function QuienSoy() {
         {/* TEXTO */}
         <div className="text-white font-contenido px-8 py-9 md:px-10 md:py-6">
           <h1
-            className={`about-title ${styles.mainTitle} font-titulos text-4xl md:text-5xl font-bold mb-12`}
+            className={`about-title ${styles.mainTitle} font-titulos text-4xl md:text-5xl sm:text-3xl font-bold mb-12`}
           >
             {t("about.title")}
           </h1>

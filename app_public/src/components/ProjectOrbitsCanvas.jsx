@@ -266,32 +266,34 @@ function SaturnMoons({
                 )}
 
                 {/* Etiqueta grande sobre cada luna */}
-                {hoveredIndex === null && (<Html
-                  distanceFactor={10}
-                  position={[0, 0.75, 0]}
-                  style={{ pointerEvents: "none" }}
-                >
-                  <div
-                    style={{
-                      padding: "1.2rem",
-                      borderRadius: "999px",
-                      background: "rgba(0,0,0,0.9)",
-                      border: "1px solid rgba(156,101,242,0.95)",
-                      color: "#ffffff",
-                      fontFamily: "'Space Grotesk', system-ui, sans-serif",
-                      fontWeight: 600,
-                      fontSize: "clamp(0.9rem, 2.2vw, 1.2rem)",
-                      letterSpacing: "0.06em",
-                      textTransform: "uppercase",
-                      whiteSpace: "nowrap",
-                      boxShadow: "0 0 14px rgba(0,0,0,0.8)",
-                      backdropFilter: "blur(10)",
-                      textShadow: "0 0 6px #000000",
-                    }}
+                {hoveredIndex === null && (
+                  <Html
+                    distanceFactor={10}
+                    position={[0, 0.75, 0]}
+                    style={{ pointerEvents: "none" }}
                   >
-                    {label}
-                  </div>
-                </Html>)}
+                    <div
+                      style={{
+                        padding: "clamp(0.3rem, 0.8vw, 1rem)",
+                        borderRadius: "999px",
+                        background: "rgba(0,0,0,0.9)",
+                        border: "1px solid rgba(156,101,242,0.95)",
+                        color: "#ffffff",
+                        fontFamily: "'Space Grotesk', system-ui, sans-serif",
+                        fontWeight: 600,
+                        fontSize: "clamp(1rem, 1.8vw, 1.2rem)",
+                        letterSpacing: "0.06em",
+                        textTransform: "uppercase",
+                        whiteSpace: "nowrap",
+                        boxShadow: "0 0 14px rgba(0,0,0,0.8)",
+                        backdropFilter: "blur(10px)",
+                        textShadow: "0 0 6px #000000",
+                      }}
+                    >
+                      {label}
+                    </div>
+                  </Html>
+                )}
               </mesh>
             </group>
           </Float>
@@ -366,7 +368,7 @@ function Scene({
         lang={lang}
       />
 
-      {/* 🔹 Nombre del proyecto al centro cuando está hover */}
+      {/*Nombre del proyecto al centro cuando está hover */}
       {hoveredProject && (
         <Html
           fullscreen
@@ -380,14 +382,14 @@ function Scene({
         >
           <div
             style={{
-              padding: "0.9rem 2.2rem",
+              padding: "clamp(0.6rem, 1.5vw, 0.9rem) clamp(1.2rem, 3vw, 2.2rem)",
               borderRadius: "999px",
               background: "rgba(0,0,0,0.9)",
               border: "1px solid rgba(156,101,242,0.95)",
               color: "#ffffff",
               fontFamily: "'Space Grotesk', system-ui, sans-serif",
               fontWeight: 600,
-              fontSize: "clamp(1.1rem, 2.4vw, 1.5rem)",
+              fontSize: "clamp(0.85rem, 2.2vw, 1.5rem)",
               whiteSpace: "nowrap",
               boxShadow: "0 0 18px rgba(0,0,0,0.8)",
               backdropFilter: "blur(14px)",
@@ -432,7 +434,7 @@ function AssetProgress({ onAssetsLoaded }) {
 function TextureLoadingOverlay({ lang }) {
   const { active, progress } = useProgress();
 
-  if (!active) return null; // ya cargó todo
+  if (!active) return null;
 
   return (
     <Html
@@ -447,14 +449,14 @@ function TextureLoadingOverlay({ lang }) {
     >
       <div
         style={{
-          padding: "1rem 2.5rem",
+          padding: "clamp(0.6rem, 1.5vw, 1rem) clamp(1.5rem, 3vw, 2.5rem)",
           borderRadius: "999px",
           background: "rgba(0,0,0,0.85)",
           border: "1px solid rgba(156,101,242,0.95)",
           color: "#ffffff",
           fontFamily: "'Space Grotesk', system-ui, sans-serif",
           fontWeight: 600,
-          fontSize: "1rem",
+          fontSize: "clamp(0.75rem, 1.8vw, 1rem)",
           boxShadow: "0 0 18px rgba(0,0,0,0.8)",
           backdropFilter: "blur(14px)",
           textShadow: "0 0 10px #000000",

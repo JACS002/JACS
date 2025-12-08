@@ -241,7 +241,7 @@ export default function Contacto() {
         </p>
 
         <h2
-          className={`${styles.mainTitle} font-titulos text-4xl md:text-5xl font-bold mb-12`}
+          className={`${styles.mainTitle} font-titulos text-4xl md:text-5xl sm:text-3xl font-bold mb-12`}
         >
           {t("contact.title")}
         </h2>
