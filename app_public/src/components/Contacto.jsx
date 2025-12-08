@@ -273,51 +273,26 @@ export default function Contacto() {
                 className="relative flex md:items-center"
               >
                 {/* Nodo circular sobre la línea */}
-                <div
-                  className={`
-                    contact-node
-                    absolute
-                    top-2
-                    md:top-1/2 md:-translate-y-1/2
-                    rounded-full
-                    w-4 h-4
-                    bg-accent
-                    border border-white/40
-                    shadow-[0_0_8px_rgba(0,240,255,0.6)]
-                    left-4 md:left-1/2 md:-ml-2
-                  `}
-                />
+                <div className={`contact-node ${styles.contactNode}`} />
 
                 {/* Conector pequeño desde el nodo hacia la card (solo desktop) */}
                 <div
-                  className={`
-                    hidden md:block
-                    absolute
-                    top-1/2 -translate-y-1/2
-                    h-[2px] w-10
-                    bg-accent/40
-                    ${isLeft ? "left-1/2" : "right-1/2 md:-scale-x-100"}
-                  `}
+                  className={`${styles.connector} ${
+                    isLeft ? styles.connectorLeft : styles.connectorRight
+                  }`}
                 />
 
                 {/* Tarjeta de contenido del paso */}
                 <div
                   className={`
-                    relative
-                    mt-4 md:mt-0
-                    w-full md:w-[48%]
-                    rounded-3xl
-                    border
-                    ${step.highlight ? "border-accent/60" : "border-white/10"}
-                    bg-black/40
-                    backdrop-blur-md
-                    px-6 py-7 md:px-7 md:py-8
-                    text-white
-                    shadow-[0_0_20px_rgba(0,0,0,0.5)]
+                    ${styles.stepCard}
+                    ${
+                      step.highlight
+                        ? styles.stepCardHighlight
+                        : styles.stepCardNormal
+                    }
+                    ${isLeft ? styles.stepCardLeft : styles.stepCardRight}
                     font-contenido
-                    ${isLeft ? "md:mr-auto md:pl-7" : "md:ml-auto md:pr-7"}
-                    ${isLeft ? "md:pr-4" : "md:pl-4"}
-                    ml-10 md:ml-0
                   `}
                 >
                   {/* Cabecera de la card (etiqueta + icono) */}
@@ -331,8 +306,9 @@ export default function Contacto() {
                   {/* Título del paso */}
                   <h3
                     className={`
-                      font-titulos text-lg md:text-xl font-semibold mb-3
-                      ${step.highlight ? "text-accent" : "text-white"}
+                      ${styles.stepTitle}
+                      ${step.highlight ? styles.stepTitleHighlight : ""}
+                      font-titulos
                     `}
                   >
                     {step.title}

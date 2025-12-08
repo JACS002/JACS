@@ -86,34 +86,14 @@ function SkillBubble({ name, position, size = 0.3, baseTexture, hoverTexture }) 
           ref={hoverMatRef}
           map={hoverTexture}
           transparent
-          opacity={0}      // empieza invisible
+          opacity={0}
           depthWrite={false}
         />
       </mesh>
 
       {/* Etiqueta */}
-      <Html
-        distanceFactor={6}
-        position={[0, size + 0.4, 0]}
-        style={{ pointerEvents: "none" }}
-      >
-        <div
-          style={{
-            padding: "0.24rem 0.75rem",
-            borderRadius: "999px",
-            background: "rgba(0,0,0,0.9)",
-            border: "1px solid rgba(199,210,254,0.45)",
-            color: "#ffffff",
-            fontFamily: "'Space Grotesk', system-ui, sans-serif",
-            fontWeight: 600,
-            fontSize: "1.7rem",
-            letterSpacing: "0.09em",
-            textTransform: "uppercase",
-            whiteSpace: "nowrap",
-            boxShadow: "0 0 12px rgba(0,0,0,0.9)",
-            backdropFilter: "blur(10px)",
-          }}
-        >
+      <Html distanceFactor={6} position={[0, size + 0.4, 0]}>
+        <div className={styles.skillLabel}>
           {name}
         </div>
       </Html>
