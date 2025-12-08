@@ -113,38 +113,6 @@
   transform: scale(1.5);
 }
 
-/* ===== SCROLL DOWN INDICATOR ===== */
-.scrollDown {
-  position: absolute;
-  bottom: 3vh;
-  left: 50%;
-  top: 50%;
-  transform: translateX(-50%);
-  z-index: 10;
-  opacity: 1;
-  transition: opacity 0.5s ease;
-  pointer-events: none;
-}
-
-.arrow {
-  display: block;
-  width: 2.5rem;
-  height: 2.5rem;
-  border-left: 5px solid white;
-  border-bottom: 5px solid white;
-  transform: rotate(-45deg);
-  animation: bounce 1.5s infinite;
-}
-
-@keyframes bounce {
-  0%, 100% {
-    transform: translateY(0) rotate(-45deg);
-  }
-  50% {
-    transform: translateY(8px) rotate(-45deg);
-  }
-}
-
 /* ===== RESPONSIVE: ALTURA PEQUEÑA ===== */
 @media (max-height: 750px) {
   .heroSection {
@@ -251,5 +219,62 @@
     font-size: 1rem !important;
     line-height: 1.25 !important;
     margin-bottom: 0.1rem !important;
+  }
+}
+
+/* ===== SCROLL INDICATOR (mouse + texto) ===== */
+.scrollIndicator {
+  position: absolute;
+  bottom: 4vh;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  opacity: 1;
+  transition: opacity 0.4s ease;
+  pointer-events: none; /* muy importante: no es un botón */
+}
+
+.scrollIndicator p {
+  color: #ffffff;
+  font-size: 0.85rem;
+  opacity: 0.8;
+}
+
+/* Icono de mouse */
+.mouse {
+  width: 28px;
+  height: 46px;
+  border: 2px solid #ffffff;
+  border-radius: 20px;
+  position: relative;
+}
+
+.wheel {
+  width: 4px;
+  height: 8px;
+  background: #ffffff;
+  border-radius: 4px;
+  margin: 6px auto 0;
+  animation: wheelSlide 1.5s infinite;
+}
+
+@keyframes wheelSlide {
+  0% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(10px);
+    opacity: 0;
+  }
+}
+
+/* Ajuste en móviles muy pequeños: acercar un poco el indicador */
+@media (max-height: 600px) {
+  .scrollIndicator {
+    bottom: 2vh;
   }
 }

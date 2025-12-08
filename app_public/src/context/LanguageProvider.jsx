@@ -11,6 +11,7 @@ const translations = {
     "nav.langLabel": "Change language",
 
     // HERO
+    "hero.scrollHint": "Scroll down",
     "hero.title": "Hi, I'm JACS",
     "hero.tagline.fs": "Full stack developer",
     "hero.tagline.dm": "Data mining",
@@ -106,6 +107,7 @@ const translations = {
     "nav.langLabel": "Cambiar idioma",
 
     // HERO
+    "hero.scrollHint": "Desliza hacia abajo",
     "hero.title": "Hola, soy JACS",
     "hero.tagline.fs": "Desarrollador full stack",
     "hero.tagline.dm": "Minería de datos",
