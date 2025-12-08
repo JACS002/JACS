@@ -199,11 +199,11 @@
 }
 
 /* Pantallas con altura muy pequeña (landscape en móviles) */
-@media (max-height: 600px) {
+@media (max-height: 668px) {
   .bienvenida {
     padding: 0.75rem 1rem;
     max-width: 95%;
-    width: 95%;
+    width: 80%;
     max-height: 95vh;
     overflow-y: auto; /* permitir scroll interno si es necesario */
   }
@@ -229,27 +229,27 @@
 /* Pantallas con altura extremadamente pequeña */
 @media (max-height: 450px) {
   .bienvenida {
-    padding: 0.5rem 0.75rem;
+    padding: 0.2rem 0.2rem;
+    width: 90%;
     max-width: 95%;
-    width: 95%;
     max-height: 95vh;
     overflow-y: auto;
   }
 
   .bienvenida h1 {
-    font-size: 1.25rem !important;
+    font-size: 1.6rem !important;
     margin-bottom: 0.4rem !important;
     margin-top: 0.2rem !important;
   }
 
   .bienvenida h2 {
-    font-size: 0.9rem !important;
+    font-size: 1.2rem !important;
     margin-bottom: 0.4rem !important;
   }
 
   .bienvenida p {
-    font-size: 0.75rem !important;
+    font-size: 1rem !important;
     line-height: 1.25 !important;
-    margin-bottom: 0.3rem !important;
+    margin-bottom: 0.1rem !important;
   }
 }

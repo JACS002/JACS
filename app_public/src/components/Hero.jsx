@@ -67,9 +67,9 @@ export default function Hero() {
       scrollTrigger: {
         trigger: logoRef.current,
         start: "top top",
-        end: isSmallViewport ? "+=800" : "+=2000",
+        end: "+=2000",
         scrub: 1,
-        pin: true,       // pantallas bajas NO pin
+        pin: true,
         invalidateOnRefresh: true,
         refreshPriority: 10,
         onRefresh: (self) => { window.heroEnd = self.end; },
