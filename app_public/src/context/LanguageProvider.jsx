@@ -15,10 +15,8 @@ const translations = {
     "hero.tagline.fs": "Full stack developer",
     "hero.tagline.dm": "Data mining",
     "hero.p1":
-      "Computer Science Engineer focused on building modern interfaces with React, solid backends with Node.js and well-designed APIs.",
-    "hero.p2":
-      "I also work with data mining and machine learning, data pipelines, Docker and AWS to take ideas from prototype to something deployed and ready to grow.",
-
+      "I craft modern web experiences, build scalable backends, and turn data into actionable insights through clean engineering and thoughtful design.",
+    "hero.p2": "Focused on building intuitive interfaces, efficient systems and solutions that connect ideas with real impact.",
     // ─────────────────────────────────────────────
     // ABOUT / QUIÉN SOY
     "about.title": "About me",
@@ -112,9 +110,9 @@ const translations = {
     "hero.tagline.fs": "Desarrollador full stack",
     "hero.tagline.dm": "Minería de datos",
     "hero.p1":
-      "Ingeniero en Ciencias de la Computación, enfocado en construir interfaces modernas con React, backends sólidos con Node.js y APIs bien diseñadas.",
-    "hero.p2":
-      "También trabajo con data mining y machine learning, pipelines de datos, Docker y AWS para llevar las ideas desde un prototipo hasta algo desplegado y listo para crecer.",
+      "Creo experiencias web modernas, desarrollo backends escalables y transformo datos en información útil mediante ingeniería limpia y diseño bien pensado.",
+      "hero.p2": "Enfocado en crear interfaces intuitivas, sistemas eficientes y soluciones que conectan ideas con impacto real.",
+
 
     // ─────────────────────────────────────────────
     // ABOUT / QUIÉN SOY
