@@ -312,47 +312,55 @@ function Scene({
 }) {
   const [hoveredIndex, setHoveredIndex] = useState(null);
 
-  // detectar si debemos habilitar OrbitControls (solo escritorio)
+  // detectar si debemos habilitar OrbitControls
   const [hasPointerDevice, setHasPointerDevice] = useState(false);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
 
     const checkPointerCapability = () => {
-      // ¿Hay puntero fino (mouse, trackpad, stylus)?
+      const mqPointerFine = window.matchMedia("(pointer: fine)");
+      const mqAnyPointerFine = window.matchMedia("(any-pointer: fine)");
+      const mqHoverHover = window.matchMedia("(hover: hover)");
+
       const hasFinePointer =
-        window.matchMedia("(pointer: fine)").matches ||
-        window.matchMedia("(any-pointer: fine)").matches;
+        mqPointerFine.matches || mqAnyPointerFine.matches;
 
-      // ¿Pantalla lo bastante ancha? (modo escritorio)
-      const isLargeScreen = window.matchMedia("(min-width: 900px)").matches;
+      // Mouse o trackpad real: puede hacer hover
+      const hasRealMouse = hasFinePointer && mqHoverHover.matches;
 
-      // ¿Pantalla lo bastante alta?
-      // Esto evita que un móvil en horizontal (mucha anchura pero poca altura)
-      // active los controles.
-      const isTallEnough = window.matchMedia("(min-height: 650px)").matches;
+      if (hasRealMouse) {
+        setHasPointerDevice(true);
+        return;
+      }
 
-      // Solo activamos OrbitControls si se cumplen las tres condiciones
+      // Si no hay mouse real, usamos reglas de escritorio
+      const isLargeScreen = window.matchMedia("(min-width: 800px)").matches;
+      const isTallEnough = window.matchMedia("(min-height: 550px)").matches;
+
       setHasPointerDevice(hasFinePointer && isLargeScreen && isTallEnough);
     };
 
     checkPointerCapability();
 
-    const mqPointer = window.matchMedia("(pointer: fine)");
-    const mqAnyPointer = window.matchMedia("(any-pointer: fine)");
-    const mqLarge = window.matchMedia("(min-width: 900px)");
-    const mqTall = window.matchMedia("(min-height: 650px)");
+    const queries = [
+      "(pointer: fine)",
+      "(any-pointer: fine)",
+      "(hover: hover)",
+      "(min-width: 800px)",
+      "(min-height: 550px)",
+    ];
 
-    mqPointer.addEventListener("change", checkPointerCapability);
-    mqAnyPointer.addEventListener("change", checkPointerCapability);
-    mqLarge.addEventListener("change", checkPointerCapability);
-    mqTall.addEventListener("change", checkPointerCapability);
+    const mqs = queries.map((q) => window.matchMedia(q));
+
+    mqs.forEach((mq) =>
+      mq.addEventListener("change", checkPointerCapability)
+    );
 
     return () => {
-      mqPointer.removeEventListener("change", checkPointerCapability);
-      mqAnyPointer.removeEventListener("change", checkPointerCapability);
-      mqLarge.removeEventListener("change", checkPointerCapability);
-      mqTall.removeEventListener("change", checkPointerCapability);
+      mqs.forEach((mq) =>
+        mq.removeEventListener("change", checkPointerCapability)
+      );
     };
   }, []);
 
@@ -428,8 +436,8 @@ function Scene({
         </Html>
       )}
 
-      {/* Mostrar OrbitControls solo si hay dispositivo de puntero fino
-          y estamos claramente en un layout tipo escritorio */}
+      {/* OrbitControls solo si hay mouse/trackpad real
+          o si encaja con layout de escritorio */}
       {hasPointerDevice && (
         <OrbitControls
           enablePan={false}
@@ -449,11 +457,11 @@ function AssetProgress({ onAssetsLoaded }) {
 
   useEffect(() => {
     if (!active && onAssetsLoaded) {
-      onAssetsLoaded(); // ✅ ya cargaron texturas / assets
+      onAssetsLoaded();
     }
   }, [active, onAssetsLoaded]);
 
-  return null; // no dibuja nada dentro del canvas
+  return null;
 }
 
 // ===================== OVERLAY "CARGANDO TEXTURAS" ===========================
