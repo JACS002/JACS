@@ -99,7 +99,6 @@ function getMoonLabel(project) {
   return raw;
 }
 
-
 // =============================== SATURNO =====================================
 function Saturn() {
   const groupRef = useRef();
@@ -313,36 +312,47 @@ function Scene({
 }) {
   const [hoveredIndex, setHoveredIndex] = useState(null);
 
-  // detectar si hay un mouse/pointer disponible
-  const [hasPointerDevice, setHasPointerDevice] = useState(true);
+  // detectar si debemos habilitar OrbitControls (solo escritorio)
+  const [hasPointerDevice, setHasPointerDevice] = useState(false);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
 
     const checkPointerCapability = () => {
-      // Detectar si hay un dispositivo de puntero fino (mouse, trackpad, stylus)
-      // matchMedia con 'pointer: fine' detecta mouse/trackpad
-      const hasFinePointer = window.matchMedia("(pointer: fine)").matches;
-      
-      // También detectar si hay ANY pointer device (incluye touch)
-      const hasAnyPointer = window.matchMedia("(any-pointer: fine)").matches;
-      
-      // Si tiene pointer fino O any-pointer fino, activar controles
-      setHasPointerDevice(hasFinePointer || hasAnyPointer);
+      // ¿Hay puntero fino (mouse, trackpad, stylus)?
+      const hasFinePointer =
+        window.matchMedia("(pointer: fine)").matches ||
+        window.matchMedia("(any-pointer: fine)").matches;
+
+      // ¿Pantalla lo bastante ancha? (modo escritorio)
+      const isLargeScreen = window.matchMedia("(min-width: 900px)").matches;
+
+      // ¿Pantalla lo bastante alta?
+      // Esto evita que un móvil en horizontal (mucha anchura pero poca altura)
+      // active los controles.
+      const isTallEnough = window.matchMedia("(min-height: 650px)").matches;
+
+      // Solo activamos OrbitControls si se cumplen las tres condiciones
+      setHasPointerDevice(hasFinePointer && isLargeScreen && isTallEnough);
     };
 
     checkPointerCapability();
-    
-    // Escuchar cambios (por ejemplo, conectar/desconectar mouse)
-    const mediaQuery = window.matchMedia("(pointer: fine)");
-    const anyPointerQuery = window.matchMedia("(any-pointer: fine)");
-    
-    mediaQuery.addEventListener("change", checkPointerCapability);
-    anyPointerQuery.addEventListener("change", checkPointerCapability);
-    
+
+    const mqPointer = window.matchMedia("(pointer: fine)");
+    const mqAnyPointer = window.matchMedia("(any-pointer: fine)");
+    const mqLarge = window.matchMedia("(min-width: 900px)");
+    const mqTall = window.matchMedia("(min-height: 650px)");
+
+    mqPointer.addEventListener("change", checkPointerCapability);
+    mqAnyPointer.addEventListener("change", checkPointerCapability);
+    mqLarge.addEventListener("change", checkPointerCapability);
+    mqTall.addEventListener("change", checkPointerCapability);
+
     return () => {
-      mediaQuery.removeEventListener("change", checkPointerCapability);
-      anyPointerQuery.removeEventListener("change", checkPointerCapability);
+      mqPointer.removeEventListener("change", checkPointerCapability);
+      mqAnyPointer.removeEventListener("change", checkPointerCapability);
+      mqLarge.removeEventListener("change", checkPointerCapability);
+      mqTall.removeEventListener("change", checkPointerCapability);
     };
   }, []);
 
@@ -398,7 +408,8 @@ function Scene({
         >
           <div
             style={{
-              padding: "clamp(0.6rem, 1.5vw, 0.9rem) clamp(1.2rem, 3vw, 2.2rem)",
+              padding:
+                "clamp(0.6rem, 1.5vw, 0.9rem) clamp(1.2rem, 3vw, 2.2rem)",
               borderRadius: "999px",
               background: "rgba(0,0,0,0.9)",
               border: "1px solid rgba(156,101,242,0.95)",
@@ -417,7 +428,8 @@ function Scene({
         </Html>
       )}
 
-      {/* Mostrar OrbitControls solo si hay dispositivo de puntero fino (mouse) */}
+      {/* Mostrar OrbitControls solo si hay dispositivo de puntero fino
+          y estamos claramente en un layout tipo escritorio */}
       {hasPointerDevice && (
         <OrbitControls
           enablePan={false}
