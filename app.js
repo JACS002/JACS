@@ -14,8 +14,9 @@ const PORT = process.env.PORT || 5000;
 // orígenes permitidos
 const allowedOrigins = [
   'http://localhost:5173',      // dev Vite
-  'https://jacs.vercel.app',    // frontend en producción
-  // 'https://jacs.dev',
+  'https://www.jacs.dev',    // frontend en producción
+  'https://jacs.dev',
+  'https://api.jacs.dev',
 ];
 
 connectDB();
