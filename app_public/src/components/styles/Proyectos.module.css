@@ -406,7 +406,8 @@
   grid-template-columns: minmax(0, 1.05fr) minmax(0, 1.4fr);
   gap: 1.5rem;
   color: #f9fafb;
-  overflow: hidden;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .modalLayout {
@@ -544,7 +545,6 @@
 .modalRight {
   display: flex;
   flex-direction: column;
-  overflow: hidden;
   max-height: 100%;
 }
 
@@ -910,4 +910,96 @@
     padding-top: 4rem !important;
     padding-bottom: 2.5rem !important;
   }
+}
+
+/* Agregar/actualizar estos estilos en Proyectos.module.css */
+
+/* Scrollbar del modal - temática espacial */
+.modalCard::-webkit-scrollbar {
+  width: 8px;
+}
+
+.modalCard::-webkit-scrollbar-track {
+  background: rgba(3, 7, 18, 0.6);
+  border-radius: 999px;
+  border: 1px solid rgba(148, 163, 184, 0.15);
+}
+
+.modalCard::-webkit-scrollbar-thumb {
+  background: radial-gradient(circle at center, rgba(255, 255, 255, 0.95), rgba(200, 200, 220, 0.85));
+  border-radius: 999px;
+  box-shadow: 
+    0 0 8px rgba(255, 255, 255, 0.6),
+    0 0 12px rgba(156, 101, 242, 0.4),
+    inset 0 1px 2px rgba(255, 255, 255, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.modalCard::-webkit-scrollbar-thumb:hover {
+  background: radial-gradient(circle at center, rgba(255, 255, 255, 1), rgba(220, 220, 240, 0.95));
+  box-shadow: 
+    0 0 12px rgba(255, 255, 255, 0.9),
+    0 0 18px rgba(156, 101, 242, 0.7),
+    0 0 24px rgba(0, 240, 255, 0.3),
+    inset 0 1px 3px rgba(255, 255, 255, 0.5);
+}
+
+/* Scrollbar de la descripción del modal - mismo tema */
+.modalDescription::-webkit-scrollbar {
+  width: 6px;
+}
+
+.modalDescription::-webkit-scrollbar-track {
+  background: rgba(3, 7, 18, 0.5);
+  border-radius: 999px;
+  border: 1px solid rgba(148, 163, 184, 0.1);
+}
+
+.modalDescription::-webkit-scrollbar-thumb {
+  background: radial-gradient(circle at center, rgba(255, 255, 255, 0.9), rgba(200, 200, 220, 0.8));
+  border-radius: 999px;
+  box-shadow: 
+    0 0 6px rgba(255, 255, 255, 0.5),
+    0 0 10px rgba(156, 101, 242, 0.3),
+    inset 0 1px 2px rgba(255, 255, 255, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+}
+
+.modalDescription::-webkit-scrollbar-thumb:hover {
+  background: radial-gradient(circle at center, rgba(255, 255, 255, 1), rgba(220, 220, 240, 0.9));
+  box-shadow: 
+    0 0 10px rgba(255, 255, 255, 0.8),
+    0 0 16px rgba(156, 101, 242, 0.6),
+    0 0 20px rgba(0, 240, 255, 0.25),
+    inset 0 1px 3px rgba(255, 255, 255, 0.4);
+}
+
+/* Scrollbar de la lista de proyectos - mismo tema */
+.projectListItems::-webkit-scrollbar {
+  width: 5px;
+}
+
+.projectListItems::-webkit-scrollbar-track {
+  background: rgba(3, 7, 18, 0.5);
+  border-radius: 999px;
+  border: 1px solid rgba(148, 163, 184, 0.1);
+}
+
+.projectListItems::-webkit-scrollbar-thumb {
+  background: radial-gradient(circle at center, rgba(255, 255, 255, 0.85), rgba(200, 200, 220, 0.75));
+  border-radius: 999px;
+  box-shadow: 
+    0 0 5px rgba(255, 255, 255, 0.4),
+    0 0 8px rgba(156, 101, 242, 0.3),
+    inset 0 1px 1px rgba(255, 255, 255, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.projectListItems::-webkit-scrollbar-thumb:hover {
+  background: radial-gradient(circle at center, rgba(255, 255, 255, 0.95), rgba(220, 220, 240, 0.85));
+  box-shadow: 
+    0 0 8px rgba(255, 255, 255, 0.7),
+    0 0 14px rgba(156, 101, 242, 0.5),
+    0 0 18px rgba(0, 240, 255, 0.2),
+    inset 0 1px 2px rgba(255, 255, 255, 0.4);
 }

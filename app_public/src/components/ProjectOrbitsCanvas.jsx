@@ -313,21 +313,37 @@ function Scene({
 }) {
   const [hoveredIndex, setHoveredIndex] = useState(null);
 
-  // detectar si es dispositivo móvil / táctil
-  const [isMobile, setIsMobile] = useState(false);
+  // detectar si hay un mouse/pointer disponible
+  const [hasPointerDevice, setHasPointerDevice] = useState(true);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
 
-    const check = () => {
-      const isTouch =
-        "ontouchstart" in window || navigator.maxTouchPoints > 0;
-      setIsMobile(isTouch || window.innerWidth <= 768);
+    const checkPointerCapability = () => {
+      // Detectar si hay un dispositivo de puntero fino (mouse, trackpad, stylus)
+      // matchMedia con 'pointer: fine' detecta mouse/trackpad
+      const hasFinePointer = window.matchMedia("(pointer: fine)").matches;
+      
+      // También detectar si hay ANY pointer device (incluye touch)
+      const hasAnyPointer = window.matchMedia("(any-pointer: fine)").matches;
+      
+      // Si tiene pointer fino O any-pointer fino, activar controles
+      setHasPointerDevice(hasFinePointer || hasAnyPointer);
     };
 
-    check();
-    window.addEventListener("resize", check);
-    return () => window.removeEventListener("resize", check);
+    checkPointerCapability();
+    
+    // Escuchar cambios (por ejemplo, conectar/desconectar mouse)
+    const mediaQuery = window.matchMedia("(pointer: fine)");
+    const anyPointerQuery = window.matchMedia("(any-pointer: fine)");
+    
+    mediaQuery.addEventListener("change", checkPointerCapability);
+    anyPointerQuery.addEventListener("change", checkPointerCapability);
+    
+    return () => {
+      mediaQuery.removeEventListener("change", checkPointerCapability);
+      anyPointerQuery.removeEventListener("change", checkPointerCapability);
+    };
   }, []);
 
   // si viene un hover desde la lista, tiene prioridad
@@ -401,8 +417,8 @@ function Scene({
         </Html>
       )}
 
-      {/* Desktop / tablet: controles normales sin zoom/pan */}
-      {!isMobile && (
+      {/* Mostrar OrbitControls solo si hay dispositivo de puntero fino (mouse) */}
+      {hasPointerDevice && (
         <OrbitControls
           enablePan={false}
           enableZoom={false}
@@ -411,8 +427,6 @@ function Scene({
           target={[0, 0, 0]}
         />
       )}
-
-      {/* En móvil: SIN OrbitControls → scroll táctil funciona bien */}
     </>
   );
 }
