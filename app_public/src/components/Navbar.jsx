@@ -47,6 +47,21 @@ export default function Navbar() {
   };
 
   // ========================================================================
+  // Cerrar visor con tecla ESC
+  // ========================================================================
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === "Escape" || e.key === "Esc") {
+        setMenuOpen(false);
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
+
+
+  // ========================================================================
   // Bloquear scroll del body cuando el visor está abierto
   // ========================================================================
   useEffect(() => {

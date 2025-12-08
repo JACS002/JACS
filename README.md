@@ -1,179 +1,81 @@
-# 🚀 JACS - Portafolio Personal
+# JACS - Full Stack Developer Portfolio
 
 [![React](https://img.shields.io/badge/React-18.2.0-blue.svg)](https://reactjs.org/)
 [![Node.js](https://img.shields.io/badge/Node.js-22.x-green.svg)](https://nodejs.org/)
 [![Express](https://img.shields.io/badge/Express-5.1.0-black.svg)](https://expressjs.com/)
-[![MongoDB](https://img.shields.io/badge/MongoDB-6.9.0-green.svg)](https://www.mongodb.com/)
+[![MongoDB](https://img.shields.io/badge/MongoDB-latest-green.svg)](https://www.mongodb.com/)
 [![Vite](https://img.shields.io/badge/Vite-6.3.1-646CFF.svg)](https://vitejs.dev/)
+[![License MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
-Un portafolio web dinámico y moderno con efectos visuales avanzados, soporte multiidioma y arquitectura escalable. Desarrollado con tecnologías de vanguardia para ofrecer una experiencia de usuario excepcional.
+Portafolio interactivo que combina diseño moderno, animaciones avanzadas y una arquitectura full stack robusta. Presenta proyectos en un sistema planetario 3D inmersivo con soporte multiidioma y experiencia optimizada.
 
-## Características Destacadas
+## Lo que hace destacar este portafolio
 
-- **🎨 Interfaz Moderna**: Diseño glassmorphism con efectos visuales 3D
-- **🌍 Multiidioma**: Soporte completo para Español e Inglés
-- **⚡ Animaciones Fluidas**: Transiciones GSAP con ScrollTrigger
-- **💫 Efectos 3D**: Partículas interactivas y sistema planetario
-- **📱 Responsive**: Diseño adaptativo para todos los dispositivos
-- **🔒 Seguridad**: Implementación completa de medidas de seguridad
-- **🚀 Alto Rendimiento**: Optimizado con Vite y React 18
+- **Sistema Planetario 3D**: Visualización de proyectos en orbitas interactivas con Saturno y lunas (Three.js)
+- **Animaciones Avanzadas**: Efectos GSAP con ScrollTrigger, glitch effects y transiciones fluidas
+- **Multiidioma**: Interfaz completa en Español e Inglés con Context API
+- **Diseño Moderno**: Glassmorphism, efectos de parallax y fondo de estrellas animado
+- **Full Stack**: Backend RESTful con Node/Express + Frontend React con Vite
+- **Optimizado**: Hot reload en desarrollo, code splitting y renderizado 3D eficiente
 
-## 🛠️ Tecnologías y Herramientas
+## Tech Stack
 
-### Frontend
-| Tecnología | Versión | Propósito |
-|-----------|---------|-----------|
-| **React** | 18.2.0 | Biblioteca principal para UI |
-| **Vite** | 6.3.1 | Build tool y dev server |
-| **TailwindCSS** | 3.4.3 | Framework de CSS utilitario |
-| **GSAP** | 3.13.0 | Animaciones y transiciones |
-| **Three.js** | 0.152.2 | Gráficos 3D y WebGL |
-| **React Three Fiber** | 8.13.6 | React renderer para Three.js |
-| **React Three Drei** | 9.56.11 | Utilidades para R3F |
+**Frontend**
+- React 18.2.0 - UI Framework
+- Vite 6.3.1 - Build tool
+- TailwindCSS - Styling
+- GSAP & ScrollTrigger - Animaciones
+- Three.js & React Three Fiber - Gráficos 3D
+- React Icons - Iconografía
 
-### Backend
-| Tecnología | Versión | Propósito |
-|-----------|---------|-----------|
-| **Node.js** | 22.x | Runtime de JavaScript |
-| **Express** | 5.1.0 | Framework web |
-| **MongoDB** | 6.9.0 | Base de datos NoSQL |
-| **Mongoose** | 8.8.4 | ODM para MongoDB |
-| **Axios** | 1.9.0 | Cliente HTTP |
+**Backend**
+- Node.js / Express - API RESTful
+- MongoDB & Mongoose - Base de datos
+- Helmet, JWT, bcrypt - Seguridad
 
-### Seguridad
-| Tecnología | Versión | Propósito |
-|-----------|---------|-----------|
-| **Helmet** | 8.1.0 | Headers de seguridad |
-| **express-rate-limit** | 8.2.1 | Limitación de peticiones |
-| **CORS** | 2.8.5 | Control de acceso |
+**Deployment**
+- Frontend: Vercel
+- Backend: Railway / Heroku
 
-### Desarrollo
-| Tecnología | Versión | Propósito |
-|-----------|---------|-----------|
-| **ESLint** | 9.22.0 | Linter de código |
-| **PostCSS** | 8.5.3 | Procesador CSS |
-| **Autoprefixer** | 10.4.21 | Prefijos CSS automáticos |
-| **Nodemon** | 3.1.9 | Auto-reload en desarrollo |
+## Características Principales
 
-### Animaciones y Efectos
-| Biblioteca | Propósito |
-|-----------|-----------|
-| **GSAP ScrollTrigger** | Animaciones basadas en scroll |
-| **Three.js BufferGeometry** | Geometrías optimizadas 3D |
-| **WebGL Shaders** | Efectos visuales personalizados |
-| **CSS Modules** | Estilos encapsulados |
+**Visualización de Proyectos**
+- Sistema planetario 3D interactivo con Saturno
+- Cada proyecto es una luna orbitando
+- Click para ver detalles en modal inmersivo
+- Lista sincronizada con hover effects
 
-## Arquitectura del Proyecto
+**Experiencia de Usuario**
+- Animaciones scroll-triggered fluidas
+- Fondo de estrellas con parallax
+- Hero section con efectos glitch
+- Transiciones suaves entre secciones
+- Diseño responsive (mobile-first)
 
-```
-JACS/
-├── app.js                      # Servidor principal Express
-├── package.json               # Dependencias del servidor
-│
-├── app_api/                   # API RESTful
-│   ├── config/
-│   │   └── db.js             # Configuración MongoDB
-│   ├── controllers/
-│   │   └── projectApiController.js
-│   ├── models/
-│   │   └── Project.js        # Schema Mongoose
-│   └── routes/
-│       └── projectApiRouter.js
-│
-├── app_server/               # Server-side rendering
-│   ├── controllers/
-│   │   └── projectServerController.js
-│   ├── routes/
-│   │   └── projectServerRouter.js
-│   └── utils/
-│       └── apiRequest.js
-│
-└── app_public/               # Frontend React
-    ├── src/
-    │   ├── components/       # Componentes React
-    │   ├── pages/           # Páginas principales
-    │   ├── utils/           # Utilidades
-    │   └── assets/          # Recursos estáticos
-    ├── public/              # Assets públicos
-    ├── dist/                # Build de producción
-    └── package.json         # Dependencias frontend
-```
+**Funcionalidades**
+- Toggle de idioma (ES/EN) persistente
+- Carga dinámica de proyectos desde API
+- Modal con detalles, tecnologías y links
+- Contacto y sección "Quién soy"
+## Cómo Funciona
 
-## Instalación y Configuración
+**Frontend**
+- React renderiza componentes responsivos
+- GSAP maneja todas las animaciones
+- Three.js visualiza el sistema planetario
+- Context API gestiona idioma y traducciones
+- Vite proporciona HMR en desarrollo
 
-### Prerrequisitos
-- Node.js 22.x
-- npm 8.x
-- MongoDB instalado y ejecutándose
+**Backend**
+- Express sirve la API RESTful
+- MongoDB almacena proyectos con contenido multiidioma
+- JWT para autenticación segura
+- Rate limiting y CORS configurados
 
-### 1. Clonar el Repositorio
-```bash
-git clone https://github.com/JACS002/JACS
-cd JACS
-```
-
-### 2. Instalar Dependencias del Servidor
-```bash
-npm install
-```
-
-### 3. Instalar Dependencias del Frontend
-```bash
-cd app_public
-npm install
-cd ..
-```
-
-### 4. Configurar Variables de Entorno
-Crear archivo `.env` en la raíz del proyecto:
-```env
-# Base de datos
-DB_URI=mongodb://localhost:27017/jacs-portfolio
-
-# JWT
-JWT_SECRET=tu_jwt_secret_muy_seguro
-
-# Entorno
-NODE_ENV=development
-PORT=3000
-
-# CORS
-ALLOWED_ORIGINS=http://localhost:5173,http://localhost:3000
-```
-<!-- 
-### 5. Iniciar MongoDB
-```bash
-mongod
-```
-
-### 6. Ejecutar en Modo Desarrollo
-
-**Terminal 1 - Servidor Backend:**
-```bash
-npm run dev
-```
-
-**Terminal 2 - Frontend React:**
-```bash
-cd app_public
-npm run dev
-``` -->
-
-<!-- ## Despliegue
-
-### Frontend (Vercel)
-```bash
-cd app_public
-npm run build
-vercel --prod
-```
-
-### Backend (Railway/Heroku)
-```bash
-# Configurar variables de entorno en el panel de control
-# Subir código al repositorio
-git push origin main
-``` -->
+**Estructura**
+- `app_api/` - Controladores, modelos y rutas
+- `app_server/` - Server-side logic
+- `app_public/` - React + Vite frontend
 
 ## Seguridad Implementada
 
@@ -189,54 +91,78 @@ git push origin main
 - **Proyectos Rotativos**: Carrusel con animaciones GSAP en arco
 - **Efectos Glassmorphism**: Diseño moderno con transparencias
 
-### Internacionalización
-- **Cambio de Idioma**: Toggle español/inglés dinámico
-- **Persistencia**: Preferencia guardada en localStorage
-- **Context API**: Sistema de traducción centralizado
-- **Contenido Dinámico**: Textos y metadatos multiidioma
+## Características Principales
 
-### Responsive Design
-- **Mobile First**: Diseño optimizado para móviles
-- **Breakpoints**: Adaptación a tablets y escritorio
-- **Touch Gestures**: Interacciones táctiles optimizadas
+**Visualización de Proyectos**
+- Sistema planetario 3D interactivo con Saturno
+- Cada proyecto es una luna orbitando
+- Click para ver detalles en modal inmersivo
+- Lista sincronizada con hover effects
 
-<!-- ## Scripts Disponibles
+**Experiencia de Usuario**
+- Animaciones scroll-triggered fluidas
+- Fondo de estrellas con parallax
+- Hero section con efectos glitch
+- Transiciones suaves entre secciones
+- Diseño responsive (mobile-first)
 
-### Servidor
-```bash
-npm start          # Producción
-npm run dev        # Desarrollo con nodemon
-```
+**Funcionalidades**
+- Toggle de idioma (ES/EN) persistente
+- Carga dinámica de proyectos desde API
+- Modal con detalles, tecnologías y links
+- Contacto y sección "Quién soy"
 
-### Frontend
-```bash
-npm run dev        # Servidor de desarrollo
-npm run build      # Build de producción
-npm run preview    # Preview del build
-npm run lint       # Análisis de código
-``` -->
+## Cómo Funciona
+
+**Frontend**
+- React renderiza componentes responsivos
+- GSAP maneja todas las animaciones
+- Three.js visualiza el sistema planetario
+- Context API gestiona idioma y traducciones
+- Vite proporciona HMR en desarrollo
+
+**Backend**
+- Express sirve la API RESTful
+- MongoDB almacena proyectos con contenido multiidioma
+- JWT para autenticación segura
+- Rate limiting y CORS configurados
+
+**Estructura**
+- `app_api/` - Controladores, modelos y rutas
+- `app_server/` - Server-side logic
+- `app_public/` - React + Vite frontend
 
 ## Rendimiento
 
-- **Vite HMR**: Hot Module Replacement ultrarrápido
-- **Code Splitting**: Carga bajo demanda
-- **Asset Optimization**: Compresión de imágenes y assets
-- **Tree Shaking**: Eliminación de código no utilizado
-- **Lazy Loading**: Carga diferida de componentes
+- Vite HMR: Recarga instantánea en desarrollo
+- Code splitting automático
+- Asset optimization y compresión
+- Lazy loading de componentes
+- Renderizado 3D optimizado con WebGL
 
+## Lo Que Aprendí Construyendo Esto
 
-## 📝 Licencia
+- Integración de Three.js con React para gráficos 3D complejos
+- Animaciones avanzadas con GSAP ScrollTrigger sincronizadas
+- Arquitectura escalable con separación frontend/backend/api
+- Manejo de contenido multiidioma con Context API
+- Optimización de rendimiento en aplicaciones 3D
+- Diseño responsive y accesibilidad web
+- Seguridad en APIs: JWT, rate limiting, CORS, helmet
+- Deployment en Vercel y plataformas backend modernas
 
-Este proyecto está bajo la Licencia ISC. Ver el archivo `LICENSE` para más detalles.
+## Licencia
 
-## 👨‍💻 Autor
+MIT
 
-**JACS** - Desarrollador Full Stack
+## Autor
 
-- 🌐 [Portfolio](https://jacs-portfolio.vercel.app)
-- 📧 [Email](mailto:contact@jacs.dev)
-- 💼 [LinkedIn](https://linkedin.com/in/jacs-dev)
+**JACS** - Full Stack Developer & Data Engineer
+
+Portafolio: [jacs.vercel.app](https://jacs.vercel.app)
+GitHub: [@JACS002](https://github.com/JACS002)
+LinkedIn: [Joel Cuascota](https://www.linkedin.com/in/joel-cuascota-b49284308)
 
 ---
 
-⭐ Si este proyecto te ha sido útil, ¡no olvides darle una estrella!
+Si te pareció interesante, no olvides dejar una ⭐
