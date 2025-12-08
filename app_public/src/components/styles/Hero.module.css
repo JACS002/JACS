@@ -1,13 +1,19 @@
+/* Hero.module.css */
+
+/* ===== SECCIÓN PRINCIPAL ===== */
 .heroSection {
-  height: 100vh;
-  background-color: transparent;
-  display: flex;
-  justify-content: center;
-  align-items: center;
   position: relative;
+  min-height: calc(100vh - 80px);
+  padding-top: 6rem;
+  padding-bottom: 3rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   overflow: hidden;
 }
 
+/* ===== LOGO WRAPPER ===== */
 .logoWrapper {
   display: flex;
   flex-direction: column;
@@ -17,7 +23,6 @@
   will-change: transform;
 }
 
-/* Logo principal */
 .logoContainer {
   transition: all 0.4s ease;
   padding: 0 5vw;
@@ -28,7 +33,6 @@
   overflow: visible;
 }
 
-/* Halo circular */
 .logoHalo {
   position: absolute;
   top: 100%;
@@ -43,6 +47,7 @@
   z-index: 0;
 }
 
+/* ===== BIENVENIDA Y ESQUINAS ===== */
 .bienvenida {
   position: absolute;
   top: 40%;
@@ -59,7 +64,6 @@
   will-change: transform, opacity;
 }
 
-/* Esquinas */
 .bienvenida::before,
 .bienvenida::after,
 .bienvenida .corner-tl,
@@ -73,7 +77,6 @@
   z-index: 1;
 }
 
-/* Esquina superior izquierda */
 .bienvenida::before {
   top: 0;
   left: 0;
@@ -81,7 +84,6 @@
   border-bottom: none;
 }
 
-/* Esquina inferior derecha */
 .bienvenida::after {
   bottom: 0;
   right: 0;
@@ -89,7 +91,6 @@
   border-top: none;
 }
 
-/* Esquina superior derecha */
 .bienvenida .corner-tl {
   top: 0;
   right: 0;
@@ -97,7 +98,6 @@
   border-bottom: none;
 }
 
-/* Esquina inferior izquierda */
 .bienvenida .corner-br {
   bottom: 0;
   left: 0;
@@ -105,7 +105,6 @@
   border-top: none;
 }
 
-/* Hover para todas */
 .bienvenida:hover::before,
 .bienvenida:hover::after,
 .bienvenida:hover .corner-tl,
@@ -113,46 +112,7 @@
   transform: scale(1.5);
 }
 
-
-
-@media (max-width: 767px) {
-  .bienvenida {
-    font-size: 1.5rem;
-    padding: 0 10vw;
-  }
-  .logoContainer {
-    width: 100%;
-  }
-  .logoHalo{
-    bottom: -10%;
-    width: 150%;
-  }
-}
-
-@media (max-width: 767px) {
-  .bienvenida {
-    padding: 1.5rem 1.25rem;
-    border-radius: 0.75rem;
-    width: 80%;
-
-  }
-
-  .bienvenida h1 {
-    font-size: 2.5rem;
-  }
-
-  .bienvenida h2 {
-    font-size: 1.3rem;
-    margin-bottom: 1.2rem;
-  }
-
-  .bienvenida p {
-    font-size: 1rem;
-    line-height: 1.5;
-  }
-}
-
-/* Indicador animado para invitar a hacer scroll hacia abajo */
+/* ===== SCROLL DOWN INDICATOR ===== */
 .scrollDown {
   position: absolute;
   bottom: 3vh;
@@ -162,7 +122,7 @@
   z-index: 10;
   opacity: 1;
   transition: opacity 0.5s ease;
-  pointer-events: none; /* evita que bloquee clics */
+  pointer-events: none;
 }
 
 .arrow {
@@ -181,5 +141,53 @@
   }
   50% {
     transform: translateY(8px) rotate(-45deg);
+  }
+}
+
+/* ===== RESPONSIVE: ALTURA PEQUEÑA ===== */
+@media (max-height: 750px) {
+  .heroSection {
+    padding-top: 4rem;
+    padding-bottom: 2rem;
+  }
+
+  .bienvenida h1 {
+    font-size: 2.25rem;
+  }
+
+  .bienvenida h2 {
+    font-size: 1.5rem;
+  }
+}
+
+/* ===== RESPONSIVE: MÓVIL ===== */
+@media (max-width: 767px) {
+  .logoContainer {
+    width: 100%;
+  }
+
+  .logoHalo {
+    bottom: -10%;
+    width: 150%;
+  }
+
+  .bienvenida {
+    padding: 1.5rem 1.25rem;
+    border-radius: 0.75rem;
+    width: 80%;
+  }
+
+  .bienvenida h1 {
+    font-size: 2.5rem;
+  }
+
+  .bienvenida h2 {
+    font-size: 1.3rem;
+    margin-bottom: 1.2rem;
+  }
+
+  .bienvenida p {
+    font-size: 1rem;
+    line-height: 1.5;
   }
 }

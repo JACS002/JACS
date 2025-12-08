@@ -127,9 +127,7 @@ export default function Proyectos() {
     <section
       id="proyectos"
       ref={sectionRef}
-      className={`${styles.section} ${
-        isVisible ? styles.sectionVisible : styles.sectionHidden
-      }`}
+      className={`${styles.section}`}
     >
       {/* Canvas */}
       <div className={styles.canvasFull}>
@@ -195,14 +193,15 @@ export default function Proyectos() {
                 ${styles.mainTitle} 
                 font-titulos 
                 font-bold 
-                text-4xl
-                sm:text-5xl
-                md:text-6xl
-                lg:text-7xl
+                text-3xl
+                sm:text-4xl
+                md:text-5xl
+                lg:text-6xl
               `}
             >
               {t("projects.title")}
             </h1>
+
 
             {!loading && !error && projects.length > 0 && (
               <button

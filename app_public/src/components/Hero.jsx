@@ -257,9 +257,12 @@ export default function Hero() {
 
       {/* Bloque de texto de bienvenida (título, tagline y descripción) */}
       <div
-        className={`${styles.bienvenida} bienvenida`}
-        style={{ marginTop: "3rem" }}
+        className={`
+          ${styles.bienvenida} bienvenida
+          mt-8 md:mt-10 lg:mt-12
+        `}
       >
+
         <h1 className="text-white font-titulos font-bold text-5xl mb-5 mt-3">
           {t("hero.title")}
         </h1>
