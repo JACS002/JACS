@@ -1,4 +1,3 @@
-// src/components/ProjectOrbitsCanvas.jsx
 import { Canvas, useFrame } from "@react-three/fiber";
 import {
   OrbitControls,
@@ -39,7 +38,6 @@ function getMoonTexturePath(project) {
   if (title.includes("tradingml")) return "/images/projects/luna-trading.webp";
   if (title.includes("portfolio")) return "/images/projects/luna-jacs.webp";
 
-  // fallback: reutilizamos la de JACS
   return "/images/projects/luna-jacs.webp";
 }
 
@@ -59,43 +57,20 @@ function getMoonLabel(project) {
 
   const title = raw.toLowerCase();
 
-  //Importante: condiciones bien específicas y sin solaparse
-
-  // Cenespe Industrias
-  if (title.includes("cenespe industrias") || title.includes("cenespe")) {
+  if (title.includes("cenespe industrias") || title.includes("cenespe"))
     return "Cenespe";
-  }
 
-  // Global Print
-  if (title.includes("global print")) {
-    return "Global Print";
-  }
-
-  // NYC Taxi Analytics
-  if (title.includes("nyc taxi analytics")) {
-    return "NYC Analytics";
-  }
-
-  // TaxiFare – aquí ya NO usamos "nyc taxi" genérico
-  if (title.includes("taxifare")) {
-    return "TaxiFare";
-  }
-
-  // TradingML
-  if (title.includes("tradingml")) {
-    return "TradingML";
-  }
-
-  // Portafolio JACS (en/es)
+  if (title.includes("global print")) return "Global Print";
+  if (title.includes("nyc taxi analytics")) return "NYC Analytics";
+  if (title.includes("taxifare")) return "TaxiFare";
+  if (title.includes("tradingml")) return "TradingML";
   if (
     title.includes("portafolio personal jacs") ||
     title.includes("jacs personal portfolio") ||
     title.includes("jacs")
-  ) {
+  )
     return "JACS";
-  }
 
-  // fallback: usa el título completo
   return raw;
 }
 
@@ -184,17 +159,15 @@ function SaturnMoons({
   const moonTextures = useTexture(moonTexturePaths);
 
   if (orbitParamsRef.current.length !== projects.length) {
-    orbitParamsRef.current = projects.map((_, i) => {
-      const radius = baseRadius + i * radiusStep;
-      const speed = 0.25 + i * 0.05;
-      const tiltX = (Math.random() - 0.5) * Math.PI * 0.6;
-      const tiltZ = (Math.random() - 0.5) * Math.PI * 0.6;
-      return {
-        radius,
-        speed,
-        tilt: new THREE.Euler(tiltX, 0, tiltZ),
-      };
-    });
+    orbitParamsRef.current = projects.map((_, i) => ({
+      radius: baseRadius + i * radiusStep,
+      speed: 0.25 + i * 0.05,
+      tilt: new THREE.Euler(
+        (Math.random() - 0.5) * Math.PI * 0.6,
+        0,
+        (Math.random() - 0.5) * Math.PI * 0.6
+      ),
+    }));
   }
 
   useFrame((_, delta) => {
@@ -203,19 +176,17 @@ function SaturnMoons({
     orbitRefs.current.forEach((group, index) => {
       if (!group) return;
       const { speed } = orbitParamsRef.current[index];
-      if (!paused) {
-        group.rotation.y += delta * speed;
-      }
+      if (!paused) group.rotation.y += delta * speed;
     });
 
     moonRefs.current.forEach((mesh, index) => {
       if (!mesh) return;
       const isActive = index === activeIndex;
       const isHovered = index === hoveredIndex;
-      const targetScale = isHovered ? 1.7 : isActive ? 1.3 : 1.0;
+      const target = isHovered ? 1.7 : isActive ? 1.3 : 1.0;
 
       const current = mesh.scale.x;
-      const next = THREE.MathUtils.lerp(current, targetScale, 0.15);
+      const next = THREE.MathUtils.lerp(current, target, 0.15);
       mesh.scale.setScalar(next);
     });
   });
@@ -223,17 +194,16 @@ function SaturnMoons({
   return (
     <group>
       {projects.map((project, index) => {
-        const isHovered = index === hoveredIndex;
-        const color = MOON_COLORS[index % MOON_COLORS.length];
         const params = orbitParamsRef.current[index];
         const texture = moonTextures[index];
         const label = getMoonLabel(project);
+        const color = MOON_COLORS[index % MOON_COLORS.length];
 
         return (
           <Float
             key={project._id || index}
-            speed={isHovered ? 2 : 1.2}
-            floatIntensity={isHovered ? 1.5 : 0.9}
+            speed={1.2}
+            floatIntensity={0.9}
             rotationIntensity={0.7}
           >
             <group
@@ -264,7 +234,6 @@ function SaturnMoons({
                   <meshBasicMaterial color={color} />
                 )}
 
-                {/* Etiqueta grande sobre cada luna */}
                 {hoveredIndex === null && (
                   <Html
                     distanceFactor={10}
@@ -277,7 +246,7 @@ function SaturnMoons({
                         borderRadius: "999px",
                         background: "rgba(0,0,0,0.9)",
                         border: "1px solid rgba(156,101,242,0.95)",
-                        color: "#ffffff",
+                        color: "#fff",
                         fontFamily: "'Space Grotesk', system-ui, sans-serif",
                         fontWeight: 600,
                         fontSize: "clamp(1rem, 1.8vw, 1.2rem)",
@@ -286,7 +255,7 @@ function SaturnMoons({
                         whiteSpace: "nowrap",
                         boxShadow: "0 0 14px rgba(0,0,0,0.8)",
                         backdropFilter: "blur(10px)",
-                        textShadow: "0 0 6px #000000",
+                        textShadow: "0 0 6px #000",
                       }}
                     >
                       {label}
@@ -302,7 +271,7 @@ function SaturnMoons({
   );
 }
 
-// =============================== ESCENA (dentro del Canvas) ==================
+// =============================== ESCENA ==================
 function Scene({
   projects,
   activeIndex,
@@ -312,59 +281,33 @@ function Scene({
 }) {
   const [hoveredIndex, setHoveredIndex] = useState(null);
 
-  // detectar si debemos habilitar OrbitControls
+  // Solo true si el navegador detecta pointerType === "mouse"
   const [hasPointerDevice, setHasPointerDevice] = useState(false);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
 
-    const checkPointerCapability = () => {
-      const mqPointerFine = window.matchMedia("(pointer: fine)");
-      const mqAnyPointerFine = window.matchMedia("(any-pointer: fine)");
-      const mqHoverHover = window.matchMedia("(hover: hover)");
-
-      const hasFinePointer =
-        mqPointerFine.matches || mqAnyPointerFine.matches;
-
-      // Mouse o trackpad real: puede hacer hover
-      const hasRealMouse = hasFinePointer && mqHoverHover.matches;
-
-      if (hasRealMouse) {
+    const handlePointerDown = (event) => {
+      if (event.pointerType === "mouse") {
         setHasPointerDevice(true);
-        return;
       }
-
-      // Si no hay mouse real, usamos reglas de escritorio
-      const isLargeScreen = window.matchMedia("(min-width: 800px)").matches;
-      const isTallEnough = window.matchMedia("(min-height: 550px)").matches;
-
-      setHasPointerDevice(hasFinePointer && isLargeScreen && isTallEnough);
     };
 
-    checkPointerCapability();
+    const handlePointerMove = (event) => {
+      if (event.pointerType === "mouse") {
+        setHasPointerDevice(true);
+      }
+    };
 
-    const queries = [
-      "(pointer: fine)",
-      "(any-pointer: fine)",
-      "(hover: hover)",
-      "(min-width: 800px)",
-      "(min-height: 550px)",
-    ];
-
-    const mqs = queries.map((q) => window.matchMedia(q));
-
-    mqs.forEach((mq) =>
-      mq.addEventListener("change", checkPointerCapability)
-    );
+    window.addEventListener("pointerdown", handlePointerDown);
+    window.addEventListener("pointermove", handlePointerMove);
 
     return () => {
-      mqs.forEach((mq) =>
-        mq.removeEventListener("change", checkPointerCapability)
-      );
+      window.removeEventListener("pointerdown", handlePointerDown);
+      window.removeEventListener("pointermove", handlePointerMove);
     };
   }, []);
 
-  // si viene un hover desde la lista, tiene prioridad
   const effectiveHover =
     externalHoverIndex !== null ? externalHoverIndex : hoveredIndex;
 
@@ -372,23 +315,12 @@ function Scene({
     effectiveHover != null ? projects[effectiveHover] : null;
 
   const handleHoverChange = (index) => {
-    // si la lista está controlando el hover, ignoramos el del mouse
     if (externalHoverIndex !== null) return;
     setHoveredIndex(index);
   };
 
   return (
     <>
-      {/* Fondo de estrellas opcional */}
-      {/* <Stars
-        radius={60}
-        depth={40}
-        count={8000}
-        factor={2}
-        saturation={0}
-        fade
-      /> */}
-
       <ambientLight intensity={0.4} />
 
       <Saturn />
@@ -402,7 +334,6 @@ function Scene({
         lang={lang}
       />
 
-      {/*Nombre del proyecto al centro cuando está hover */}
       {hoveredProject && (
         <Html
           fullscreen
@@ -436,8 +367,6 @@ function Scene({
         </Html>
       )}
 
-      {/* OrbitControls solo si hay mouse/trackpad real
-          o si encaja con layout de escritorio */}
       {hasPointerDevice && (
         <OrbitControls
           enablePan={false}
@@ -530,13 +459,9 @@ export default function ProjectOrbitsCanvas({
         touchAction: "pan-y",
       }}
     >
-      {/* escucha progreso de carga y avisa al padre */}
       <AssetProgress onAssetsLoaded={onAssetsLoaded} />
-
-      {/* overlay de carga de texturas */}
       <TextureLoadingOverlay lang={lang} />
 
-      {/* Escena principal */}
       <Scene
         projects={projects}
         activeIndex={activeIndex}
