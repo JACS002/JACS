@@ -1,8 +1,5 @@
 // ============================================================================
 // Navbar tipo "casco / visor"
-// - Logo fijo centro superior
-// - Botón VISOR_002 a la derecha
-// - Al abrir visor: overlay HUD con secciones + cambio de idioma
 // ============================================================================
 
 import { useState, useEffect } from "react";
@@ -18,12 +15,10 @@ gsap.registerPlugin(ScrollToPlugin);
 export default function Navbar() {
   const { lang, toggleLang, t } = useLang();
 
-  // Estados
   const [menuOpen, setMenuOpen] = useState(false);
   const [showNavbar, setShowNavbar] = useState(true);
   const [activeSection, setActiveSection] = useState("");
 
-  // Links usando sistema de traducciones
   const navLinks = [
     { name: t("nav.home"), href: "#inicio" },
     { name: t("nav.projects"), href: "#proyectos" },
@@ -35,9 +30,6 @@ export default function Navbar() {
     setMenuOpen((prev) => !prev);
   };
 
-  // ========================================================================
-  // Cambio de idioma sin mover el scroll
-  // ========================================================================
   const handleLangToggle = () => {
     const currentY = window.scrollY;
     toggleLang();
@@ -46,9 +38,6 @@ export default function Navbar() {
     });
   };
 
-  // ========================================================================
-  // Cerrar visor con tecla ESC
-  // ========================================================================
   useEffect(() => {
     const handleKeyDown = (e) => {
       if (e.key === "Escape" || e.key === "Esc") {
@@ -60,10 +49,6 @@ export default function Navbar() {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, []);
 
-
-  // ========================================================================
-  // Bloquear scroll del body cuando el visor está abierto
-  // ========================================================================
   useEffect(() => {
     if (menuOpen) {
       document.body.style.overflow = "hidden";
@@ -76,9 +61,6 @@ export default function Navbar() {
     };
   }, [menuOpen]);
 
-  // ========================================================================
-  // Ocultar navbar si ya hay un modal abierto al entrar
-  // ========================================================================
   useEffect(() => {
     if (window.forceHideNavbar) {
       setShowNavbar(false);
@@ -87,9 +69,6 @@ export default function Navbar() {
     }
   }, []);
 
-  // ========================================================================
-  // Detectar sección activa según el scroll
-  // ========================================================================
   useEffect(() => {
     const handleScroll = () => {
       const scrollTop = window.scrollY;
@@ -124,9 +103,6 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // ========================================================================
-  // Scroll animado con GSAP
-  // ========================================================================
   const handleScrollTo = (targetId) => {
     let target;
 
@@ -148,9 +124,6 @@ export default function Navbar() {
     });
   };
 
-  // ========================================================================
-  // Monitorear forceHideNavbar para ocultar durante modales
-  // ========================================================================
   useEffect(() => {
     const interval = setInterval(() => {
       if (window.forceHideNavbar) {
@@ -163,15 +136,11 @@ export default function Navbar() {
     return () => clearInterval(interval);
   }, []);
 
-  // Click en opción de menú dentro del visor
   const handleVisorNavClick = (href) => {
     setMenuOpen(false);
     handleScrollTo(href);
   };
 
-  // ========================================================================
-  // Render
-  // ========================================================================
   return (
     <>
       {/* HEADER FIJO: Logo centro + botón VISOR derecha */}
@@ -181,17 +150,44 @@ export default function Navbar() {
         }`}
       >
         <div className={styles.headerInner}>
-          {/* Columna izquierda (HUD pequeño) */}
+          {/* Columna izquierda: solo toggle de idioma */}
           <div className={styles.headerLeft}>
-            <span className={styles.headerMetaSmall}>JACS VISOR</span>
+            <button
+              type="button"
+              onClick={handleLangToggle}
+              className={styles.langSwitch}
+              aria-label={t("nav.langLabel")}
+            >
+              <span
+                className={`${styles.langLabel} ${
+                  lang === "en" ? styles.langActive : ""
+                }`}
+              >
+                EN
+              </span>
+              <div className={styles.langTrack}>
+                <div
+                  className={`${styles.langThumb} ${
+                    lang === "es" ? styles.thumbRight : styles.thumbLeft
+                  }`}
+                />
+              </div>
+              <span
+                className={`${styles.langLabel} ${
+                  lang === "es" ? styles.langActive : ""
+                }`}
+              >
+                ES
+              </span>
+            </button>
           </div>
 
           {/* Logo centrado */}
           <button
             type="button"
             onClick={() => {
-              setMenuOpen(false)
-              handleScrollTo("#inicio")
+              setMenuOpen(false);
+              handleScrollTo("#inicio");
             }}
             className={styles.headerLogoButton}
           >
@@ -218,6 +214,14 @@ export default function Navbar() {
         </div>
       </header>
 
+      {/* Marca inferior centrada: JACS VISOR */}
+      {!menuOpen && (
+        <div className={styles.footerBrand}>
+          <span className={styles.headerMetaSmall}>JACS VISOR</span>
+        </div>
+      )}
+
+
       {/* OVERLAY DEL CASCO / VISOR */}
       <div
         id="helmetVisor"
@@ -229,32 +233,11 @@ export default function Navbar() {
         <div className={styles.visorBackdrop} />
 
         <div className={styles.visorFrame}>
-          {/* HUD superior dentro del visor (vacío, solo mantiene algo de espacio si quieres) */}
+          {/* HUD superior dentro del visor (lo dejamos vacío por ahora) */}
           <div className={styles.visorHudTop} />
 
-          {/* Centro del visor: POV + navegación */}
+          {/* Centro del visor: solo textos + navegación (SIN toggle de idioma) */}
           <div className={styles.visorCenter}>
-            <button
-              type="button"
-              onClick={handleLangToggle}
-              className={styles.langSwitchCenter}
-              aria-label={t("nav.langLabel")}
-            >
-              <span className={`${styles.langLabel} ${lang === "en" ? styles.langActive : ""}`}>
-                EN
-              </span>
-              <div className={styles.langTrack}>
-                <div
-                  className={`${styles.langThumb} ${
-                    lang === "es" ? styles.thumbRight : styles.thumbLeft
-                  }`}
-                />
-              </div>
-              <span className={`${styles.langLabel} ${lang === "es" ? styles.langActive : ""}`}>
-                ES
-              </span>
-            </button>
-
             <p className={styles.visorTitle}>
               {lang === "es" ? "Sistema de navegación" : "Navigation system"}
             </p>
@@ -278,7 +261,9 @@ export default function Navbar() {
                       }`}
                       onClick={() => handleVisorNavClick(link.href)}
                     >
-                      <span className={styles.visorNavLabel}>{link.name}</span>
+                      <span className={styles.visorNavLabel}>
+                        {link.name}
+                      </span>
                     </button>
                   </li>
                 );
@@ -289,8 +274,9 @@ export default function Navbar() {
           {/* Meta del casco al final de las secciones */}
           <div className={styles.visorHelmetMeta}>
             <span className={styles.hudLabel}>JACS VISOR</span>
-            <span className={styles.hudSubLabel}>ORBIT • SECTOR-03 • MK-II</span>
-            {/* cambia "MK-II" por la versión que tú quieras */}
+            <span className={styles.hudSubLabel}>
+              ORBIT • SECTOR-03 • MK-II
+            </span>
           </div>
 
           {/* Pie del visor: pista visual */}
@@ -302,7 +288,6 @@ export default function Navbar() {
             </span>
           </div>
         </div>
-
       </div>
     </>
   );
