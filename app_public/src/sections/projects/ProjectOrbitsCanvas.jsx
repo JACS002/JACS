@@ -23,19 +23,17 @@ const MOON_COLORS = [
 
 // ---------------- helpers ----------------
 function getMoonTexturePath(project) {
-  const titleObj = project?.title || "";
-  const title =
-    typeof titleObj === "string"
-      ? titleObj
-      : (titleObj.en || titleObj.es || "").toLowerCase();
+  if (!project) return "/images/projects/luna-jacs.webp";
 
-  if (title.includes("cenespe")) return "/images/projects/luna-cenespe.webp";
-  if (title.includes("global print")) return "/images/projects/luna-global.webp";
-  if (title.includes("nyc taxi analytics"))
-    return "/images/projects/luna-nyc-taxi.webp";
-  if (title.includes("taxifare")) return "/images/projects/luna-taxifare.webp";
-  if (title.includes("tradingml")) return "/images/projects/luna-trading.webp";
-  if (title.includes("portfolio")) return "/images/projects/luna-jacs.webp";
+  // Usar shortLabel directamente (más confiable)
+  const label = (project.shortLabel || "").toLowerCase();
+
+  if (label === "cenespe") return "/images/projects/luna-cenespe.webp";
+  if (label === "globalprint") return "/images/projects/luna-global.webp";
+  if (label === "nyc analytics") return "/images/projects/luna-nyc-taxi.webp";
+  if (label === "taxifare") return "/images/projects/luna-taxifare.webp";
+  if (label === "tradingml") return "/images/projects/luna-trading.webp";
+  if (label === "jacs") return "/images/projects/luna-jacs.webp";
 
   return "/images/projects/luna-jacs.webp";
 }
@@ -46,25 +44,19 @@ function getLocalizedField(field, lang) {
   return lang === "es" ? field.es || field.en || "" : field.en || field.es || "";
 }
 
-// nombre corto
+
 function getMoonLabel(project) {
-  const titleObj = project?.title || "";
-  const raw =
-    typeof titleObj === "string"
-      ? titleObj
-      : titleObj.en || titleObj.es || "";
+  if (!project) return "";
 
-  const title = raw.toLowerCase();
+  // Si existe shortLabel
+  if (project.shortLabel) return project.shortLabel;
 
-  if (title.includes("cenespe")) return "Cenespe";
-  if (title.includes("global print")) return "Global Print";
-  if (title.includes("nyc taxi")) return "NYC Analytics";
-  if (title.includes("taxifare")) return "TaxiFare";
-  if (title.includes("tradingml")) return "TradingML";
-  if (title.includes("jacs")) return "JACS";
-
-  return raw;
+  // Fallback en caso de que algún proyecto viejo no tenga shortLabel
+  const title = project.title?.en || project.title?.es || "";
+  return title;
 }
+
+
 
 // =============================== SATURNO ===============================
 function Saturn() {

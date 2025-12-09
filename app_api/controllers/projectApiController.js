@@ -10,6 +10,7 @@ const getAllProjects = async (req, res) => {
     const mapped = projects.map((p) => ({
       _id: p._id,
       title: p.title,             // { en: "...", es: "..." }
+      shortLabel: p.shortLabel,
       description: p.description, // { en: "...", es: "..." }
       image: p.image,
       github: p.github,

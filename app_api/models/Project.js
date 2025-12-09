@@ -6,6 +6,13 @@ const projectSchema = new mongoose.Schema({
     es: { type: String, required: true, trim: true },
     en: { type: String, required: true, trim: true },
   },
+
+  shortLabel: {
+    type: String,
+    trim: true,
+    required: false,
+  },
+
   description: {
     es: { type: String, required: true },
     en: { type: String, required: true },
@@ -17,5 +24,5 @@ const projectSchema = new mongoose.Schema({
   createdAt: { type: Date, default: Date.now },
 });
 
-// "proyectos" será el nombre de la colección en MongoDB
+// "proyectos" será la colección
 module.exports = mongoose.model('Project', projectSchema, 'proyectos');
