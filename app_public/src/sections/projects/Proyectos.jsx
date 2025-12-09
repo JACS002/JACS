@@ -17,7 +17,7 @@ export default function Proyectos() {
   const [error, setError] = useState("");
 
   const sectionRef = useRef(null);
-  const canvasWrapperRef = useRef(null); // 👈 referencia al wrapper del canvas
+  const canvasWrapperRef = useRef(null); //referencia al wrapper del canvas
 
   // visibilidad viewport (por ahora no se usa, pero lo dejamos listo)
   const [isVisible, setIsVisible] = useState(false);
@@ -233,7 +233,7 @@ export default function Proyectos() {
             )}
           </div>
 
-          {/* 👇 Indicador debajo del título */}
+          {/*Indicador debajo del título */}
           <div
             className={`
               ${styles.dragIndicatorInline}

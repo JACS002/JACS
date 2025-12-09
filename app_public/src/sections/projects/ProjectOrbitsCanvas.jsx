@@ -129,7 +129,7 @@ function SaturnMoons({
   onSelect,
   onHoverChange,
   lang,
-  onDragStart,              // 👈 AHORA SÍ RECIBE onDragStart
+  onDragStart,
 }) {
   const orbitRefs = useRef([]);
   const moonRefs = useRef([]);
@@ -195,7 +195,7 @@ function SaturnMoons({
                 }}
                 onPointerDown={(e) => {
                   if (e.pointerType === "mouse") {
-                    onDragStart?.();      // 👈 AHORA SÍ EXISTE Y SE LLAMA
+                    onDragStart?.();
                   }
                 }}
                 onPointerOver={() => {
@@ -257,7 +257,7 @@ function Scene({
   lang,
   externalHoverIndex = null,
   onDetectMouse,
-  onDragStart,          // 👈 ya lo recibe aquí
+  onDragStart,
 }) {
   const [hoveredIndex, setHoveredIndex] = useState(null);
   const [hasPointerDevice, setHasPointerDevice] = useState(false);
@@ -298,7 +298,7 @@ function Scene({
         onSelect={onSelect}
         onHoverChange={setHoveredIndex}
         lang={lang}
-        onDragStart={onDragStart}      // 👈 AHORA SE PASA A SATURNMOONS
+        onDragStart={onDragStart}
       />
 
       {hoveredProject && (

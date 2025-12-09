@@ -27,7 +27,7 @@ gsap.registerPlugin(ScrollTrigger);
 // ============================================================================
 
 // Nodo de skill: esfera con cross-fade de texturas + etiqueta
-function SkillBubble({ name, position, size = 0.3, baseTexture, hoverTexture }) {
+function SkillBubble({ name, position, size = 0.15, baseTexture, hoverTexture }) {
   const [hovered, setHovered] = useState(false);
 
   const groupRef = useRef();
@@ -70,7 +70,7 @@ function SkillBubble({ name, position, size = 0.3, baseTexture, hoverTexture }) 
     >
       {/* Esfera base */}
       <mesh>
-        <sphereGeometry args={[size, 32, 32]} />
+        <sphereGeometry args={[size, 20, 20]} />
         <meshBasicMaterial
           ref={baseMatRef}
           map={baseTexture}
@@ -81,7 +81,7 @@ function SkillBubble({ name, position, size = 0.3, baseTexture, hoverTexture }) 
 
       {/* Esfera hover (encima de la base) */}
       <mesh>
-        <sphereGeometry args={[size, 32, 32]} />
+        <sphereGeometry args={[size, 20, 20]} />
         <meshBasicMaterial
           ref={hoverMatRef}
           map={hoverTexture}
@@ -193,7 +193,7 @@ function SkillConstellationScene() {
       <directionalLight position={[3, 4, 2]} intensity={0.3} />
       <pointLight position={[-3, -2, -3]} intensity={0.2} />
 
-      {/* ↑ aquí aumentamos el scale para separar más las estrellas */}
+      {/* aquí aumentamos el scale para separar más las estrellas */}
       <group ref={groupRef} scale={1.4} position={[0, 0, 0]}>
         <SkillLinks nodes={nodes} />
         {nodes.map((node) => (
