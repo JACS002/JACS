@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
-import LogoSVG from "../components/LogoSVG";
+import LogoSVG from "../components/ui/LogoSVG";
 
 export default function LogoIntro({ onComplete }) {
   const containerRef = useRef();

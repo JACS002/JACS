@@ -1,5 +1,5 @@
 // src/context/ScrollContext.jsx
-import React, { createContext, useContext, useCallback, useRef, useEffect } from "react";
+import { createContext, useContext, useCallback, useRef, useEffect } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 

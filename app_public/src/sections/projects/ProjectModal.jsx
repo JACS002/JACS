@@ -1,6 +1,6 @@
 // src/components/ProjectModal.jsx
-import styles from "./styles/Proyectos.module.css";
-import techColors from "../utils/techColors";
+import styles from "./Proyectos.module.css";
+import techColors from "../../data/techColors";
 import { useEffect, useState } from "react";
 import { FaGithub } from "react-icons/fa";
 

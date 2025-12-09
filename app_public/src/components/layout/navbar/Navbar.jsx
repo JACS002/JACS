@@ -6,12 +6,12 @@
 // ============================================================================
 
 import { useState, useEffect } from "react";
-import logo from "../assets/icons/logo.svg";
-import styles from "../components/styles/Navbar.module.css";
+import logo from "../../../assets/icons/logo.svg";
+import styles from "./Navbar.module.css";
 
 import { gsap } from "gsap";
 import { ScrollToPlugin } from "gsap/ScrollToPlugin";
-import { useLang } from "../context/LanguageProvider";
+import { useLang } from "../../../context/LanguageProvider";
 
 gsap.registerPlugin(ScrollToPlugin);
 

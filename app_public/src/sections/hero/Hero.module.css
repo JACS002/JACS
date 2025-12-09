@@ -59,7 +59,6 @@
   width: 80%;
   height: auto;
   text-align: center;
-  /* font-family: 'Manrope', sans-serif; */
   background: transparent;
   border: none;
   will-change: transform, opacity;
@@ -171,9 +170,8 @@
   .bienvenida {
     padding: 0.75rem 1rem;
     max-width: 95%;
-    width: 80%;
+    width: 70%;
     max-height: 95vh;
-    overflow-y: auto; /* permitir scroll interno si es necesario */
   }
 
   .bienvenida h1 {
@@ -194,31 +192,50 @@
   }
 }
 
+@media (max-height: 610px) {
+  .bienvenida {
+    top: 35vh;
+  }
+}
+
 /* Pantallas con altura extremadamente pequeña */
 @media (max-height: 450px) {
+  .logoContainer {
+    width: 100%;
+  }
+
   .bienvenida {
-    padding: 0.2rem 0.2rem;
+    top: 28vh;
+    padding: 0.18rem;
     width: 90%;
     max-width: 95%;
     max-height: 95vh;
-    overflow-y: auto;
   }
 
   .bienvenida h1 {
     font-size: 1.6rem !important;
-    margin-bottom: 0.4rem !important;
-    margin-top: 0.2rem !important;
+    margin: 0rem !important;
   }
 
   .bienvenida h2 {
     font-size: 1.2rem !important;
-    margin-bottom: 0.4rem !important;
+    margin-bottom: 0rem !important;
   }
 
   .bienvenida p {
     font-size: 1rem !important;
     line-height: 1.25 !important;
-    margin-bottom: 0.1rem !important;
+  }
+}
+
+@media (max-height: 375px) {
+  .logoContainer {
+    width: 80%;
+  }
+
+  .bienvenida {
+    top: 25vh;
+    padding: 0.07rem;
   }
 }
 

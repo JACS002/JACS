@@ -521,7 +521,11 @@
   }
 
   .headerLogoButton {
-    top: 60%;
+    top: 80%;
+  }
+
+  .headerLogo {
+    height: 3.5rem;
   }
 
   .headerRight {
@@ -546,7 +550,7 @@
   }
 
   .headerLogoButton {
-    top: 110%;
+    top: 100%;
   }
 
   .headerLogo {

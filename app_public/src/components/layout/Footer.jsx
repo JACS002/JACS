@@ -1,6 +1,6 @@
 import { FaGithub, FaLinkedin } from "react-icons/fa";
 import { HiOutlineMail } from "react-icons/hi";
-import { useLang } from "../context/LanguageProvider";
+import { useLang } from "../../context/LanguageProvider";
 
 export default function Footer() {
   const { t } = useLang();

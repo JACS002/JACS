@@ -16,11 +16,11 @@
 //   - Integración con el sistema de i18n (useLang)
 // -----------------------------------------------------------------------------
 
-import React, { useEffect, useLayoutEffect, useRef } from "react";
+import {useLayoutEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import styles from "./styles/Contacto.module.css";
-import { useLang } from "../context/LanguageProvider";
+import styles from "./Contacto.module.css";
+import { useLang } from "../../context/LanguageProvider";
 
 gsap.registerPlugin(ScrollTrigger);
 

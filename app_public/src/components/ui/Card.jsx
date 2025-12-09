@@ -1,4 +1,4 @@
-import techColors from "../utils/techColors";
+import techColors from "../../data/techColors";
 import styles from "./styles/Proyectos.module.css";
 import { forwardRef } from "react";
 

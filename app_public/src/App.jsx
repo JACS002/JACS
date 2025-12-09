@@ -3,10 +3,9 @@ import { useState } from "react";
 import "./App.css";
 import LogoIntro from "./pages/LogoIntro";
 import Home from "./pages/Home";
-
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import StarBackground from "./components/StarBackground";
+import StarBackground from "./components/layout/StarBackground";
 
 gsap.registerPlugin(ScrollTrigger);
 

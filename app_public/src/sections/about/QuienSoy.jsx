@@ -5,7 +5,7 @@
 // - Usa GSAP + ScrollTrigger para animaciones de entrada/salida con scroll
 // -----------------------------------------------------------------------------
 
-import React, {
+import{
   Suspense,
   useRef,
   useLayoutEffect,
@@ -17,8 +17,8 @@ import { OrbitControls, Html, useTexture } from "@react-three/drei";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import * as THREE from "three";
-import styles from "./styles/QuienSoy.module.css";
-import { useLang } from "../context/LanguageProvider";
+import styles from "./QuienSoy.module.css";
+import { useLang } from "../../context/LanguageProvider";
 
 gsap.registerPlugin(ScrollTrigger);
 

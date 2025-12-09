@@ -1,9 +1,9 @@
 // src/components/Proyectos.jsx
 import { useEffect, useState, useRef } from "react";
-import styles from "./styles/Proyectos.module.css";
-import getProjects from "../utils/getProjects";
+import styles from "./Proyectos.module.css";
+import getProjects from "../../utils/getProjects";
 import ProjectModal from "./ProjectModal";
-import { useLang } from "../context/LanguageProvider";
+import { useLang } from "../../context/LanguageProvider";
 import ProjectOrbitsCanvas from "./ProjectOrbitsCanvas";
 import { FaListUl } from "react-icons/fa";
 

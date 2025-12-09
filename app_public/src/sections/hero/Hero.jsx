@@ -4,12 +4,12 @@
 // -----------------------------------------------------------------------------
 
 import { useLayoutEffect, useRef, useEffect } from "react";
-import styles from "../components/styles/Hero.module.css";
-import LogoNombre from "../assets/icons/LogoNombre";
+import styles from "./Hero.module.css";
+import LogoNombre from "../../assets/icons/LogoNombre";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { useLang } from "../context/LanguageProvider";
-import { useScroll } from "../context/ScrollContext";
+import { useLang } from "../../context/LanguageProvider";
+import { useScroll } from "../../context/ScrollContext";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -94,7 +94,7 @@ export default function Hero() {
       tl.to(
         wrapper,
         {
-          y: isSmallViewport ? "-30vh" : "-20vh",
+          y: isSmallViewport ? "-25vh" : "-20vh",
           duration: 3,
           ease: "power1.inOut",
         },
@@ -189,8 +189,11 @@ export default function Hero() {
           <span className="text-accent">{t("hero.tagline.dm")}</span>
         </h2>
 
-        <p className="text-white font-contenido text-lg md:text-xl leading-relaxed mb-3 max-w-2xl mx-auto">
+        <p className="text-center text-white font-contenido text-lg md:text-xl leading-relaxed mb-3">
           {t("hero.p1")}
+        </p>
+        <p className="text-center text-gray-400 font-contenido text-lg md:text-xl leading-relaxed">
+          {t("hero.p2")}
         </p>
       </div>
 
