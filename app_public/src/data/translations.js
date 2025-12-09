@@ -16,6 +16,10 @@ const translations = {
       "I craft modern web experiences, build scalable backends, and turn data into actionable insights through clean engineering and thoughtful design.",
     "hero.p2": "Focused on building intuitive interfaces, efficient systems and solutions that connect ideas with real impact.",
     // ─────────────────────────────────────────────
+
+    //PORYECTOS
+    "projects.dragHint": "Drag to explore",
+
     // ABOUT / QUIÉN SOY
     "about.title": "About me",
 
@@ -112,6 +116,8 @@ const translations = {
       "Creo experiencias web modernas, desarrollo backends escalables y transformo datos en información útil mediante ingeniería limpia y diseño bien pensado.",
       "hero.p2": "Enfocado en crear interfaces intuitivas, sistemas eficientes y soluciones que conectan ideas con impacto real.",
 
+    //PORYECTOS
+    "projects.dragHint": "Arrastra para navegar",
 
     // ─────────────────────────────────────────────
     // ABOUT / QUIÉN SOY

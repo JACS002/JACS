@@ -4,13 +4,12 @@ import {
   Float,
   Html,
   useTexture,
-  // Stars,
   useProgress,
 } from "@react-three/drei";
 import { useRef, useState, useEffect } from "react";
 import * as THREE from "three";
 
-// Colores fallback para las lunas (por si algún día falta textura)
+// Colores fallback
 const MOON_COLORS = [
   "#4f8cff",
   "#ff7043",
@@ -22,7 +21,7 @@ const MOON_COLORS = [
   "#9ccc65",
 ];
 
-// ------------------ helpers ------------------------
+// ---------------- helpers ----------------
 function getMoonTexturePath(project) {
   const titleObj = project?.title || "";
   const title =
@@ -47,7 +46,7 @@ function getLocalizedField(field, lang) {
   return lang === "es" ? field.es || field.en || "" : field.en || field.es || "";
 }
 
-//Nombre corto y bonito para la etiqueta de cada luna
+// nombre corto
 function getMoonLabel(project) {
   const titleObj = project?.title || "";
   const raw =
@@ -57,24 +56,17 @@ function getMoonLabel(project) {
 
   const title = raw.toLowerCase();
 
-  if (title.includes("cenespe industrias") || title.includes("cenespe"))
-    return "Cenespe";
-
+  if (title.includes("cenespe")) return "Cenespe";
   if (title.includes("global print")) return "Global Print";
-  if (title.includes("nyc taxi analytics")) return "NYC Analytics";
+  if (title.includes("nyc taxi")) return "NYC Analytics";
   if (title.includes("taxifare")) return "TaxiFare";
   if (title.includes("tradingml")) return "TradingML";
-  if (
-    title.includes("portafolio personal jacs") ||
-    title.includes("jacs personal portfolio") ||
-    title.includes("jacs")
-  )
-    return "JACS";
+  if (title.includes("jacs")) return "JACS";
 
   return raw;
 }
 
-// =============================== SATURNO =====================================
+// =============================== SATURNO ===============================
 function Saturn() {
   const groupRef = useRef();
   const ringMeshRef = useRef();
@@ -84,7 +76,6 @@ function Saturn() {
 
   const setupRingUVs = () => {
     if (!ringMeshRef.current) return;
-
     const geometry = ringMeshRef.current.geometry;
     const uvAttribute = geometry.attributes.uv;
 
@@ -95,18 +86,13 @@ function Saturn() {
     for (let i = 0; i < uvAttribute.count; i++) {
       const u = uvAttribute.getX(i);
       const v = uvAttribute.getY(i);
-      const newU = cropStart + u * cropRange;
-      const newV = cropStart + v * cropRange;
-      uvAttribute.setXY(i, newU, newV);
+      uvAttribute.setXY(i, cropStart + u * cropRange, cropStart + v * cropRange);
     }
-
     uvAttribute.needsUpdate = true;
   };
 
   useFrame((_, delta) => {
-    if (!groupRef.current) return;
-    groupRef.current.rotation.y += delta * 0.25;
-
+    if (groupRef.current) groupRef.current.rotation.y += delta * 0.25;
     if (ringMeshRef.current && !ringMeshRef.current.userData.uvsConfigured) {
       setupRingUVs();
       ringMeshRef.current.userData.uvsConfigured = true;
@@ -120,11 +106,7 @@ function Saturn() {
         <meshBasicMaterial map={saturnMap} />
       </mesh>
 
-      <mesh
-        ref={ringMeshRef}
-        rotation={[Math.PI / 2.6, 0, 0]}
-        position={[0, 0, 0]}
-      >
+      <mesh ref={ringMeshRef} rotation={[Math.PI / 2.6, 0, 0]}>
         <ringGeometry args={[1.9, 2.9, 125]} />
         <meshBasicMaterial
           map={ringMap}
@@ -139,7 +121,7 @@ function Saturn() {
   );
 }
 
-// =============================== LUNAS / PROYECTOS ===========================
+// =============================== LUNAS ===============================
 function SaturnMoons({
   projects,
   activeIndex,
@@ -147,6 +129,7 @@ function SaturnMoons({
   onSelect,
   onHoverChange,
   lang,
+  onDragStart,              // 👈 AHORA SÍ RECIBE onDragStart
 }) {
   const orbitRefs = useRef([]);
   const moonRefs = useRef([]);
@@ -155,8 +138,7 @@ function SaturnMoons({
   const baseRadius = 2.8;
   const radiusStep = 0.5;
 
-  const moonTexturePaths = projects.map(getMoonTexturePath);
-  const moonTextures = useTexture(moonTexturePaths);
+  const moonTextures = useTexture(projects.map(getMoonTexturePath));
 
   if (orbitParamsRef.current.length !== projects.length) {
     orbitParamsRef.current = projects.map((_, i) => ({
@@ -173,53 +155,51 @@ function SaturnMoons({
   useFrame((_, delta) => {
     const paused = hoveredIndex !== null;
 
-    orbitRefs.current.forEach((group, index) => {
-      if (!group) return;
-      const { speed } = orbitParamsRef.current[index];
-      if (!paused) group.rotation.y += delta * speed;
+    orbitRefs.current.forEach((group, i) => {
+      if (group && !paused)
+        group.rotation.y += delta * orbitParamsRef.current[i].speed;
     });
 
-    moonRefs.current.forEach((mesh, index) => {
+    moonRefs.current.forEach((mesh, i) => {
       if (!mesh) return;
-      const isActive = index === activeIndex;
-      const isHovered = index === hoveredIndex;
+      const isActive = i === activeIndex;
+      const isHovered = i === hoveredIndex;
       const target = isHovered ? 1.7 : isActive ? 1.3 : 1.0;
-
-      const current = mesh.scale.x;
-      const next = THREE.MathUtils.lerp(current, target, 0.15);
-      mesh.scale.setScalar(next);
+      mesh.scale.setScalar(THREE.MathUtils.lerp(mesh.scale.x, target, 0.15));
     });
   });
 
   return (
     <group>
-      {projects.map((project, index) => {
-        const params = orbitParamsRef.current[index];
-        const texture = moonTextures[index];
+      {projects.map((project, i) => {
+        const params = orbitParamsRef.current[i];
         const label = getMoonLabel(project);
-        const color = MOON_COLORS[index % MOON_COLORS.length];
 
         return (
           <Float
-            key={project._id || index}
+            key={i}
             speed={1.2}
             floatIntensity={0.9}
             rotationIntensity={0.7}
           >
             <group
-              ref={(el) => (orbitRefs.current[index] = el)}
+              ref={(el) => (orbitRefs.current[i] = el)}
               rotation={params.tilt}
             >
               <mesh
-                ref={(el) => (moonRefs.current[index] = el)}
+                ref={(el) => (moonRefs.current[i] = el)}
                 position={[params.radius, 0, 0]}
                 onClick={(e) => {
                   e.stopPropagation();
-                  onSelect(index);
+                  onSelect(i);
                 }}
-                onPointerOver={(e) => {
-                  e.stopPropagation();
-                  onHoverChange(index);
+                onPointerDown={(e) => {
+                  if (e.pointerType === "mouse") {
+                    onDragStart?.();      // 👈 AHORA SÍ EXISTE Y SE LLAMA
+                  }
+                }}
+                onPointerOver={() => {
+                  onHoverChange(i);
                   document.body.style.cursor = "pointer";
                 }}
                 onPointerOut={() => {
@@ -228,11 +208,14 @@ function SaturnMoons({
                 }}
               >
                 <sphereGeometry args={[0.4, 28, 28]} />
-                {texture ? (
-                  <meshBasicMaterial map={texture} />
-                ) : (
-                  <meshBasicMaterial color={color} />
-                )}
+                <meshBasicMaterial
+                  map={moonTextures[i] || null}
+                  color={
+                    !moonTextures[i]
+                      ? MOON_COLORS[i % MOON_COLORS.length]
+                      : null
+                  }
+                />
 
                 {hoveredIndex === null && (
                   <Html
@@ -247,15 +230,10 @@ function SaturnMoons({
                         background: "rgba(0,0,0,0.9)",
                         border: "1px solid rgba(156,101,242,0.95)",
                         color: "#fff",
-                        fontFamily: "'Space Grotesk', system-ui, sans-serif",
+                        fontFamily: "'Space Grotesk', sans-serif",
                         fontWeight: 600,
                         fontSize: "clamp(1rem, 1.8vw, 1.2rem)",
-                        letterSpacing: "0.06em",
                         textTransform: "uppercase",
-                        whiteSpace: "nowrap",
-                        boxShadow: "0 0 14px rgba(0,0,0,0.8)",
-                        backdropFilter: "blur(10px)",
-                        textShadow: "0 0 6px #000",
                       }}
                     >
                       {label}
@@ -271,53 +249,41 @@ function SaturnMoons({
   );
 }
 
-// =============================== ESCENA ==================
+// =============================== ESCENA ===============================
 function Scene({
   projects,
   activeIndex,
   onSelect,
   lang,
   externalHoverIndex = null,
+  onDetectMouse,
+  onDragStart,          // 👈 ya lo recibe aquí
 }) {
   const [hoveredIndex, setHoveredIndex] = useState(null);
-
-  // Solo true si el navegador detecta pointerType === "mouse"
   const [hasPointerDevice, setHasPointerDevice] = useState(false);
 
   useEffect(() => {
-    if (typeof window === "undefined") return;
-
-    const handlePointerDown = (event) => {
+    const detect = (event) => {
       if (event.pointerType === "mouse") {
         setHasPointerDevice(true);
+        onDetectMouse?.();
       }
     };
 
-    const handlePointerMove = (event) => {
-      if (event.pointerType === "mouse") {
-        setHasPointerDevice(true);
-      }
-    };
-
-    window.addEventListener("pointerdown", handlePointerDown);
-    window.addEventListener("pointermove", handlePointerMove);
+    window.addEventListener("pointerdown", detect);
+    window.addEventListener("pointermove", detect);
 
     return () => {
-      window.removeEventListener("pointerdown", handlePointerDown);
-      window.removeEventListener("pointermove", handlePointerMove);
+      window.removeEventListener("pointerdown", detect);
+      window.removeEventListener("pointermove", detect);
     };
-  }, []);
+  }, [onDetectMouse]);
 
   const effectiveHover =
     externalHoverIndex !== null ? externalHoverIndex : hoveredIndex;
 
   const hoveredProject =
     effectiveHover != null ? projects[effectiveHover] : null;
-
-  const handleHoverChange = (index) => {
-    if (externalHoverIndex !== null) return;
-    setHoveredIndex(index);
-  };
 
   return (
     <>
@@ -330,8 +296,9 @@ function Scene({
         activeIndex={activeIndex}
         hoveredIndex={effectiveHover}
         onSelect={onSelect}
-        onHoverChange={handleHoverChange}
+        onHoverChange={setHoveredIndex}
         lang={lang}
+        onDragStart={onDragStart}      // 👈 AHORA SE PASA A SATURNMOONS
       />
 
       {hoveredProject && (
@@ -342,7 +309,6 @@ function Scene({
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            zIndex: 20,
           }}
         >
           <div
@@ -352,14 +318,7 @@ function Scene({
               borderRadius: "999px",
               background: "rgba(0,0,0,0.9)",
               border: "1px solid rgba(156,101,242,0.95)",
-              color: "#ffffff",
-              fontFamily: "'Space Grotesk', system-ui, sans-serif",
-              fontWeight: 600,
-              fontSize: "clamp(0.85rem, 2.2vw, 1.5rem)",
-              whiteSpace: "nowrap",
-              boxShadow: "0 0 18px rgba(0,0,0,0.8)",
-              backdropFilter: "blur(14px)",
-              textShadow: "0 0 10px #000000",
+              color: "#fff",
             }}
           >
             {getLocalizedField(hoveredProject.title, lang)}
@@ -380,20 +339,17 @@ function Scene({
   );
 }
 
-// =================== COMPONENTE PARA AVISAR AL PADRE ========================
+// =============================== LOADING ===============================
 function AssetProgress({ onAssetsLoaded }) {
   const { active } = useProgress();
 
   useEffect(() => {
-    if (!active && onAssetsLoaded) {
-      onAssetsLoaded();
-    }
+    if (!active && onAssetsLoaded) onAssetsLoaded();
   }, [active, onAssetsLoaded]);
 
   return null;
 }
 
-// ===================== OVERLAY "CARGANDO TEXTURAS" ===========================
 function TextureLoadingOverlay({ lang }) {
   const { active, progress } = useProgress();
 
@@ -407,37 +363,23 @@ function TextureLoadingOverlay({ lang }) {
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        zIndex: 30,
       }}
     >
       <div
         style={{
-          padding: "clamp(0.6rem, 1.5vw, 1rem) clamp(1.5rem, 3vw, 2.5rem)",
-          borderRadius: "999px",
+          padding: "1rem 2rem",
           background: "rgba(0,0,0,0.85)",
-          border: "1px solid rgba(156,101,242,0.95)",
-          color: "#ffffff",
-          fontFamily: "'Space Grotesk', system-ui, sans-serif",
-          fontWeight: 600,
-          fontSize: "clamp(0.75rem, 1.8vw, 1rem)",
-          boxShadow: "0 0 18px rgba(0,0,0,0.8)",
-          backdropFilter: "blur(14px)",
-          textShadow: "0 0 10px #000000",
-          display: "flex",
-          gap: "0.75rem",
-          alignItems: "center",
+          borderRadius: "999px",
         }}
       >
-        <span>
-          {lang === "es" ? "Cargando texturas..." : "Loading textures..."}
-        </span>
-        <span style={{ opacity: 0.8 }}>{Math.round(progress)}%</span>
+        {lang === "es" ? "Cargando texturas..." : "Loading textures..."}{" "}
+        {Math.round(progress)}%
       </div>
     </Html>
   );
 }
 
-// =============================== WRAPPER DEL CANVAS ==========================
+// =============================== CANVAS WRAPPER ===============================
 export default function ProjectOrbitsCanvas({
   projects,
   activeIndex,
@@ -445,6 +387,8 @@ export default function ProjectOrbitsCanvas({
   lang,
   externalHoverIndex = null,
   onAssetsLoaded,
+  onDetectMouse,
+  onDragStart,
 }) {
   if (!projects || projects.length === 0) return null;
 
@@ -453,11 +397,7 @@ export default function ProjectOrbitsCanvas({
       dpr={[1, 1.5]}
       camera={{ position: [0, 0, 15], fov: 45 }}
       gl={{ alpha: true, antialias: true }}
-      style={{
-        width: "100%",
-        height: "100%",
-        touchAction: "pan-y",
-      }}
+      style={{ width: "100%", height: "100%", touchAction: "pan-y" }}
     >
       <AssetProgress onAssetsLoaded={onAssetsLoaded} />
       <TextureLoadingOverlay lang={lang} />
@@ -468,6 +408,8 @@ export default function ProjectOrbitsCanvas({
         onSelect={onSelect}
         lang={lang}
         externalHoverIndex={externalHoverIndex}
+        onDetectMouse={onDetectMouse}
+        onDragStart={onDragStart}
       />
     </Canvas>
   );

@@ -17,8 +17,9 @@ export default function Proyectos() {
   const [error, setError] = useState("");
 
   const sectionRef = useRef(null);
+  const canvasWrapperRef = useRef(null); // 👈 referencia al wrapper del canvas
 
-  // ✅ visibilidad en viewport para animación de entrada/salida
+  // visibilidad viewport (por ahora no se usa, pero lo dejamos listo)
   const [isVisible, setIsVisible] = useState(false);
 
   // hover desde lista
@@ -27,8 +28,52 @@ export default function Proyectos() {
   // lista simple
   const [showList, setShowList] = useState(false);
 
-  // saber cuándo el sistema 3D (texturas) ya está listo
+  // saber cuándo el sistema 3D está listo
   const [is3DReady, setIs3DReady] = useState(false);
+
+  // detectar mouse en la escena 3D
+  const [hasMouse, setHasMouse] = useState(false);
+
+  // saber si ya hubo un drag real dentro del canvas
+  const [isDragging, setIsDragging] = useState(false);
+
+  // --------------------------- lógica drag hint ----------------------------
+  useEffect(() => {
+    if (!hasMouse) return;
+
+    let isDown = false;
+
+    const handlePointerDown = (e) => {
+      if (e.pointerType !== "mouse") return;
+      // solo consideramos down si empieza dentro del canvas
+      if (!canvasWrapperRef.current?.contains(e.target)) return;
+      isDown = true;
+    };
+
+    const handlePointerMove = (e) => {
+      if (!isDown) return;
+      if (e.pointerType !== "mouse") return;
+
+      // aquí consideramos que ya hubo un drag real en el canvas
+      setIsDragging(true);
+      isDown = false;
+    };
+
+    const handlePointerUp = () => {
+      isDown = false;
+    };
+
+    window.addEventListener("pointerdown", handlePointerDown);
+    window.addEventListener("pointermove", handlePointerMove);
+    window.addEventListener("pointerup", handlePointerUp);
+
+    return () => {
+      window.removeEventListener("pointerdown", handlePointerDown);
+      window.removeEventListener("pointermove", handlePointerMove);
+      window.removeEventListener("pointerup", handlePointerUp);
+    };
+  }, [hasMouse]);
+  // ------------------------------------------------------------------------
 
   const getLocalizedField = (field) => {
     if (!field) return "";
@@ -63,7 +108,7 @@ export default function Proyectos() {
     }
   }, [projects, activeIndex]);
 
-  // Animación de entrada/salida con IntersectionObserver
+  // IntersectionObserver
   useEffect(() => {
     const el = sectionRef.current;
     if (!el) return;
@@ -71,7 +116,6 @@ export default function Proyectos() {
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          // si al menos 25% de la sección está visible → activar
           if (entry.isIntersecting && entry.intersectionRatio >= 0.25) {
             setIsVisible(true);
           } else {
@@ -79,9 +123,7 @@ export default function Proyectos() {
           }
         });
       },
-      {
-        threshold: [0, 0.25, 0.6, 1],
-      }
+      { threshold: [0, 0.25, 0.6, 1] }
     );
 
     observer.observe(el);
@@ -98,7 +140,6 @@ export default function Proyectos() {
   };
 
   const handleSelectFromList = (index) => {
-    // limpia el hover al seleccionar desde la lista
     setExternalHoverIndex(null);
     handleSelectSphere(index);
     setShowList(false);
@@ -116,9 +157,8 @@ export default function Proyectos() {
         });
       }
 
-      if (!next) {
-        setExternalHoverIndex(null);
-      }
+      if (!next) setExternalHoverIndex(null);
+
       return next;
     });
   };
@@ -127,43 +167,30 @@ export default function Proyectos() {
     <section
       id="proyectos"
       ref={sectionRef}
-      className={`${styles.section}`}
+      className={styles.section}
     >
       {/* Canvas */}
-      <div className={styles.canvasFull}>
-        {/* Loader mientras esperamos al backend */}
+      <div className={styles.canvasFull} ref={canvasWrapperRef}>
+        {/* Loader */}
         {loading && !error && (
           <div className={styles.loaderWrapper}>
             <div className={styles.loaderSpinner} />
             <span
-              className={`
-                ${styles.loaderText}
-                font-titulos font-bold text-white
-                text-xl
-                sm:text-2xl
-                md:text-3xl
-              `}
+              className={`${styles.loaderText} font-titulos font-bold text-white text-xl sm:text-2xl md:text-3xl`}
             >
               {lang === "es" ? "Cargando proyectos..." : "Loading projects..."}
             </span>
           </div>
         )}
 
-        {/* Canvas 3D, se monta cuando ya hay proyectos */}
+        {/* Canvas 3D */}
         {!loading && !error && projects.length > 0 && (
           <>
-            {/* Overlay extra mientras el 3D/texturas se preparan */}
             {!is3DReady && (
               <div className={styles.loaderWrapper}>
                 <div className={styles.loaderSpinner} />
                 <span
-                  className={`
-                    ${styles.loaderText}
-                    font-titulos font-bold text-white
-                    text-lg
-                    sm:text-xl
-                    md:text-2xl
-                  `}
+                  className={`${styles.loaderText} font-titulos font-bold text-white text-lg sm:text-xl md:text-2xl`}
                 >
                   {lang === "es"
                     ? "Preparando sistema planetario..."
@@ -179,6 +206,7 @@ export default function Proyectos() {
               lang={lang}
               externalHoverIndex={externalHoverIndex}
               onAssetsLoaded={() => setIs3DReady(true)}
+              onDetectMouse={() => setHasMouse(true)}
             />
           </>
         )}
@@ -189,16 +217,10 @@ export default function Proyectos() {
         <div className={styles.overlayInner}>
           <div className={styles.overlayInnerRow}>
             <h1
-              className={`
-                ${styles.mainTitle} 
-                font-titulos 
-                font-bold 
-                text-4xl md:text-5xl sm:text-3xl
-              `}
+              className={`${styles.mainTitle} font-titulos font-bold text-4xl md:text-5xl sm:text-3xl`}
             >
               {t("projects.title")}
             </h1>
-
 
             {!loading && !error && projects.length > 0 && (
               <button
@@ -209,6 +231,25 @@ export default function Proyectos() {
                 <FaListUl />
               </button>
             )}
+          </div>
+
+          {/* 👇 Indicador debajo del título */}
+          <div
+            className={`
+              ${styles.dragIndicatorInline}
+              ${
+                hasMouse && !isDragging
+                  ? ""
+                  : styles.dragIndicatorHidden
+              }
+            `}
+          >
+            <div className={styles.dragMouse}>
+              <div className={styles.dragDot}></div>
+            </div>
+            <p className={styles.dragHintText}>
+              {lang === "es" ? "Arrastra para explorar" : "Drag to explore"}
+            </p>
           </div>
         </div>
       </div>
