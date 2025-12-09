@@ -131,7 +131,7 @@ export default function Navbar() {
     let target;
 
     if (targetId === "#inicio" && window.heroEnd) {
-      target = window.heroEnd - 1000;
+      target = window.heroEnd - 800;
     } else if (
       targetId === "#proyectos" &&
       window.proyectosStart !== undefined
@@ -189,7 +189,10 @@ export default function Navbar() {
           {/* Logo centrado */}
           <button
             type="button"
-            onClick={() => handleScrollTo("#inicio")}
+            onClick={() => {
+              setMenuOpen(false)
+              handleScrollTo("#inicio")
+            }}
             className={styles.headerLogoButton}
           >
             <img src={logo} alt="JACS Logo" className={styles.headerLogo} />
