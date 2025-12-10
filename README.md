@@ -35,7 +35,7 @@ Portafolio interactivo que combina diseño moderno, animaciones avanzadas y una 
 
 **Deployment**
 - Frontend: Vercel
-- Backend: Railway / Heroku
+- Backend: Railway
 
 ## Características Principales
 
