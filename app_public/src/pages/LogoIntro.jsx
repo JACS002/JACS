@@ -51,7 +51,7 @@ export default function LogoIntro({ onComplete }) {
   }, [onComplete]);
 
   return (
-    // 👇 fixed + inset-0 + z-40 para cubrir toda la pantalla
+    // fixed + inset-0 + z-40 para cubrir toda la pantalla
     <div className="fixed inset-0 z-40 overflow-hidden bg-transparent">
       <div
         className={`absolute inset-0 pointer-events-none transition-opacity duration-700 ${
