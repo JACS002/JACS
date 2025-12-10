@@ -186,12 +186,12 @@ export default function Proyectos() {
   return (
     <section id="proyectos" ref={sectionRef} className={styles.section}>
       {/* Canvas */}
-      <div className={`${styles.canvasFull}`} ref={canvasWrapperRef}>
+      <div className={`${styles.canvasFull} ${is3DReady ? styles.canvasReady : ""}`} ref={canvasWrapperRef}>
         {loading && !error && (
           <div className={styles.loaderWrapper}>
             <div className={styles.loaderSpinner} />
-            <span className={`${styles.loaderText} font-titulos font-bold text-lg`}>
-              {lang === "es" ? "Cargando proyectos..." : "Loading projects..."}
+            <span className={`${styles.loaderText} font-titulos font-bold text-base`}>
+              {lang === "es" ? "Encendiendo sistemas del casco…" : "Booting helmet systems…"}
             </span>
           </div>
         )}
@@ -201,10 +201,10 @@ export default function Proyectos() {
             {!is3DReady && (
               <div className={styles.loaderWrapper}>
                 <div className={styles.loaderSpinner} />
-                <span className={`${styles.loaderText} font-titulos font-bold text-lg`}>
+                <span className={`${styles.loaderText} font-titulos font-bold text-base`}>
                   {lang === "es"
-                    ? "Preparando sistema planetario..."
-                    : "Preparing 3D system..."}
+                    ? "Ajustando visor interestelar…"
+                    : "Calibrating interstellar visor…"}
                 </span>
               </div>
             )}

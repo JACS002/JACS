@@ -8,6 +8,7 @@ import {
 } from "@react-three/drei";
 import { useRef, useState, useEffect, useMemo } from "react";
 import * as THREE from "three";
+import styles from "./Proyectos.module.css";
 
 const MOON_COLORS = [
   "#4f8cff",
@@ -354,6 +355,7 @@ function TextureLoadingOverlay({ lang }) {
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
+        backgroundColor: "rgba(0,0,0,0.5)",
       }}
     >
       <div
@@ -361,9 +363,11 @@ function TextureLoadingOverlay({ lang }) {
           padding: "1rem 2rem",
           background: "rgba(0,0,0,0.85)",
           borderRadius: "999px",
+          color: "#fff",
         }}
+        className={`${styles.loaderText} font-titulos font-bold text-base`}
       >
-        {lang === "es" ? "Cargando texturas..." : "Loading textures..."}{" "}
+        {lang === "es" ? "Calibrando visor óptico…" : "Calibrating optical visor…"}
         {Math.round(progress)}%
       </div>
     </Html>
