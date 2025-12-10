@@ -246,7 +246,7 @@ export default function Contacto() {
           {t("contact.title")}
         </h2>
 
-        <p className="font-contenido text-base md:text-lg text-gray-300 leading-relaxed">
+        <p className="font-contenido text-base md:text-base text-gray-300 leading-relaxed">
           {t("contact.p1")}
         </p>
       </div>

@@ -155,7 +155,7 @@ function SkillConstellationScene() {
   baseTexture.colorSpace = THREE.SRGBColorSpace;
   hoverTexture.colorSpace = THREE.SRGBColorSpace;
 
-  // 🔹 Nodos más separados y mejor distribuidos en X / Y / Z
+  // Nodos más separados y mejor distribuidos en X / Y / Z
   const nodes = useMemo(
     () => [
       { name: "React",      position: [-2.2, -1.6,  0.2] },
@@ -379,7 +379,7 @@ export default function QuienSoy() {
 
           <p
             ref={(el) => (paragraphRefs.current[0] = el)}
-            className="about-paragraph text-base md:text-lg text-gray-300 leading-relaxed mb-6"
+            className="about-paragraph text-base md:text-base text-gray-300 leading-relaxed mb-6"
           >
             {t("about.p1.a")}{" "}
             <span className="text-accent font-semibold">
@@ -394,7 +394,7 @@ export default function QuienSoy() {
 
           <p
             ref={(el) => (paragraphRefs.current[1] = el)}
-            className="about-paragraph text-base md:text-lg text-gray-300 leading-relaxed mb-6"
+            className="about-paragraph text-base md:text-base text-gray-300 leading-relaxed mb-6"
           >
             {t("about.p2.a")}{" "}
             <span className="text-accent font-semibold">
@@ -409,7 +409,7 @@ export default function QuienSoy() {
 
           <p
             ref={(el) => (paragraphRefs.current[2] = el)}
-            className="about-paragraph text-base md:text-lg text-gray-400 leading-relaxed mb-6"
+            className="about-paragraph text-base md:text-base text-gray-400 leading-relaxed mb-6"
           >
             {t("about.p3.a")}{" "}
             <span className="font-semibold">{t("about.p3.b")}</span>{" "}
@@ -422,7 +422,7 @@ export default function QuienSoy() {
 
           <p
             ref={(el) => (paragraphRefs.current[3] = el)}
-            className="about-paragraph text-base md:text-lg text-gray-400 leading-relaxed"
+            className="about-paragraph text-base md:text-base text-gray-400 leading-relaxed"
           >
             {t("about.p4.a")}{" "}
             <span className="font-semibold text-accent">
