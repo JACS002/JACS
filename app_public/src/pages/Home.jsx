@@ -6,15 +6,8 @@ import Proyectos from "../sections/projects/Proyectos";
 import QuienSoy from "../sections/about/QuienSoy";
 import Contacto from "../sections/contact/Contacto";
 import Footer from "../components/layout/Footer";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 export default function Home() {
-  useLayoutEffect(() => {
-    const timer = setTimeout(() => {
-      ScrollTrigger.refresh();
-    }, 100);
-    return () => clearTimeout(timer);
-  }, []);
 
   return (
     <main className="bg-transparent w-full relative overflow-x-hidden">

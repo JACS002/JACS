@@ -1,3 +1,4 @@
+// LogoIntro.jsx
 import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import LogoSVG from "../components/ui/LogoSVG";
@@ -7,6 +8,7 @@ export default function LogoIntro({ onComplete }) {
   const [fadeOut, setFadeOut] = useState(false);
 
   useEffect(() => {
+    // Bloquear scroll mientras la intro está activa
     document.body.style.overflow = "hidden";
 
     const ctx = gsap.context(() => {
@@ -49,10 +51,10 @@ export default function LogoIntro({ onComplete }) {
   }, [onComplete]);
 
   return (
-    <div className="min-h-screen w-full relative overflow-hidden bg-transparent">
-      {/* Logo animado con fade */}
+    // 👇 fixed + inset-0 + z-40 para cubrir toda la pantalla
+    <div className="fixed inset-0 z-40 overflow-hidden bg-transparent">
       <div
-        className={`absolute inset-0 z-20 pointer-events-none transition-opacity duration-700 ${
+        className={`absolute inset-0 pointer-events-none transition-opacity duration-700 ${
           fadeOut ? "opacity-0" : "opacity-100"
         }`}
       >
@@ -61,7 +63,6 @@ export default function LogoIntro({ onComplete }) {
           className="w-full h-full flex items-center justify-center"
           style={{ padding: "5vh 5vw" }}
         >
-          {/* Wrapper SOLO para escalar el logo, no para recortarlo */}
           <div className="origin-center scale-[0.5] sm:scale-[0.55] md:scale-[0.63] lg:scale-[0.7]">
             <LogoSVG />
           </div>
