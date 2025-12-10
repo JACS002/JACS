@@ -1066,12 +1066,3 @@
   50%  { transform: rotate(8deg); }
   100% { transform: rotate(0deg); }
 }
-
-.canvasFull {
-  opacity: 0;
-  transition: opacity 0.3s ease-out;
-}
-
-.canvasReady {
-  opacity: 1;
-}

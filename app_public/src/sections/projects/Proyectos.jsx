@@ -186,7 +186,7 @@ export default function Proyectos() {
   return (
     <section id="proyectos" ref={sectionRef} className={styles.section}>
       {/* Canvas */}
-      <div className={`${styles.canvasFull} ${is3DReady ? styles.canvasReady : ""}`} ref={canvasWrapperRef}>
+      <div className={`${styles.canvasFull}`} ref={canvasWrapperRef}>
         {loading && !error && (
           <div className={styles.loaderWrapper}>
             <div className={styles.loaderSpinner} />
