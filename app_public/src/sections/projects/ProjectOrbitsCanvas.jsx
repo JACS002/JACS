@@ -6,10 +6,9 @@ import {
   useTexture,
   useProgress,
 } from "@react-three/drei";
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState, useEffect, useMemo } from "react";
 import * as THREE from "three";
 
-// Colores fallback
 const MOON_COLORS = [
   "#4f8cff",
   "#ff7043",
@@ -25,7 +24,6 @@ const MOON_COLORS = [
 function getMoonTexturePath(project) {
   if (!project) return "/images/projects/luna-jacs.webp";
 
-  // Usar shortLabel directamente (más confiable)
   const label = (project.shortLabel || "").toLowerCase();
 
   if (label === "cenespe") return "/images/projects/luna-cenespe.webp";
@@ -44,22 +42,16 @@ function getLocalizedField(field, lang) {
   return lang === "es" ? field.es || field.en || "" : field.en || field.es || "";
 }
 
-
 function getMoonLabel(project) {
   if (!project) return "";
-
-  // Si existe shortLabel
   if (project.shortLabel) return project.shortLabel;
 
-  // Fallback en caso de que algún proyecto viejo no tenga shortLabel
   const title = project.title?.en || project.title?.es || "";
   return title;
 }
 
-
-
 // =============================== SATURNO ===============================
-function Saturn() {
+function Saturn({ isActive }) {
   const groupRef = useRef();
   const ringMeshRef = useRef();
 
@@ -84,6 +76,7 @@ function Saturn() {
   };
 
   useFrame((_, delta) => {
+    if (!isActive) return;        // no hacemos nada si la sección no está visible
     if (groupRef.current) groupRef.current.rotation.y += delta * 0.25;
     if (ringMeshRef.current && !ringMeshRef.current.userData.uvsConfigured) {
       setupRingUVs();
@@ -122,6 +115,7 @@ function SaturnMoons({
   onHoverChange,
   lang,
   onDragStart,
+  isActive,
 }) {
   const orbitRefs = useRef([]);
   const moonRefs = useRef([]);
@@ -130,6 +124,7 @@ function SaturnMoons({
   const baseRadius = 2.8;
   const radiusStep = 0.5;
 
+  // memo para que solo cambie si cambian los proyectos
   const moonTextures = useTexture(projects.map(getMoonTexturePath));
 
   if (orbitParamsRef.current.length !== projects.length) {
@@ -145,6 +140,8 @@ function SaturnMoons({
   }
 
   useFrame((_, delta) => {
+    if (!isActive) return; //si la sección no está activa, no orbitan
+
     const paused = hoveredIndex !== null;
 
     orbitRefs.current.forEach((group, i) => {
@@ -154,9 +151,9 @@ function SaturnMoons({
 
     moonRefs.current.forEach((mesh, i) => {
       if (!mesh) return;
-      const isActive = i === activeIndex;
+      const isActiveMoon = i === activeIndex;
       const isHovered = i === hoveredIndex;
-      const target = isHovered ? 1.7 : isActive ? 1.3 : 1.0;
+      const target = isHovered ? 1.7 : isActiveMoon ? 1.3 : 1.0;
       mesh.scale.setScalar(THREE.MathUtils.lerp(mesh.scale.x, target, 0.15));
     });
   });
@@ -250,6 +247,7 @@ function Scene({
   externalHoverIndex = null,
   onDetectMouse,
   onDragStart,
+  isActive,
 }) {
   const [hoveredIndex, setHoveredIndex] = useState(null);
   const [hasPointerDevice, setHasPointerDevice] = useState(false);
@@ -281,7 +279,7 @@ function Scene({
     <>
       <ambientLight intensity={0.4} />
 
-      <Saturn />
+      <Saturn isActive={isActive} />
 
       <SaturnMoons
         projects={projects}
@@ -291,6 +289,7 @@ function Scene({
         onHoverChange={setHoveredIndex}
         lang={lang}
         onDragStart={onDragStart}
+        isActive={isActive}
       />
 
       {hoveredProject && (
@@ -322,7 +321,7 @@ function Scene({
         <OrbitControls
           enablePan={false}
           enableZoom={false}
-          autoRotate={!effectiveHover}
+          autoRotate={isActive && !effectiveHover}
           autoRotateSpeed={0.25}
           target={[0, 0, 0]}
         />
@@ -381,6 +380,7 @@ export default function ProjectOrbitsCanvas({
   onAssetsLoaded,
   onDetectMouse,
   onDragStart,
+  isVisible,
 }) {
   if (!projects || projects.length === 0) return null;
 
@@ -389,6 +389,7 @@ export default function ProjectOrbitsCanvas({
       dpr={[1, 1.5]}
       camera={{ position: [0, 0, 15], fov: 45 }}
       gl={{ alpha: true, antialias: true }}
+      frameloop={isVisible ? "always" : "demand"}
       style={{ width: "100%", height: "100%", touchAction: "pan-y" }}
     >
       <AssetProgress onAssetsLoaded={onAssetsLoaded} />
@@ -402,6 +403,7 @@ export default function ProjectOrbitsCanvas({
         externalHoverIndex={externalHoverIndex}
         onDetectMouse={onDetectMouse}
         onDragStart={onDragStart}
+        isActive={!!isVisible}
       />
     </Canvas>
   );

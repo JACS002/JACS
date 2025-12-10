@@ -23,17 +23,16 @@ function App() {
       <StarBackground />
 
       <div className="relative min-h-screen overflow-x-hidden">
-
-        {/* HOME — Aparece con fade-in cuando la intro termina */}
+        {/* HOME siempre montado, pero recibe introFinished */}
         <div
           className={`transition-opacity duration-700 ${
             introFinished ? "opacity-100" : "opacity-0"
           }`}
         >
-          <Home />
+          <Home introFinished={introFinished} />
         </div>
 
-        {/* INTRO como overlay */}
+        {/* Intro como overlay, se elimina del DOM al terminar */}
         {!introFinished && (
           <LogoIntro onComplete={() => setIntroFinished(true)} />
         )}

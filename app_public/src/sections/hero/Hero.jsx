@@ -1,9 +1,9 @@
-// src/components/Hero.jsx
+// src/sections/hero/Hero.jsx
 // -----------------------------------------------------------------------------
 // Sección "Hero" del portfolio
 // -----------------------------------------------------------------------------
 
-import { useLayoutEffect, useRef, useEffect } from "react";
+import { useEffect, useRef } from "react";
 import styles from "./Hero.module.css";
 import LogoNombre from "../../assets/icons/LogoNombre";
 import gsap from "gsap";
@@ -13,12 +13,16 @@ import { useScroll } from "../../context/ScrollContext";
 
 gsap.registerPlugin(ScrollTrigger);
 
-export default function Hero() {
+export default function Hero({ enableAnimations }) {
   const logoRef = useRef(null);
   const { t } = useLang();
   const { refreshScroll } = useScroll();
 
-  useLayoutEffect(() => {
+  // Timeline principal del hero
+  useEffect(() => {
+    if (!enableAnimations) return;
+    if (!logoRef.current) return;
+
     const ctx = gsap.context(() => {
       const letters = logoRef.current.querySelectorAll(".logo-letra");
       const logoContainer = logoRef.current.querySelector(".logo-container");
@@ -26,135 +30,156 @@ export default function Hero() {
       const wrapper = logoRef.current.querySelector(".logoWrapper");
       const bienvenida = logoRef.current.querySelector(".bienvenida");
 
+      if (!letters.length || !logoContainer || !halo || !wrapper || !bienvenida)
+        return;
+
       const isSmallViewport =
         window.innerHeight < 740 || window.innerWidth < 400;
 
+      // Estados iniciales
       gsap.set(letters, { y: -200, opacity: 0 });
       gsap.set(logoContainer, { filter: "none", scale: 1 });
       gsap.set(halo, { opacity: 0, scale: 1, y: 0, yPercent: 0 });
       gsap.set(wrapper, { y: 0, opacity: 1 });
       gsap.set(bienvenida, { y: 100, opacity: 0 });
 
+      // --------------------------------------
+      //TIMELINE CINEMÁTICO (LENTO + SUAVE)
+      // --------------------------------------
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: logoRef.current,
           start: "top top",
-          end: "+=2000",
-          scrub: 1,
+          end: "+=900",
+          scrub: 2,     //animación muy lenta al scrollear
           pin: true,
           invalidateOnRefresh: true,
           refreshPriority: 10,
           onRefresh: (self) => {
+            window.heroStart = self.start;
             window.heroEnd = self.end;
           },
           onUpdate: (self) => {
+            window.heroStart = self.start;
             window.heroEnd = self.end;
           },
         },
       });
 
-      let lastFallTime = 0;
-
-      letters.forEach((letter, i) => {
-        const time = i * 0.1;
-
-        tl.to(
-          letter,
-          { y: 0, opacity: 1, ease: "power2.out", duration: 1 },
-          time
-        );
-
-        if (time > lastFallTime) lastFallTime = time;
+      // 1) Caída de letras — muy lenta
+      tl.to(letters, {
+        y: 0,
+        opacity: 1,
+        ease: "power3.out",
+        duration: 4.5,   // antes era ~2
+        stagger: 0.25,   // más separación entre letras
       });
 
-      const glowStart = lastFallTime + 0.5;
-
+      // 2) Glow de letras (iluminación)
       tl.to(
         letters,
-        { fill: "#ffffff", stroke: "#ffffff", duration: 1 },
-        glowStart
+        {
+          fill: "#ffffff",
+          stroke: "#ffffff",
+          duration: 2.5,
+          ease: "power1.out",
+        },
+        "+=0.6"
       );
 
+      // 3) Glow del logo
       tl.to(
         logoContainer,
         {
           filter:
-            "drop-shadow(0 0 6px #ffffff) drop-shadow(0 0 20px #9c65f2)",
-          duration: 1,
+            "drop-shadow(0 0 6px #ffffff) drop-shadow(0 0 18px #9c65f2)",
+          duration: 2.5,
         },
         "<"
       );
 
+      // 4) Halo aparece
       tl.to(
         halo,
-        { opacity: 0.5, duration: 1 },
+        {
+          opacity: 0.5,
+          duration: 2.5,
+        },
         "<"
       );
 
+      // 5) Wrapper sube lentamente
       tl.to(
         wrapper,
         {
           y: isSmallViewport ? "-25vh" : "-20vh",
-          duration: 3,
-          ease: "power1.inOut",
+          duration: 6,
+          ease: "power2.inOut",
         },
         "+=0.5"
       );
 
+      // 6) Logo se encoge mientras sube
       tl.to(
         [logoContainer, halo],
         {
           scale: 0.5,
-          transformOrigin: "center center",
-          duration: 3,
+          duration: 6,
+          ease: "power2.inOut",
         },
         "<"
       );
 
+      // 7) Halo sube también
       tl.to(
         halo,
-        { yPercent: -60, duration: 3 },
+        {
+          yPercent: -60,
+          duration: 6,
+          ease: "power2.inOut",
+        },
         "<"
       );
 
+      // 8) Texto de bienvenida — entrada suave
       tl.to(
         bienvenida,
         {
           y: 0,
           opacity: 1,
-          ease: "power2.out",
-          duration: 2,
+          duration: 3.5,
+          ease: "power3.out",
         },
         "<+1"
       );
 
+      // 9) Pausa para que el usuario lo lea
       tl.to({}, { duration: 2 });
 
+      // 10) Fade-out final
       tl.to([wrapper, bienvenida], {
         opacity: 0,
         y: -50,
-        duration: 1,
+        duration: 2,
         ease: "power1.in",
       });
     }, logoRef);
 
     refreshScroll();
 
-    return () => {
-      ctx.revert();
-      window.heroEnd = null;
-    };
-  }, [refreshScroll]);
+    return () => ctx.revert();
+  }, [enableAnimations, refreshScroll]);
 
-  // Mostrar / ocultar indicador de scroll
+  // Indicador de scroll (optimizado)
   useEffect(() => {
+    const icon = document.querySelector(".scroll-indicator");
+    if (!icon) return;
+
     const handleScroll = () => {
-      const icon = document.querySelector(".scroll-indicator");
-      if (!icon) return;
       icon.style.opacity = window.scrollY > 20 ? "0" : "1";
     };
 
-    window.addEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
@@ -173,7 +198,7 @@ export default function Hero() {
         <div className={`${styles.logoHalo} logo-halo`}></div>
       </div>
 
-      {/* Bloque de texto de bienvenida */}
+      {/* Texto de bienvenida */}
       <div
         className={`
           ${styles.bienvenida} bienvenida
@@ -197,7 +222,7 @@ export default function Hero() {
         </p>
       </div>
 
-      {/* Indicador de scroll (mouse + texto) */}
+      {/* Indicador de scroll */}
       <div className={`${styles.scrollIndicator} scroll-indicator`}>
         <div className={styles.mouse}>
           <div className={styles.wheel}></div>

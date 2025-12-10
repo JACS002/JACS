@@ -1,5 +1,5 @@
 // src/components/Proyectos.jsx
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import styles from "./Proyectos.module.css";
 import getProjects from "../../utils/getProjects";
 import ProjectModal from "./ProjectModal";
@@ -15,72 +15,32 @@ export default function Proyectos() {
   const [selectedProject, setSelectedProject] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [hasEntered, setHasEntered] = useState(false);
+
 
   const sectionRef = useRef(null);
-  const canvasWrapperRef = useRef(null); //referencia al wrapper del canvas
+  const canvasWrapperRef = useRef(null);
 
-  // visibilidad viewport (por ahora no se usa, pero lo dejamos listo)
   const [isVisible, setIsVisible] = useState(false);
-
-  // hover desde lista
   const [externalHoverIndex, setExternalHoverIndex] = useState(null);
-
-  // lista simple
   const [showList, setShowList] = useState(false);
 
-  // saber cuándo el sistema 3D está listo
   const [is3DReady, setIs3DReady] = useState(false);
-
-  // detectar mouse en la escena 3D
   const [hasMouse, setHasMouse] = useState(false);
-
-  // saber si ya hubo un drag real dentro del canvas
   const [isDragging, setIsDragging] = useState(false);
 
-  // --------------------------- lógica drag hint ----------------------------
-  useEffect(() => {
-    if (!hasMouse) return;
+  // -------------------------
+  // Control limpio del Navbar
+  // -------------------------
+  const setNavbarVisible = useCallback((visible) => {
+    window.dispatchEvent(
+      new CustomEvent("navbar-visibility", { detail: { visible } })
+    );
+  }, []);
 
-    let isDown = false;
-
-    const handlePointerDown = (e) => {
-      if (e.pointerType !== "mouse") return;
-      // solo consideramos down si empieza dentro del canvas
-      if (!canvasWrapperRef.current?.contains(e.target)) return;
-      isDown = true;
-    };
-
-    const handlePointerMove = (e) => {
-      if (!isDown) return;
-      if (e.pointerType !== "mouse") return;
-
-      // aquí consideramos que ya hubo un drag real en el canvas
-      setIsDragging(true);
-      isDown = false;
-    };
-
-    const handlePointerUp = () => {
-      isDown = false;
-    };
-
-    window.addEventListener("pointerdown", handlePointerDown);
-    window.addEventListener("pointermove", handlePointerMove);
-    window.addEventListener("pointerup", handlePointerUp);
-
-    return () => {
-      window.removeEventListener("pointerdown", handlePointerDown);
-      window.removeEventListener("pointermove", handlePointerMove);
-      window.removeEventListener("pointerup", handlePointerUp);
-    };
-  }, [hasMouse]);
-  // ------------------------------------------------------------------------
-
-  const getLocalizedField = (field) => {
-    if (!field) return "";
-    if (typeof field === "string") return field;
-    return lang === "es" ? field.es || field.en : field.en || field.es;
-  };
-
+  // -------------------------
+  // Carga inicial de proyectos
+  // -------------------------
   const handleRetry = async () => {
     try {
       setLoading(true);
@@ -90,8 +50,8 @@ export default function Proyectos() {
       const data = await getProjects();
       setProjects(data || []);
       setActiveIndex(0);
-    } catch (e) {
-      console.error(e);
+    } catch (err) {
+      console.error(err);
       setError("Error loading projects");
     } finally {
       setLoading(false);
@@ -102,13 +62,18 @@ export default function Proyectos() {
     handleRetry();
   }, []);
 
+  // -------------------------
+  // Ajustar activeIndex si la cantidad cambia
+  // -------------------------
   useEffect(() => {
     if (projects.length > 0 && activeIndex >= projects.length) {
       setActiveIndex(0);
     }
   }, [projects, activeIndex]);
 
-  // IntersectionObserver
+  // -------------------------
+  // IntersectionObserver para detectar visibilidad real
+  // -------------------------
   useEffect(() => {
     const el = sectionRef.current;
     if (!el) return;
@@ -116,45 +81,91 @@ export default function Proyectos() {
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          if (entry.isIntersecting && entry.intersectionRatio >= 0.25) {
-            setIsVisible(true);
+          if (entry.isIntersecting && entry.intersectionRatio >= 0.2) {
+            setHasEntered(true);   // marcamos como montado PARA SIEMPRE
+            setIsVisible(true);    // visible ahora
           } else {
-            setIsVisible(false);
+            setIsVisible(false);   // pero no desmontamos
           }
         });
       },
-      { threshold: [0, 0.25, 0.6, 1] }
+      { threshold: [0.2] }
     );
 
     observer.observe(el);
     return () => observer.disconnect();
   }, []);
 
-  const handleSelectSphere = (index) => {
-    setActiveIndex(index);
-    const project = projects[index];
-    if (project) {
-      window.forceHideNavbar = true;
-      setSelectedProject(project);
-    }
-  };
 
+  // -------------------------
+  // Hint de drag solo si usa mouse
+  // -------------------------
+  useEffect(() => {
+    if (!hasMouse) return;
+
+    let isDown = false;
+
+    const handlePointerDown = (e) => {
+      if (e.pointerType !== "mouse") return;
+      if (!canvasWrapperRef.current?.contains(e.target)) return;
+      isDown = true;
+    };
+
+    const handlePointerMove = (e) => {
+      if (isDown && e.pointerType === "mouse") {
+        setIsDragging(true);
+        isDown = false;
+      }
+    };
+
+    const endDrag = () => (isDown = false);
+
+    window.addEventListener("pointerdown", handlePointerDown);
+    window.addEventListener("pointermove", handlePointerMove);
+    window.addEventListener("pointerup", endDrag);
+
+    return () => {
+      window.removeEventListener("pointerdown", handlePointerDown);
+      window.removeEventListener("pointermove", handlePointerMove);
+      window.removeEventListener("pointerup", endDrag);
+    };
+  }, [hasMouse]);
+
+  // -------------------------
+  // Selección desde el Canvas
+  // -------------------------
+  const handleSelectSphere = useCallback(
+    (index) => {
+      setActiveIndex(index);
+      const project = projects[index];
+      if (project) {
+        setNavbarVisible(false);
+        setSelectedProject(project);
+      }
+    },
+    [projects, setNavbarVisible]
+  );
+
+  // -------------------------
+  // Selección desde lista
+  // -------------------------
   const handleSelectFromList = (index) => {
     setExternalHoverIndex(null);
     handleSelectSphere(index);
     setShowList(false);
   };
 
+  // -------------------------
+  // Toggle de lista
+  // -------------------------
   const toggleList = () => {
     if (loading || error || projects.length === 0) return;
+
     setShowList((prev) => {
       const next = !prev;
 
       if (next && sectionRef.current) {
-        sectionRef.current.scrollIntoView({
-          behavior: "smooth",
-          block: "start",
-        });
+        sectionRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
       }
 
       if (!next) setExternalHoverIndex(null);
@@ -163,35 +174,34 @@ export default function Proyectos() {
     });
   };
 
+  const getLocalizedField = (field) => {
+    if (!field) return "";
+    if (typeof field === "string") return field;
+    return lang === "es" ? field.es || field.en : field.en || field.es;
+  };
+
+  // -------------------------
+  // Render
+  // -------------------------
   return (
-    <section
-      id="proyectos"
-      ref={sectionRef}
-      className={styles.section}
-    >
+    <section id="proyectos" ref={sectionRef} className={styles.section}>
       {/* Canvas */}
-      <div className={styles.canvasFull} ref={canvasWrapperRef}>
-        {/* Loader */}
+      <div className={`${styles.canvasFull} ${is3DReady ? styles.canvasReady : ""}`} ref={canvasWrapperRef}>
         {loading && !error && (
           <div className={styles.loaderWrapper}>
             <div className={styles.loaderSpinner} />
-            <span
-              className={`${styles.loaderText} font-titulos font-bold text-white text-xl sm:text-2xl md:text-3xl`}
-            >
+            <span className={styles.loaderText}>
               {lang === "es" ? "Cargando proyectos..." : "Loading projects..."}
             </span>
           </div>
         )}
 
-        {/* Canvas 3D */}
-        {!loading && !error && projects.length > 0 && (
+        {hasEntered && !loading && !error && projects.length > 0 && (
           <>
             {!is3DReady && (
               <div className={styles.loaderWrapper}>
                 <div className={styles.loaderSpinner} />
-                <span
-                  className={`${styles.loaderText} font-titulos font-bold text-white text-lg sm:text-xl md:text-2xl`}
-                >
+                <span className={styles.loaderText}>
                   {lang === "es"
                     ? "Preparando sistema planetario..."
                     : "Preparing 3D system..."}
@@ -207,42 +217,31 @@ export default function Proyectos() {
               externalHoverIndex={externalHoverIndex}
               onAssetsLoaded={() => setIs3DReady(true)}
               onDetectMouse={() => setHasMouse(true)}
+              onDragStart={() => setIsDragging(true)}
+              isVisible={isVisible}
             />
           </>
         )}
       </div>
 
-      {/* Título + icono */}
+      {/* Título */}
       <div className={styles.overlay}>
         <div className={styles.overlayInner}>
           <div className={styles.overlayInnerRow}>
-            <h1
-              className={`${styles.mainTitle} font-titulos font-bold text-4xl md:text-5xl sm:text-3xl`}
-            >
-              {t("projects.title")}
-            </h1>
-
+            <h1 className={`${styles.mainTitle} font-titulos font-bold text-4xl md:text-5xl sm:text-3xl`}>
+              {t("projects.title")}</h1>
             {!loading && !error && projects.length > 0 && (
-              <button
-                type="button"
-                className={styles.projectListToggleInline}
-                onClick={toggleList}
-              >
+              <button className={styles.projectListToggleInline} onClick={toggleList}>
                 <FaListUl />
               </button>
             )}
           </div>
 
-          {/*Indicador debajo del título */}
+          {/* Drag Hint */}
           <div
-            className={`
-              ${styles.dragIndicatorInline}
-              ${
-                hasMouse && !isDragging
-                  ? ""
-                  : styles.dragIndicatorHidden
-              }
-            `}
+            className={`${styles.dragIndicatorInline} ${
+              hasMouse && !isDragging ? "" : styles.dragIndicatorHidden
+            }`}
           >
             <div className={styles.dragMouse}>
               <div className={styles.dragDot}></div>
@@ -254,7 +253,7 @@ export default function Proyectos() {
         </div>
       </div>
 
-      {/* Panel de lista */}
+      {/* Lista */}
       {showList && (
         <div className={styles.projectListPanel}>
           <div className={styles.projectListHeader}>
@@ -300,7 +299,7 @@ export default function Proyectos() {
           project={selectedProject}
           lang={lang}
           onClose={() => {
-            window.forceHideNavbar = false;
+            setNavbarVisible(true);
             setSelectedProject(null);
             setExternalHoverIndex(null);
           }}

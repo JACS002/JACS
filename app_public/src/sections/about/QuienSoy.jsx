@@ -3,14 +3,17 @@
 // Sección "Quién soy" del portfolio
 // - Texto + escena 3D de constelación de skills
 // - Usa GSAP + ScrollTrigger para animaciones de entrada/salida con scroll
+// - Canvas 3D optimizado: solo se monta cuando entra en viewport y
+//   reduce trabajo cuando no está visible.
 // -----------------------------------------------------------------------------
 
-import{
+import {
   Suspense,
   useRef,
   useLayoutEffect,
   useMemo,
   useState,
+  useEffect,
 } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { OrbitControls, Html, useTexture } from "@react-three/drei";
@@ -31,13 +34,13 @@ function SkillBubble({ name, position, size = 0.15, baseTexture, hoverTexture })
   const [hovered, setHovered] = useState(false);
 
   const groupRef = useRef();
-  const blendRef = useRef(0);          // 0 = solo base, 1 = solo hover
+  const blendRef = useRef(0); // 0 = solo base, 1 = solo hover
   const baseMatRef = useRef();
   const hoverMatRef = useRef();
 
   useFrame(() => {
     const target = hovered ? 1 : 0;
-    // qué tan rápido se mezcla (ajusta 0.12 si quieres más/menos suave)
+    // mezcla suave entre base y hover
     blendRef.current = THREE.MathUtils.lerp(blendRef.current, target, 0.12);
 
     const b = 1 - blendRef.current; // opacidad base
@@ -48,7 +51,7 @@ function SkillBubble({ name, position, size = 0.15, baseTexture, hoverTexture })
 
     // pequeño scale suave en hover
     if (groupRef.current) {
-      const targetScale = 1 + blendRef.current * 0.06; // hasta ~1.06
+      const targetScale = 1 + blendRef.current * 0.06;
       const s = THREE.MathUtils.lerp(groupRef.current.scale.x, targetScale, 0.12);
       groupRef.current.scale.setScalar(s);
     }
@@ -93,14 +96,11 @@ function SkillBubble({ name, position, size = 0.15, baseTexture, hoverTexture })
 
       {/* Etiqueta */}
       <Html distanceFactor={6} position={[0, size + 0.4, 0]}>
-        <div className={styles.skillLabel}>
-          {name}
-        </div>
+        <div className={styles.skillLabel}>{name}</div>
       </Html>
     </group>
   );
 }
-
 
 // Líneas que conectan los nodos de la constelación
 function SkillLinks({ nodes }) {
@@ -144,8 +144,8 @@ function SkillLinks({ nodes }) {
   );
 }
 
-// Escena principal de la constelación
-function SkillConstellationScene() {
+// Escena principal de la constelación (recibe isActive para pausar animación)
+function SkillConstellationScene({ isActive }) {
   const groupRef = useRef();
   const { mouse } = useThree();
 
@@ -155,7 +155,7 @@ function SkillConstellationScene() {
   baseTexture.colorSpace = THREE.SRGBColorSpace;
   hoverTexture.colorSpace = THREE.SRGBColorSpace;
 
-  // Nodos más separados y mejor distribuidos en X / Y / Z
+  // Nodos de skills
   const nodes = useMemo(
     () => [
       { name: "React",      position: [-2.2, -1.6,  0.2] },
@@ -172,9 +172,8 @@ function SkillConstellationScene() {
     []
   );
 
-
   useFrame((_, delta) => {
-    if (!groupRef.current) return;
+    if (!groupRef.current || !isActive) return;
 
     const targetX = mouse.y * 0.25;
     const targetY = mouse.x * 0.4;
@@ -193,7 +192,6 @@ function SkillConstellationScene() {
       <directionalLight position={[3, 4, 2]} intensity={0.3} />
       <pointLight position={[-3, -2, -3]} intensity={0.2} />
 
-      {/* aquí aumentamos el scale para separar más las estrellas */}
       <group ref={groupRef} scale={1.4} position={[0, 0, 0]}>
         <SkillLinks nodes={nodes} />
         {nodes.map((node) => (
@@ -210,7 +208,7 @@ function SkillConstellationScene() {
       <OrbitControls
         enablePan={false}
         enableZoom={false}
-        autoRotate
+        autoRotate={isActive}
         autoRotateSpeed={0.35}
       />
     </>
@@ -226,6 +224,12 @@ export default function QuienSoy() {
   const sectionRef = useRef(null);
   const paragraphRefs = useRef([]);
 
+  const [hasEntered, setHasEntered] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
+
+  // --------------------------
+  // GSAP ScrollTrigger para título, párrafos y canvas
+  // --------------------------
   useLayoutEffect(() => {
     const ctx = gsap.context(() => {
       const title = sectionRef.current?.querySelector(".about-title");
@@ -362,6 +366,31 @@ export default function QuienSoy() {
     return () => ctx.revert();
   }, [t]);
 
+  // --------------------------
+  // IntersectionObserver: visibilidad de la sección
+  // --------------------------
+  useEffect(() => {
+    const el = sectionRef.current;
+    if (!el) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting && entry.intersectionRatio >= 0.2) {
+            setHasEntered(true);  // montamos Canvas desde ahora
+            setIsVisible(true);   // está visible ahora
+          } else {
+            setIsVisible(false);  // pausamos animación, pero no desmontamos
+          }
+        });
+      },
+      { threshold: [0.2] }
+    );
+
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
   return (
     <section
       id="quien-soy"
@@ -450,20 +479,23 @@ export default function QuienSoy() {
 
         {/* CANVAS 3D */}
         <div className="about-canvas w-full h-[520px] sm:h-[580px] md:h-[700px] lg:h-[800px] overflow-visible">
-          <Canvas
-            camera={{ position: [0, 0, 14], fov: 50 }}
-            gl={{ alpha: true }}
-            style={{
-              background: "transparent",
-              width: "100%",
-              height: "100%",
-              zIndex: 0,
-            }}
-          >
-            <Suspense fallback={null}>
-              <SkillConstellationScene />
-            </Suspense>
-          </Canvas>
+          {hasEntered && (
+            <Canvas
+              camera={{ position: [0, 0, 14], fov: 50 }}
+              gl={{ alpha: true }}
+              frameloop={isVisible ? "always" : "demand"}
+              style={{
+                background: "transparent",
+                width: "100%",
+                height: "100%",
+                zIndex: 0,
+              }}
+            >
+              <Suspense fallback={null}>
+                <SkillConstellationScene isActive={isVisible} />
+              </Suspense>
+            </Canvas>
+          )}
         </div>
       </div>
     </section>

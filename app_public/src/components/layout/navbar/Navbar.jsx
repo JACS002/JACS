@@ -38,6 +38,7 @@ export default function Navbar() {
     });
   };
 
+  // ESC para cerrar visor
   useEffect(() => {
     const handleKeyDown = (e) => {
       if (e.key === "Escape" || e.key === "Esc") {
@@ -49,6 +50,7 @@ export default function Navbar() {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, []);
 
+  // Bloquear scroll cuando el visor está abierto
   useEffect(() => {
     if (menuOpen) {
       document.body.style.overflow = "hidden";
@@ -61,14 +63,28 @@ export default function Navbar() {
     };
   }, [menuOpen]);
 
+  // escuchar cambios de visibilidad del navbar mediante evento global
   useEffect(() => {
-    if (window.forceHideNavbar) {
-      setShowNavbar(false);
-    } else {
-      setShowNavbar(true);
+    // estado inicial si alguien seteó window.forceHideNavbar antes
+    if (typeof window !== "undefined" && "forceHideNavbar" in window) {
+      setShowNavbar(!window.forceHideNavbar);
     }
+
+    const handleVisibilityEvent = (event) => {
+      const visible = event?.detail?.visible;
+      if (typeof visible === "boolean") {
+        setShowNavbar(visible);
+      }
+    };
+
+    window.addEventListener("navbar-visibility", handleVisibilityEvent);
+
+    return () => {
+      window.removeEventListener("navbar-visibility", handleVisibilityEvent);
+    };
   }, []);
 
+  // Resaltar sección activa
   useEffect(() => {
     const handleScroll = () => {
       const scrollTop = window.scrollY;
@@ -97,7 +113,7 @@ export default function Navbar() {
       }
     };
 
-    window.addEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", handleScroll, { passive: true });
     handleScroll();
 
     return () => window.removeEventListener("scroll", handleScroll);
@@ -106,8 +122,12 @@ export default function Navbar() {
   const handleScrollTo = (targetId) => {
     let target;
 
-    if (targetId === "#inicio" && window.heroEnd) {
-      target = window.heroEnd - 800;
+    if (targetId === "#inicio" && window.heroEnd && window.heroStart != null) {
+      const heroStart = window.heroStart;
+      const heroEnd = window.heroEnd;
+      const length = heroEnd - heroStart;
+      const almostEnd = heroStart + length * 0.75; // ~75% de la animación
+      target = almostEnd;
     } else if (
       targetId === "#proyectos" &&
       window.proyectosStart !== undefined
@@ -123,18 +143,6 @@ export default function Navbar() {
       ease: "power2.inOut",
     });
   };
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      if (window.forceHideNavbar) {
-        setShowNavbar(false);
-      } else {
-        setShowNavbar(true);
-      }
-    }, 100);
-
-    return () => clearInterval(interval);
-  }, []);
 
   const handleVisorNavClick = (href) => {
     setMenuOpen(false);
@@ -221,7 +229,6 @@ export default function Navbar() {
         </div>
       )}
 
-
       {/* OVERLAY DEL CASCO / VISOR */}
       <div
         id="helmetVisor"
@@ -233,10 +240,8 @@ export default function Navbar() {
         <div className={styles.visorBackdrop} />
 
         <div className={styles.visorFrame}>
-          {/* HUD superior dentro del visor (lo dejamos vacío por ahora) */}
           <div className={styles.visorHudTop} />
 
-          {/* Centro del visor: solo textos + navegación (SIN toggle de idioma) */}
           <div className={styles.visorCenter}>
             <p className={styles.visorTitle}>
               {lang === "es" ? "Sistema de navegación" : "Navigation system"}
@@ -271,7 +276,6 @@ export default function Navbar() {
             </ul>
           </div>
 
-          {/* Meta del casco al final de las secciones */}
           <div className={styles.visorHelmetMeta}>
             <span className={styles.hudLabel}>JACS VISOR</span>
             <span className={styles.hudSubLabel}>
@@ -279,7 +283,6 @@ export default function Navbar() {
             </span>
           </div>
 
-          {/* Pie del visor: pista visual */}
           <div className={styles.visorFooter}>
             <span className={styles.visorHint}>
               {lang === "es"

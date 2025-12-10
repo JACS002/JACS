@@ -133,18 +133,22 @@
   .logoContainer {
     width: 110%;
   }
-
   .logoHalo {
     bottom: -10%;
     width: 150%;
   }
-
   .bienvenida {
     padding: 0.7rem;
     width: 80%;
   }
-
+  .bienvenida h1 {
+    font-size: 2.2rem;
+  }
+  .bienvenida h2 {
+    font-size: 1.5rem;
+  }
   .bienvenida p {
+    font-size: 1.1rem;
     line-height: 1.5;
   }
 }
