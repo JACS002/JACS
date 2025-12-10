@@ -190,7 +190,7 @@ export default function Proyectos() {
         {loading && !error && (
           <div className={styles.loaderWrapper}>
             <div className={styles.loaderSpinner} />
-            <span className={styles.loaderText}>
+            <span className={`${styles.loaderText} font-titulos font-bold text-lg`}>
               {lang === "es" ? "Cargando proyectos..." : "Loading projects..."}
             </span>
           </div>
@@ -201,7 +201,7 @@ export default function Proyectos() {
             {!is3DReady && (
               <div className={styles.loaderWrapper}>
                 <div className={styles.loaderSpinner} />
-                <span className={styles.loaderText}>
+                <span className={`${styles.loaderText} font-titulos font-bold text-lg`}>
                   {lang === "es"
                     ? "Preparando sistema planetario..."
                     : "Preparing 3D system..."}
