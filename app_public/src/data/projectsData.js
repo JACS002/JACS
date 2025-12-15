@@ -12,7 +12,7 @@ export const projectsData = [
       en: "Full-stack portfolio built with React and Vite, powered by a Node.js/Express backend connected to MongoDB. It features advanced GSAP + ScrollTrigger animations, 3D visuals using Three.js and React Three Fiber, a dynamic project system, full Spanish/English localization, and a performance-optimized glassmorphism interface focused on user experience."
     },
     image: "/images/projects/jacs-portfolio.svg",
-    github: "https://github.com/JACS002/JACS",
+    github: "",
     demo: "https://www.jacs.dev",
     technologies: [
       "React",
