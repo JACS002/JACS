@@ -2,18 +2,18 @@
    CONTACTO - ESTILOS MODULARES
    ============================================================================= */
 
-/* -----------------------------------------------------------------------------
-   TÍTULO PRINCIPAL
-   ----------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------- */
+/* TÍTULO PRINCIPAL                                                              */
+/* ----------------------------------------------------------------------------- */
 .mainTitle {
   color: #ffffff;
   text-shadow: 0 0 6px #ffffff, 0 0 20px #9c65f2;
   padding: 0.1rem;
 }
 
-/* -----------------------------------------------------------------------------
-   NODO DEL TIMELINE
-   ----------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------- */
+/* NODO DEL TIMELINE                                                             */
+/* ----------------------------------------------------------------------------- */
 .contactNode {
   position: absolute;
   top: 0.5rem;
@@ -23,7 +23,12 @@
   border-radius: 9999px;
   background-color: #00f0ff;
   border: 1px solid rgba(255, 255, 255, 0.4);
-  box-shadow: 0 0 8px rgba(0, 240, 255, 0.6);
+  box-shadow:
+    0 0 6px rgba(0, 240, 255, 0.7),
+    0 0 14px rgba(0, 240, 255, 0.4);
+  /* pulso en CSS, sin GSAP */
+  animation: contactNodePulse 1.4s ease-in-out infinite;
+  will-change: box-shadow;
 }
 
 @media (min-width: 768px) {
@@ -35,9 +40,31 @@
   }
 }
 
-/* -----------------------------------------------------------------------------
-   CONECTOR HORIZONTAL (Desktop)
-   ----------------------------------------------------------------------------- */
+/* Animación del pulso del nodo */
+@keyframes contactNodePulse {
+  0%,
+  100% {
+    box-shadow:
+      0 0 6px rgba(0, 240, 255, 0.7),
+      0 0 14px rgba(0, 240, 255, 0.4);
+  }
+  50% {
+    box-shadow:
+      0 0 10px rgba(0, 240, 255, 1),
+      0 0 22px rgba(0, 240, 255, 0.9);
+  }
+}
+
+/* Respeto a usuarios con reduce-motion */
+@media (prefers-reduced-motion: reduce) {
+  .contactNode {
+    animation: none;
+  }
+}
+
+/* ----------------------------------------------------------------------------- */
+/* CONECTOR HORIZONTAL (Desktop)                                                 */
+/* ----------------------------------------------------------------------------- */
 .connector {
   display: none;
   position: absolute;
@@ -63,39 +90,45 @@
   }
 }
 
-/* -----------------------------------------------------------------------------
-   TARJETA DE PASO
-   ----------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------- */
+/* TARJETA DE PASO                                                               */
+/* ----------------------------------------------------------------------------- */
 .stepCard {
   position: relative;
   width: 100%;
   margin-left: 2.5rem;
   margin-top: 1rem;
   border-radius: 1.5rem;
-  background-color: rgba(0, 0, 0, 0.669);
   padding: 1.75rem 1.5rem;
-  color: white;
-  transition: all 300ms;
-  box-shadow: 
+  color: #ffffff;
+  background-color: rgba(0, 0, 0, 0.68);
+  box-shadow:
     0 0 20px rgba(255, 255, 255, 0.1),
     0 0 30px rgba(255, 255, 255, 0.04),
     inset 0 0 10px rgba(255, 255, 255, 0.02);
+  transition:
+    transform 0.2s ease-out,
+    box-shadow 0.2s ease-out,
+    background-color 0.2s ease-out,
+    border-color 0.2s ease-out;
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .stepCard:hover {
-  transform: scale(1.02);
-  box-shadow: 
-    0 0 20px rgba(255, 255, 255, 0.2),
-    0 0 40px rgba(255, 255, 255, 0.06),
-    inset 0 0 20px rgba(255, 255, 255, 0.03);
+  transform: translateY(-2px);
+  box-shadow:
+    0 0 22px rgba(255, 255, 255, 0.18),
+    0 0 42px rgba(255, 255, 255, 0.06),
+    inset 0 0 18px rgba(255, 255, 255, 0.04);
+  background-color: rgba(5, 10, 20, 0.9);
 }
 
 .stepCardHighlight {
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-color: rgba(0, 240, 255, 0.6);
 }
 
 .stepCardNormal {
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.12);
 }
 
 @media (min-width: 768px) {
@@ -119,14 +152,14 @@
   }
 }
 
-/* -----------------------------------------------------------------------------
-   TÍTULO DEL PASO
-   ----------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------- */
+/* TÍTULO DEL PASO                                                               */
+/* ----------------------------------------------------------------------------- */
 .stepTitle {
   font-size: 1.125rem;
   font-weight: 600;
   margin-bottom: 0.75rem;
-  color: white;
+  color: #ffffff;
 }
 
 .stepTitleHighlight {

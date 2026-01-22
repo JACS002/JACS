@@ -1,7 +1,7 @@
 // src/components/ProjectModal.jsx
 import styles from "./Proyectos.module.css";
 import techColors from "../../data/techColors";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { FaGithub } from "react-icons/fa";
 
 const getLocalizedField = (field, lang) => {
@@ -18,32 +18,34 @@ export default function ProjectModal({ project, onClose, lang = "en" }) {
 
   const localizedTitle = getLocalizedField(project.title, lang);
   const localizedDescription = getLocalizedField(project.description, lang);
+  const titleId = "project-modal-title";
 
-  // ---------------------------------------------------------------------------
-  // EFECTO: Bloquear scroll del body y añadir listener para ESC
-  // ---------------------------------------------------------------------------
+  const handleClose = useCallback(() => {
+    setClosing(true);
+    // esperar la animación CSS de cierre
+    setTimeout(() => {
+      onClose();
+    }, 250);
+  }, [onClose]);
+
+  // Bloquear scroll del body y cerrar con ESC
   useEffect(() => {
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
 
     const handleKeyDown = (e) => {
-      if (e.key === "Escape") handleClose();
+      if (e.key === "Escape") {
+        handleClose();
+      }
     };
+
     window.addEventListener("keydown", handleKeyDown);
 
     return () => {
       document.body.style.overflow = previousOverflow || "";
       window.removeEventListener("keydown", handleKeyDown);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  const handleClose = () => {
-    setClosing(true);
-    setTimeout(() => {
-      onClose();
-    }, 250); // debe coincidir con la animación de CSS
-  };
+  }, [handleClose]);
 
   return (
     <div
@@ -51,6 +53,9 @@ export default function ProjectModal({ project, onClose, lang = "en" }) {
         closing ? styles.modalOverlayClosing : ""
       }`}
       onClick={handleClose}
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby={titleId}
     >
       <div
         className={styles.modalCard}
@@ -74,6 +79,7 @@ export default function ProjectModal({ project, onClose, lang = "en" }) {
                 src={project.image}
                 alt={localizedTitle}
                 className={styles.modalImage}
+                loading="lazy"
               />
             </div>
 
@@ -124,6 +130,7 @@ export default function ProjectModal({ project, onClose, lang = "en" }) {
             </p>
 
             <h2
+              id={titleId}
               className={`${styles.modalTitle} font-titulos`}
             >
               {localizedTitle}

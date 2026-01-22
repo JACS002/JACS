@@ -1,5 +1,5 @@
 // src/components/StarBackground.jsx
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useMemo } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { Stars } from "@react-three/drei";
 
@@ -9,27 +9,26 @@ import { Stars } from "@react-three/drei";
 export default function StarBackground() {
   const mouseRef = useRef({ x: 0, y: 0 });
   const scrollRef = useRef({ y: 0 });
-  const [screenSize, setScreenSize] = useState({ width: 0, height: 0 });
+  const [viewportWidth, setViewportWidth] = useState(0);
 
-  // Detectar tamaño de pantalla
+  // Detectar tamaño de pantalla (solo ancho, que es lo que usamos)
   useEffect(() => {
-    const updateSize = () => {
-      setScreenSize({
-        width: window.innerWidth,
-        height: window.innerHeight,
-      });
+    const updateWidth = () => {
+      if (typeof window === "undefined") return;
+      setViewportWidth(window.innerWidth || 0);
     };
-    
-    updateSize();
-    window.addEventListener("resize", updateSize);
-    
-    return () => window.removeEventListener("resize", updateSize);
+
+    updateWidth();
+    window.addEventListener("resize", updateWidth);
+
+    return () => window.removeEventListener("resize", updateWidth);
   }, []);
 
-  // Eventos globales: scroll + mouse (siempre habilitado)
+  // Eventos globales: scroll + mouse (sólo en dispositivos con puntero fino)
   useEffect(() => {
+    if (typeof window === "undefined") return;
+
     const handleScroll = () => {
-      if (!scrollRef.current) return;
       scrollRef.current.y =
         window.scrollY ||
         document.documentElement.scrollTop ||
@@ -37,20 +36,26 @@ export default function StarBackground() {
         0;
     };
 
+    const hasFinePointer = window.matchMedia?.("(pointer: fine)").matches;
+
     const handleMouseMove = (e) => {
       mouseRef.current.x = (e.clientX / window.innerWidth) * 2 - 1;
       mouseRef.current.y = (e.clientY / window.innerHeight) * 2 - 1;
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
-    window.addEventListener("mousemove", handleMouseMove);
+    if (hasFinePointer) {
+      window.addEventListener("mousemove", handleMouseMove);
+    }
 
     // inicial
     handleScroll();
 
     return () => {
       window.removeEventListener("scroll", handleScroll);
-      window.removeEventListener("mousemove", handleMouseMove);
+      if (hasFinePointer) {
+        window.removeEventListener("mousemove", handleMouseMove);
+      }
     };
   }, []);
 
@@ -72,7 +77,7 @@ export default function StarBackground() {
       <color attach="background" args={["#02030a"]} />
 
       <CameraRig mouseRef={mouseRef} scrollRef={scrollRef} />
-      <StarField scrollRef={scrollRef} screenSize={screenSize} />
+      <StarField scrollRef={scrollRef} viewportWidth={viewportWidth} />
     </Canvas>
   );
 }
@@ -95,11 +100,10 @@ function CameraRig({ mouseRef, scrollRef }) {
     const targetZ = baseZ - warp * 1.2;
     const targetY = warp * 0.6;
 
-    // Parallax del mouse (siempre habilitado, será 0,0 si no hay mouse)
+    // Parallax del mouse (siempre habilitado, será 0,0 si no hay movimiento)
     const mouseX = mouseRef.current.x * 0.8;
     const mouseY = mouseRef.current.y * 0.6;
 
-    // mezcla suave
     camera.position.x += (mouseX - camera.position.x) * 0.06;
     camera.position.y += (targetY + mouseY - camera.position.y) * 0.06;
     camera.position.z += (targetZ - camera.position.z) * 0.06;
@@ -113,14 +117,14 @@ function CameraRig({ mouseRef, scrollRef }) {
 // -----------------------------------------------------------------------------
 // Campo estelar: rotación suave según velocidad de scroll
 // -----------------------------------------------------------------------------
-function StarField({ scrollRef, screenSize }) {
+function StarField({ scrollRef, viewportWidth }) {
   const groupRef = useRef();
   const lastScroll = useRef(0);
 
-  // Calcular densidad de estrellas según tamaño de pantalla
-  const getStarConfig = () => {
-    const width = screenSize.width || 1920;
-    
+  // Config de estrellas memorizada por breakpoint
+  const config = useMemo(() => {
+    const width = viewportWidth || 1920;
+
     // Móvil pequeño
     if (width <= 640) {
       return {
@@ -147,9 +151,7 @@ function StarField({ scrollRef, screenSize }) {
       deep: { count: 8000, radius: 250, depth: 120 },
       mid: { count: 4000, radius: 160, depth: 80 },
     };
-  };
-
-  const config = getStarConfig();
+  }, [viewportWidth]);
 
   useFrame(() => {
     const scrollY = scrollRef.current?.y || 0;
