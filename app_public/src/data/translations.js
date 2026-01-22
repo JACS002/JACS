@@ -14,51 +14,23 @@ const translations = {
     "hero.tagline.dm": "Data mining",
     "hero.p1":
       "I craft modern web experiences, build scalable backends, and turn data into actionable insights through clean engineering and thoughtful design.",
-    "hero.p2": "Focused on building intuitive interfaces, efficient systems and solutions that connect ideas with real impact.",
+    "hero.p2":
+      "Focused on building intuitive interfaces, efficient systems and solutions that connect ideas with real impact.",
     // ─────────────────────────────────────────────
 
     //PORYECTOS
     "projects.dragHint": "Drag to explore",
 
-    // ABOUT / QUIÉN SOY
-    "about.title": "About me",
-
-    "about.p1.a": "I’m Joel Cuascota (JACS), a ",
-    "about.p1.b": "full stack developer",
-    "about.p1.c": " and Computer Science Engineer from the ",
-    "about.p1.d": "Universidad San Francisco de Quito (USFQ)",
-    "about.p1.e":
-      ". I focus on building modern web experiences end to end: from interfaces in React to APIs and backend services with Node.js, Express and MongoDB.",
-
-    "about.p2.a": "Beyond my full stack focus, I also specialize in ",
-    "about.p2.b": "data mining",
-    "about.p2.c": " and ",
-    "about.p2.d": "machine learning",
-    "about.p2.e":
-      ", applying analysis and modeling to solve problems and design solutions driven by data.",
-
-    "about.p3.a": "Outside the technical world, I enjoy ",
-    "about.p3.b": "basketball",
-    "about.p3.c": ", ",
-    "about.p3.d": "nature",
-    "about.p3.e": " and ",
-    "about.p3.f": "video games",
-    "about.p3.g":
-      ". I see myself as a curious and consistent person: I’m always looking to learn new things and improve my skills, whether through personal projects, experimenting with new tools or exploring ideas that push me to grow personally and professionally.",
-
-    "about.p4.a": "Right now I’m expanding my skills in integrating with ",
-    "about.p4.b": "APIs",
-    "about.p4.c": " and modern architecture patterns. I’m also exploring backend tools like ",
-    "about.p4.d": "Spring Boot",
-    "about.p4.e": ", and strengthening my background in ",
-    "about.p4.f": "data mining and machine learning",
-    "about.p4.g":
-      ". I work with technologies like ",
-    "about.p4.h": "AWS",
-    "about.p4.i": " and ",
-    "about.p4.j": "Docker",
-    "about.p4.k":
-      " for deployment, automation and building more scalable and professional systems, always aiming for complete, efficient solutions with a consistent visual identity.",
+    // ABOUT / WHO AM I
+    "about.title": "Who I Am",
+    "about.p1":
+      "I am <h>Joel Cuascota (JACS)</h>, a Computer Scientist and <h>Full Stack & Data Engineer</h> graduated from <h>Universidad San Francisco de Quito (USFQ)</h>. I specialize in building modern digital ecosystems, fusing interactive React interfaces with robust Python (Django/FastAPI) and Node.js backends.",
+    "about.p2":
+      "My technical profile is hybrid: I design scalable <h>cloud-native</h> architectures using <h>AWS and Docker</h>, while integrating data pipelines and Machine Learning models to create intelligent, performance-driven applications.",
+    "about.p3":
+      "Beyond code, I find balance in <b>basketball</b>, exploring <b>nature</b>, and playing <b>video games</b>. I am defined by technical curiosity and persistence; I always seek the 'why' behind technologies to implement solutions that not only work but endure.",
+    "about.p4":
+      "Currently, I am focused on <h>AI-Native</h> development, integrating <h>LLMs and AI Agents</h> into full-stack workflows. I continue refining my skills in <h>Data Engineering (Spark/Snowflake)</h> and distributed system optimization, utilizing <h>AWS</h> and <h>Docker</h> for scalable deployment.",
 
     // PROJECTS
     "projects.title": "Projects",
@@ -114,52 +86,22 @@ const translations = {
     "hero.tagline.dm": "Minería de datos",
     "hero.p1":
       "Creo experiencias web modernas, desarrollo backends escalables y transformo datos en información útil mediante ingeniería limpia y diseño bien pensado.",
-      "hero.p2": "Enfocado en crear interfaces intuitivas, sistemas eficientes y soluciones que conectan ideas con impacto real.",
+    "hero.p2":
+      "Enfocado en crear interfaces intuitivas, sistemas eficientes y soluciones que conectan ideas con impacto real.",
 
     //PORYECTOS
     "projects.dragHint": "Arrastra para navegar",
 
-    // ─────────────────────────────────────────────
     // ABOUT / QUIÉN SOY
     "about.title": "Quién soy",
-
-    "about.p1.a": "Soy Joel Cuascota (JACS), desarrollador ",
-    "about.p1.b": "full stack",
-    "about.p1.c": " e Ingeniero en Ciencias de la Computación por la ",
-    "about.p1.d": "Universidad San Francisco de Quito (USFQ)",
-    "about.p1.e":
-      ". Me enfoco en construir experiencias web modernas de principio a fin: desde interfaces en React hasta APIs y servicios backend con Node.js, Express y MongoDB.",
-
-    "about.p2.a": "Además de mi enfoque full stack, también me especializo en ",
-    "about.p2.b": "data mining",
-    "about.p2.c": " y ",
-    "about.p2.d": "machine learning",
-    "about.p2.e":
-      ", aplicando análisis y modelado de datos para resolver problemas y construir soluciones basadas en información.",
-
-    "about.p3.a": "Fuera del ámbito técnico, disfruto del ",
-    "about.p3.b": "básquet",
-    "about.p3.c": ", la ",
-    "about.p3.d": "naturaleza",
-    "about.p3.e": " y los ",
-    "about.p3.f": "videojuegos",
-    "about.p3.g":
-      ". Me considero una persona curiosa y constante: siempre busco aprender cosas nuevas y mejorar mis habilidades, ya sea a través de proyectos personales, experimentando con nuevas herramientas o explorando ideas que me impulsen a crecer personal y profesionalmente.",
-
-    "about.p4.a": "Actualmente sigo ampliando mis habilidades en integración con ",
-    "about.p4.b": "APIs",
-    "about.p4.c": " y patrones de arquitectura modernos. También estoy explorando herramientas backend como ",
-    "about.p4.d": "Spring Boot",
-    "about.p4.e": ", y reforzando mis conocimientos en ",
-    "about.p4.f": "data mining y machine learning",
-    "about.p4.g":
-      ". Además, trabajo con tecnologías como ",
-    "about.p4.h": "AWS",
-    "about.p4.i": " y ",
-    "about.p4.j": "Docker",
-    "about.p4.k":
-      " para el despliegue, automatización y construcción de sistemas más escalables y profesionales, buscando crear soluciones completas, eficientes y con una identidad visual propia.",
-
+    "about.p1":
+      "Soy <h>Joel Cuascota (JACS)</h>, Ingeniero en Ciencias de la Computación y desarrollador <h>Full Stack & Data Engineer</h> graduado de la <h>Universidad San Francisco de Quito (USFQ)</h>. Me especializo en construir ecosistemas digitales modernos, fusionando interfaces interactivas en React con backends robustos en Python (Django/FastAPI) y Node.js.",
+    "about.p2":
+      "Mi perfil técnico es híbrido: diseño arquitecturas <h>cloud-native</h> escalables utilizando <h>AWS y Docker</h>, mientras integro pipelines de datos y modelos de Machine Learning para crear aplicaciones inteligentes y orientadas al rendimiento.",
+    "about.p3":
+      "Fuera del código, encuentro balance en el <b>básquet</b>, explorando la <b>naturaleza</b> y disfrutando de los <b>videojuegos</b>. Me define la curiosidad técnica y la constancia; siempre busco el 'por qué' detrás de las tecnologías para implementar soluciones que no solo funcionen, sino que perduren.",
+    "about.p4":
+      "Actualmente, estoy enfocado en el desarrollo <h>AI-Native</h>, integrando <h>LLMs y Agentes de IA</h> en flujos de trabajo full-stack. Sigo perfeccionando mis habilidades en <h>Ingeniería de Datos (Spark/Snowflake)</h> y optimización de sistemas distribuidos, utilizando <h>AWS</h> y <h>Docker</h> para el despliegue escalable.",
     // PROYECTOS
     "projects.title": "Proyectos",
     "projects.loading": "Trayendo proyectos…",

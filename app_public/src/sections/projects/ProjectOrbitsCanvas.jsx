@@ -33,6 +33,7 @@ function getMoonTexturePath(project) {
   if (label === "taxifare") return "/images/projects/luna-taxifare.webp";
   if (label === "tradingml") return "/images/projects/luna-trading.webp";
   if (label === "jacs") return "/images/projects/luna-jacs.webp";
+  if (label === "bloggen-ai") return "/images/projects/luna-bloggenai.webp";
 
   return "/images/projects/luna-jacs.webp";
 }
@@ -40,7 +41,9 @@ function getMoonTexturePath(project) {
 function getLocalizedField(field, lang) {
   if (!field) return "";
   if (typeof field === "string") return field;
-  return lang === "es" ? field.es || field.en || "" : field.en || field.es || "";
+  return lang === "es"
+    ? field.es || field.en || ""
+    : field.en || field.es || "";
 }
 
 function getMoonLabel(project) {
@@ -71,13 +74,17 @@ function Saturn({ isActive }) {
     for (let i = 0; i < uvAttribute.count; i++) {
       const u = uvAttribute.getX(i);
       const v = uvAttribute.getY(i);
-      uvAttribute.setXY(i, cropStart + u * cropRange, cropStart + v * cropRange);
+      uvAttribute.setXY(
+        i,
+        cropStart + u * cropRange,
+        cropStart + v * cropRange,
+      );
     }
     uvAttribute.needsUpdate = true;
   };
 
   useFrame((_, delta) => {
-    if (!isActive) return;        // no hacemos nada si la sección no está visible
+    if (!isActive) return; // no hacemos nada si la sección no está visible
     if (groupRef.current) groupRef.current.rotation.y += delta * 0.25;
     if (ringMeshRef.current && !ringMeshRef.current.userData.uvsConfigured) {
       setupRingUVs();
@@ -135,7 +142,7 @@ function SaturnMoons({
       tilt: new THREE.Euler(
         (Math.random() - 0.5) * Math.PI * 0.6,
         0,
-        (Math.random() - 0.5) * Math.PI * 0.6
+        (Math.random() - 0.5) * Math.PI * 0.6,
       ),
     }));
   }
@@ -367,7 +374,9 @@ function TextureLoadingOverlay({ lang }) {
         }}
         className={`${styles.loaderText} font-titulos font-bold text-base`}
       >
-        {lang === "es" ? "Calibrando visor óptico…" : "Calibrating optical visor…"}
+        {lang === "es"
+          ? "Calibrando visor óptico…"
+          : "Calibrating optical visor…"}
         {Math.round(progress)}%
       </div>
     </Html>

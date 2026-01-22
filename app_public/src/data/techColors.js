@@ -12,6 +12,7 @@ const techColors = {
   Node: "#3C873A",
   Express: "#BBBBBB", // Gris porque Express no tiene color oficial
   FastAPI: "#009688",
+  Django: "#092E20",
 
   // --- Databases ---
   MongoDB: "#4FAA41",
@@ -39,6 +40,7 @@ const techColors = {
   "Apache Spark": "#E25A1C",
   PySpark: "#E25A1C",
   Jupyter: "#F37626",
+  "Groq LPU": "#F55036",
 
   // --- Cloud & Infrastructure ---
   AWS: "#FF9900",
@@ -58,7 +60,7 @@ const techColors = {
 
   // --- 3D & Animation ---
   "Three.js": "#FFFFFF",
-  GSAP: "#88CE02"
+  GSAP: "#88CE02",
 };
 
 export default techColors;

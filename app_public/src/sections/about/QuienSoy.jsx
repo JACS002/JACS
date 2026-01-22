@@ -26,11 +26,49 @@ import { useLang } from "../../context/LanguageProvider";
 gsap.registerPlugin(ScrollTrigger);
 
 // ============================================================================
+// HELPER: RICH TEXT PARSER
+// Parsea texto con etiquetas <h>...</h> (highlight) y <b>...</b> (bold)
+// ============================================================================
+const RichText = ({ text }) => {
+  if (!text) return null;
+  // Separa por etiquetas manteniendo los delimitadores
+  const parts = text.split(/(<h>.*?<\/h>|<b>.*?<\/b>)/g);
+
+  return (
+    <span>
+      {parts.map((part, index) => {
+        if (part.startsWith("<h>") && part.endsWith("</h>")) {
+          return (
+            <span key={index} className="text-accent font-semibold">
+              {part.replace(/<\/?h>/g, "")}
+            </span>
+          );
+        }
+        if (part.startsWith("<b>") && part.endsWith("</b>")) {
+          return (
+            <span key={index} className="font-semibold text-white/90">
+              {part.replace(/<\/?b>/g, "")}
+            </span>
+          );
+        }
+        return part;
+      })}
+    </span>
+  );
+};
+
+// ============================================================================
 // 3D: CONSTELACIÓN DE SKILLS
 // ============================================================================
 
 // Nodo de skill: esfera con cross-fade de texturas + etiqueta
-function SkillBubble({ name, position, size = 0.15, baseTexture, hoverTexture }) {
+function SkillBubble({
+  name,
+  position,
+  size = 0.15,
+  baseTexture,
+  hoverTexture,
+}) {
   const [hovered, setHovered] = useState(false);
 
   const groupRef = useRef();
@@ -44,7 +82,7 @@ function SkillBubble({ name, position, size = 0.15, baseTexture, hoverTexture })
     blendRef.current = THREE.MathUtils.lerp(blendRef.current, target, 0.12);
 
     const b = 1 - blendRef.current; // opacidad base
-    const h = blendRef.current;     // opacidad hover
+    const h = blendRef.current; // opacidad hover
 
     if (baseMatRef.current) baseMatRef.current.opacity = b;
     if (hoverMatRef.current) hoverMatRef.current.opacity = h;
@@ -52,7 +90,11 @@ function SkillBubble({ name, position, size = 0.15, baseTexture, hoverTexture })
     // pequeño scale suave en hover
     if (groupRef.current) {
       const targetScale = 1 + blendRef.current * 0.06;
-      const s = THREE.MathUtils.lerp(groupRef.current.scale.x, targetScale, 0.12);
+      const s = THREE.MathUtils.lerp(
+        groupRef.current.scale.x,
+        targetScale,
+        0.12,
+      );
       groupRef.current.scale.setScalar(s);
     }
   });
@@ -155,21 +197,28 @@ function SkillConstellationScene({ isActive }) {
   baseTexture.colorSpace = THREE.SRGBColorSpace;
   hoverTexture.colorSpace = THREE.SRGBColorSpace;
 
-  // Nodos de skills
+  // Nodos de skills (ACTUALIZADOS A TU STACK)
   const nodes = useMemo(
     () => [
-      { name: "React",      position: [-2.2, -1.6,  0.2] },
-      { name: "Node.js",    position: [-0.8, -0.9,  1.0] },
-      { name: "Express",    position: [ 1.0, -0.3, -0.7] },
-      { name: "MongoDB",    position: [ 2.3, -1.2,  0.4] },
-      { name: "PostgreSQL", position: [ 2.5,  0.7,  0.9] },
-      { name: "Python",     position: [ 0.8,  1.5, -0.5] },
-      { name: "SQL",        position: [-1.4,  2.0,  0.4] },
-      { name: "Docker",     position: [-2.6,  0.4, -1.0] },
-      { name: "APIRest",    position: [ 0.0,  0.1,  1.4] },
-      { name: "Git",        position: [-0.5, -2.2, -0.6] },
+      // Frontend Core
+      { name: "React", position: [-2.2, -1.6, 0.2] },
+
+      // Backend (Node & Python ecosystem)
+      { name: "Node.js", position: [-0.8, -0.9, 1.0] },
+      { name: "FastAPI", position: [1.0, -0.3, -0.7] },
+      { name: "Django", position: [0.8, 1.5, -0.5] },
+
+      // Data & DB
+      { name: "MongoDB", position: [2.3, -1.2, 0.4] },
+      { name: "PostgreSQL", position: [2.5, 0.7, 0.9] },
+
+      // DevOps & Tools
+      { name: "Docker", position: [-2.6, 0.4, -1.0] },
+      { name: "AWS", position: [-1.4, 2.0, 0.4] },
+      { name: "Spark", position: [0.0, 0.1, 1.4] },
+      { name: "Git", position: [-0.5, -2.2, -0.6] },
     ],
-    []
+    [],
   );
 
   useFrame((_, delta) => {
@@ -222,20 +271,23 @@ function SkillConstellationScene({ isActive }) {
 export default function QuienSoy() {
   const { t } = useLang();
   const sectionRef = useRef(null);
-  const paragraphRefs = useRef([]);
+  const paragraphRefs = useRef([]); // Array de refs dinámicos
 
   const [hasEntered, setHasEntered] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
+
+  // Claves de los párrafos en el JSON de traducciones
+  const paragraphKeys = ["about.p1", "about.p2", "about.p3", "about.p4"];
 
   // --------------------------
   // GSAP ScrollTrigger para título, párrafos y canvas
   // --------------------------
   useLayoutEffect(() => {
     const ctx = gsap.context(() => {
+      // 1. Título
       const title = sectionRef.current?.querySelector(".about-title");
       if (title) {
         gsap.set(title, { autoAlpha: 0, y: 24 });
-
         ScrollTrigger.create({
           trigger: title,
           start: "top 85%",
@@ -271,15 +323,12 @@ export default function QuienSoy() {
         });
       }
 
+      // 2. Párrafos (Loop optimizado)
       paragraphRefs.current.forEach((el, index) => {
         if (!el) return;
         const fromX = index % 2 === 0 ? -40 : 40;
 
-        gsap.set(el, {
-          autoAlpha: 0,
-          x: fromX,
-          y: 30,
-        });
+        gsap.set(el, { autoAlpha: 0, x: fromX, y: 30 });
 
         ScrollTrigger.create({
           trigger: el,
@@ -320,11 +369,11 @@ export default function QuienSoy() {
         });
       });
 
+      // 3. Canvas Container
       const canvasContainer =
         sectionRef.current?.querySelector(".about-canvas");
       if (canvasContainer) {
         gsap.set(canvasContainer, { autoAlpha: 0, y: 40 });
-
         ScrollTrigger.create({
           trigger: canvasContainer,
           start: "top 85%",
@@ -377,14 +426,14 @@ export default function QuienSoy() {
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting && entry.intersectionRatio >= 0.2) {
-            setHasEntered(true);  // montamos Canvas desde ahora
-            setIsVisible(true);   // está visible ahora
+            setHasEntered(true); // montamos Canvas desde ahora
+            setIsVisible(true); // está visible ahora
           } else {
-            setIsVisible(false);  // pausamos animación, pero no desmontamos
+            setIsVisible(false); // pausamos animación, pero no desmontamos
           }
         });
       },
-      { threshold: [0.2] }
+      { threshold: [0.2] },
     );
 
     observer.observe(el);
@@ -398,7 +447,7 @@ export default function QuienSoy() {
       className="min-h-screen flex items-center justify-center mb-12"
     >
       <div className="max-w-6xl w-full grid md:grid-cols-2 gap-10 items-center">
-        {/* TEXTO */}
+        {/* TEXTO (Ahora dinámico y limpio) */}
         <div className="text-white font-contenido px-8 py-9 md:px-10 md:py-6">
           <h1
             className={`about-title ${styles.mainTitle} font-titulos text-4xl md:text-5xl sm:text-3xl font-bold mb-12`}
@@ -406,75 +455,15 @@ export default function QuienSoy() {
             {t("about.title")}
           </h1>
 
-          <p
-            ref={(el) => (paragraphRefs.current[0] = el)}
-            className="about-paragraph text-base md:text-base text-gray-300 leading-relaxed mb-6"
-          >
-            {t("about.p1.a")}{" "}
-            <span className="text-accent font-semibold">
-              {t("about.p1.b")}
-            </span>{" "}
-            {t("about.p1.c")}{" "}
-            <span className="text-accent font-semibold">
-              {t("about.p1.d")}
-            </span>{" "}
-            {t("about.p1.e")}
-          </p>
-
-          <p
-            ref={(el) => (paragraphRefs.current[1] = el)}
-            className="about-paragraph text-base md:text-base text-gray-300 leading-relaxed mb-6"
-          >
-            {t("about.p2.a")}{" "}
-            <span className="text-accent font-semibold">
-              {t("about.p2.b")}
-            </span>{" "}
-            {t("about.p2.c")}{" "}
-            <span className="text-accent font-semibold">
-              {t("about.p2.d")}
-            </span>{" "}
-            {t("about.p2.e")}
-          </p>
-
-          <p
-            ref={(el) => (paragraphRefs.current[2] = el)}
-            className="about-paragraph text-base md:text-base text-gray-400 leading-relaxed mb-6"
-          >
-            {t("about.p3.a")}{" "}
-            <span className="font-semibold">{t("about.p3.b")}</span>{" "}
-            {t("about.p3.c")}{" "}
-            <span className="font-semibold">{t("about.p3.d")}</span>{" "}
-            {t("about.p3.e")}{" "}
-            <span className="font-semibold">{t("about.p3.f")}</span>{" "}
-            {t("about.p3.g")}
-          </p>
-
-          <p
-            ref={(el) => (paragraphRefs.current[3] = el)}
-            className="about-paragraph text-base md:text-base text-gray-400 leading-relaxed"
-          >
-            {t("about.p4.a")}{" "}
-            <span className="font-semibold text-accent">
-              {t("about.p4.b")}
-            </span>{" "}
-            {t("about.p4.c")}{" "}
-            <span className="font-semibold text-accent">
-              {t("about.p4.d")}
-            </span>{" "}
-            {t("about.p4.e")}{" "}
-            <span className="font-semibold text-accent">
-              {t("about.p4.f")}
-            </span>{" "}
-            {t("about.p4.g")}{" "}
-            <span className="font-semibold text-accent">
-              {t("about.p4.h")}
-            </span>{" "}
-            {t("about.p4.i")}{" "}
-            <span className="font-semibold text-accent">
-              {t("about.p4.j")}
-            </span>{" "}
-            {t("about.p4.k")}
-          </p>
+          {paragraphKeys.map((key, index) => (
+            <p
+              key={key}
+              ref={(el) => (paragraphRefs.current[index] = el)}
+              className="about-paragraph text-base md:text-base text-gray-300 leading-relaxed mb-6 last:mb-0"
+            >
+              <RichText text={t(key)} />
+            </p>
+          ))}
         </div>
 
         {/* CANVAS 3D */}
