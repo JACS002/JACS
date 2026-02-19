@@ -165,11 +165,11 @@ export default function BentoAboutV2() {
                   </p>
                 </div>
 
-                <div className="space-y-4">
-                  <p className="text-slate-300 leading-relaxed text-base md:text-lg max-w-2xl font-light">
+                <div className="flex flex-col gap-3 pb-4">
+                  <p className="text-slate-300 leading-relaxed text-base md:text-lg max-w-2xl font-light line-clamp-3 md:line-clamp-none">
                     {t("about.v2.summary")}
                   </p>
-                  <div className="flex items-center gap-4 text-sm text-slate-400 font-mono pt-4 border-t border-white/5">
+                  <div className="flex items-center gap-4 text-sm text-slate-400 font-mono pt-3 border-t border-white/5 flex-wrap">
                     <span className="flex items-center gap-2">
                       <Globe size={14} className="text-green-400" /> Remote
                       Ready
@@ -181,20 +181,18 @@ export default function BentoAboutV2() {
                   {/* Botón de Contacto */}
                   <button
                     onClick={() =>
-                      document
-                        .getElementById("contact-cta")
-                        ?.scrollIntoView({
-                          behavior: "smooth",
-                          block: "center",
-                        })
+                      document.getElementById("contact-cta")?.scrollIntoView({
+                        behavior: "smooth",
+                        block: "center",
+                      })
                     }
-                    className="mt-4 self-start inline-flex items-center gap-2 px-4 py-2 rounded-full border border-primary/30 bg-primary/10 text-primary text-xs font-medium uppercase tracking-wider hover:bg-primary/20 hover:border-primary/60 hover:shadow-[0_0_16px_rgba(56,189,248,0.3)] transition-all duration-300 group/contact"
+                    className="w-fit inline-flex items-center gap-2 px-4 py-2 rounded-full border border-primary/30 bg-primary/10 text-primary text-xs font-medium uppercase tracking-wider hover:bg-primary/20 hover:border-primary/60 hover:shadow-[0_0_16px_rgba(56,189,248,0.3)] transition-all duration-300 group/contact"
                   >
                     <Send
                       size={12}
-                      className="group-hover/contact:translate-x-0.5 group-hover/contact:-translate-y-0.5 transition-transform duration-300"
+                      className="group-hover/contact:scale-110 group-hover/contact:drop-shadow-[0_0_6px_rgba(56,189,248,0.8)] transition-all duration-300"
                     />
-                    {"Contact me"}
+                    Contact me
                   </button>
                 </div>
               </div>

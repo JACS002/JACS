@@ -85,7 +85,7 @@ const translations = {
     "projects.boman.type": "Enterprise B2B Platform",
     "projects.boman.role": "Full Stack Architect",
     "projects.boman.desc":
-      "Architected a B2B digital platform with custom CMS. Implemented hybrid caching strategies reducing backend load by ~90%.",
+      "Delivering a production-grade B2B platform (in dev) with custom CMS via Next.js Server Components & NestJS REST APIs. Engineered SSG + ISR + On-Demand Revalidation for ~90% backend load reduction. Secured with HttpOnly JWT cookies, CSRF double-submit, XSS mitigation & rate limiting. Deployed on Railway with Cloudflare CDN & Cloudinary media pipeline.",
     "projects.boman.stack": "Next.js 16, NestJS, Railway",
     "projects.boman.m1": "Load Reduction",
     "projects.boman.m2": "Rendering",
@@ -95,7 +95,7 @@ const translations = {
     "projects.aiblog.type": "SaaS Platform",
     "projects.aiblog.role": "SaaS Engineer",
     "projects.aiblog.desc":
-      "Production-ready SaaS generating SEO content using Llama 3 (70B). Engineered a scalable Clean Architecture separating Core AI logic.",
+      "AI-native SaaS transforming YouTube transcripts into SEO-optimized blog posts via Groq LPU + Llama 3.3 (70B), achieving <1.5s inference. Built on Clean Architecture with stateless JWT (HttpOnly cookies), CSRF protection, and a custom Markdown CMS with real-time editing and multi-format export.",
     "projects.aiblog.stack": "React, Django, Docker, Groq",
     "projects.aiblog.m1": "Inference Latency",
     "projects.aiblog.m2": "Model",
@@ -105,7 +105,7 @@ const translations = {
     "projects.trade.type": "FinTech Algorithm",
     "projects.trade.role": "Data Engineer",
     "projects.trade.desc":
-      "Deployed a low-latency inference API for real-time market predictions using serialized XGBoost models and time-series validation.",
+      "End-to-end ML pipeline for financial market prediction: automated OHLCV ingestion, idempotent feature engineering (lags, volatility, cyclical encoding), and benchmarking of 7 classifiers with strict time-series cross-validation. Winning model deployed as a containerized FastAPI inference API with Swagger docs.",
     "projects.trade.stack": "Python, FastAPI, Scikit-Learn",
     "projects.trade.m1": "API Latency",
     "projects.trade.m2": "Pipeline",
@@ -115,7 +115,7 @@ const translations = {
     "projects.cenespe.type": "E-commerce Ecosystem",
     "projects.cenespe.role": "Full Stack Engineer",
     "projects.cenespe.desc":
-      "Digitized a multi-category catalog with automated SEO indexing. Engineered high-performance APIs for complex product lookups.",
+      "Architected a B2B e-commerce ecosystem with SSR, automated SEO indexing & Google Merchant integration. Engineered MongoDB aggregation APIs with string-similarity search across multi-category catalogs. Hardened with brute-force protection, rate limiting & PayPhone payment integration.",
     "projects.cenespe.stack": "Node.js, MongoDB, Pug, AWS",
     "projects.cenespe.m1": "Search",
     "projects.cenespe.m2": "Uptime",
@@ -125,7 +125,7 @@ const translations = {
     "projects.car.type": "Microservices System",
     "projects.car.role": "Microservices Architect",
     "projects.car.desc":
-      "Dealership management with decoupled inventory/user systems and IBM Watson NLU for sentiment analysis.",
+      "IBM Full Stack capstone: multi-service dealership platform with Django REST Framework, Node.js/Express microservices and MongoDB for dealership data. Integrated IBM Watson NLU for automated sentiment analysis on customer reviews. Containerized with Docker and automated via GitHub Actions CI/CD.",
     "projects.car.stack": "React, Django, Node.js, IBM Cloud",
     "projects.car.m1": "Architecture",
     "projects.car.m2": "AI Analysis",
@@ -216,7 +216,7 @@ const translations = {
     "projects.boman.type": "Plataforma B2B",
     "projects.boman.role": "Arquitecto Full Stack",
     "projects.boman.desc":
-      "Plataforma digital con CMS personalizado. Estrategias de caché híbridas que redujeron la carga del backend en un ~90%.",
+      "Plataforma B2B de producción (en desarrollo) con CMS personalizado usando Next.js Server Components y NestJS. Estrategia híbrida SSG + ISR + revalidación bajo demanda con ~90% de reducción de carga. Seguridad con JWT HttpOnly, CSRF double-submit, mitigación XSS y rate limiting. Desplegado en Railway con CDN Cloudflare y pipeline Cloudinary.",
     "projects.boman.stack": "Next.js 16, NestJS, Railway",
     "projects.boman.m1": "Carga Reducida",
     "projects.boman.m2": "Renderizado",
@@ -226,7 +226,7 @@ const translations = {
     "projects.aiblog.type": "Plataforma SaaS",
     "projects.aiblog.role": "Ingeniero SaaS",
     "projects.aiblog.desc":
-      "SaaS de producción generando contenido SEO con Llama 3 (70B). Arquitectura limpia separando lógica IA de API REST.",
+      "SaaS nativo en IA que transforma transcripciones de YouTube en artículos SEO optimizados con Groq LPU + Llama 3.3 (70B) en <1.5s. Arquitectura limpia con JWT HttpOnly, protección CSRF y CMS Markdown con edición en tiempo real y exportación multi-formato.",
     "projects.aiblog.stack": "React, Django, Docker, Groq",
     "projects.aiblog.m1": "Latencia Inferencia",
     "projects.aiblog.m2": "Modelo",
@@ -236,7 +236,7 @@ const translations = {
     "projects.trade.type": "Algoritmo FinTech",
     "projects.trade.role": "Ingeniero de Datos",
     "projects.trade.desc":
-      "API de inferencia de baja latencia para predicciones de mercado en tiempo real usando modelos XGBoost serializados.",
+      "Pipeline ML end-to-end para predicción de mercados financieros: ingesta OHLCV automatizada, feature engineering idempotente (lags, volatilidad, codificación cíclica) y benchmark de 7 clasificadores con validación temporal estricta. Modelo ganador desplegado como API FastAPI containerizada con documentación Swagger.",
     "projects.trade.stack": "Python, FastAPI, Scikit-Learn",
     "projects.trade.m1": "Latencia API",
     "projects.trade.m2": "Pipeline",
@@ -246,7 +246,7 @@ const translations = {
     "projects.cenespe.type": "Ecosistema E-commerce",
     "projects.cenespe.role": "Ingeniero Full Stack",
     "projects.cenespe.desc":
-      "Digitalización de catálogo multicategoría con indexación SEO automática. APIs de alto rendimiento para búsquedas complejas.",
+      "Arquitecté un ecosistema e-commerce B2B con SSR, indexación SEO automatizada e integración con Google Merchant. Diseñé APIs MongoDB con algoritmos de búsqueda por similitud para catálogos multicategoría. Seguridad reforzada con rate limiting, protección brute-force e integración PayPhone.",
     "projects.cenespe.stack": "Node.js, MongoDB, Pug, AWS",
     "projects.cenespe.m1": "Búsqueda",
     "projects.cenespe.m2": "Uptime",
@@ -256,7 +256,7 @@ const translations = {
     "projects.car.type": "Sistema Microservicios",
     "projects.car.role": "Arquitecto Microservicios",
     "projects.car.desc":
-      "Gestión de concesionarios con sistemas de inventario y usuarios desacoplados, integrando IBM Watson NLU para análisis de sentimiento.",
+      "Proyecto capstone IBM Full Stack: plataforma multi-servicio para concesionarios con Django REST Framework, microservicios Node.js/Express y MongoDB. Integración de IBM Watson NLU para análisis de sentimiento automático en reseñas. Containerizado con Docker y pipeline CI/CD via GitHub Actions.",
     "projects.car.stack": "React, Django, Node.js, IBM Cloud",
     "projects.car.m1": "Arquitectura",
     "projects.car.m2": "Análisis IA",

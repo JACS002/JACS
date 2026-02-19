@@ -32,7 +32,13 @@ export default function SpaceGallery() {
         title: t("projects.boman.title"),
         type: t("projects.boman.type"),
         role: t("projects.boman.role"),
-        stack: ["Next.js 16", "NestJS", "PostgreSQL"],
+        stack: [
+          "Next.js 16",
+          "TypeScript",
+          "NestJS",
+          "PostgreSQL",
+          "Cloudflare",
+        ],
         metrics: [
           {
             label: t("projects.boman.m1"),
@@ -55,7 +61,7 @@ export default function SpaceGallery() {
         title: t("projects.aiblog.title"),
         type: t("projects.aiblog.type"),
         role: t("projects.aiblog.role"),
-        stack: ["React", "Django", "Llama 3 (70B)"],
+        stack: ["React 19", "Django 5", "Groq LPU", "PostgreSQL", "Docker"],
         metrics: [
           {
             label: t("projects.aiblog.m1"),
@@ -78,7 +84,7 @@ export default function SpaceGallery() {
         title: t("projects.trade.title"),
         type: t("projects.trade.type"),
         role: t("projects.trade.role"),
-        stack: ["Python", "XGBoost", "Docker"],
+        stack: ["Python", "FastAPI", "XGBoost", "PostgreSQL", "Docker"],
         metrics: [
           {
             label: t("projects.trade.m1"),
@@ -101,7 +107,7 @@ export default function SpaceGallery() {
         title: t("projects.cenespe.title"),
         type: t("projects.cenespe.type"),
         role: t("projects.cenespe.role"),
-        stack: ["Node.js", "MongoDB", "Express"],
+        stack: ["Node.js", "Express", "MongoDB", "Pug SSR", "PayPhone API"],
         metrics: [
           {
             label: t("projects.cenespe.m1"),
@@ -124,7 +130,7 @@ export default function SpaceGallery() {
         title: t("projects.car.title"),
         type: t("projects.car.type"),
         role: t("projects.car.role"),
-        stack: ["React", "Django", "IBM Cloud"],
+        stack: ["React", "Django", "Node.js", "MongoDB", "Watson NLU"],
         metrics: [
           {
             label: t("projects.car.m1"),
@@ -248,19 +254,16 @@ export default function SpaceGallery() {
 
 // --- CARD CON DISEÑO "CYBER-HUD" (Alta Ingeniería - High Contrast) ---
 function ProjectCard({ project, index, t }) {
+  const hasLinks = project.links.live || project.links.github;
+
   return (
-    <div className="group relative w-[85vw] md:w-[900px] h-[65vh] md:h-[600px] shrink-0 rounded-[2rem] overflow-hidden transition-all duration-700 hover:scale-[1.02] border border-white/15 hover:border-primary/50 bg-[#020617]/90 backdrop-blur-3xl shadow-[0_20px_50px_rgba(0,0,0,0.7)] hover:shadow-[0_0_50px_rgba(56,189,248,0.2)]">
+    <div className="group relative w-[85vw] md:w-[900px] h-[75vh] md:h-[600px] shrink-0 rounded-[2rem] overflow-hidden transition-all duration-700 hover:scale-[1.02] border border-white/15 hover:border-primary/50 bg-[#020617]/90 backdrop-blur-3xl shadow-[0_20px_50px_rgba(0,0,0,0.7)] hover:shadow-[0_0_50px_rgba(56,189,248,0.2)]">
       {/* 1. LAYER: FONDO & AMBIENTE TÉCNICO */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        {/* Gradiente base sutil */}
         <div
           className={`absolute top-[-50%] right-[-50%] w-[100%] h-[100%] bg-gradient-to-bl ${project.color} opacity-10 group-hover:opacity-20 blur-[120px] transition-all duration-1000`}
         />
-
-        {/* Grid Pattern (Solo visible en hover) */}
         <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:40px_40px] opacity-0 group-hover:opacity-100 transition-opacity duration-700 mask-image-gradient-b" />
-
-        {/* Ruido Pixelado */}
         <div className="absolute inset-0 opacity-[0.03] bg-[url('https://grainy-gradients.vercel.app/noise.svg')]" />
       </div>
 
@@ -271,12 +274,12 @@ function ProjectCard({ project, index, t }) {
       <div className="absolute bottom-6 right-6 w-3 h-3 border-b border-r border-white/30 opacity-50 group-hover:border-primary transition-colors duration-500" />
 
       {/* 3. LAYER: CONTENIDO */}
-      <div className="absolute inset-0 flex flex-col md:flex-row relative z-10 p-2">
-        {/* LEFT COLUMN: INFO TÉCNICA */}
-        <div className="w-full md:w-1/2 p-6 md:p-10 flex flex-col justify-between">
-          <div>
+      <div className="absolute inset-0 flex flex-col md:flex-row z-10">
+        {/* LEFT COLUMN: INFO TÉCNICA — con scroll si desborda */}
+        <div className="w-full md:w-1/2 h-full flex flex-col">
+          <div className="flex-1 overflow-y-auto hud-scroll p-6 md:p-10 flex flex-col">
             {/* Header: ID & Status */}
-            <div className="flex items-center gap-3 mb-6 opacity-80">
+            <div className="flex items-center gap-3 mb-5 opacity-80 shrink-0">
               <div
                 className={`flex items-center gap-2 px-3 py-1 rounded-full border backdrop-blur-sm transition-colors ${
                   project.status === "dev"
@@ -306,25 +309,24 @@ function ProjectCard({ project, index, t }) {
               </span>
             </div>
 
-            {/* Título Responsive con Efecto Hover */}
-            <h3 className="text-3xl md:text-5xl font-bold text-white mb-4 leading-snug tracking-tight pb-1 text-balance group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-white group-hover:to-primary/80 transition-all duration-500">
+            {/* Título */}
+            <h3 className="text-3xl md:text-5xl font-bold text-white mb-4 leading-snug tracking-tight pb-1 text-balance group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-white group-hover:to-primary/80 transition-all duration-500 shrink-0">
               {project.title}
             </h3>
 
-            {/* Descripción */}
-            <p className="text-slate-300 text-sm md:text-lg leading-relaxed font-light border-l border-white/10 pl-5 mb-8 max-w-md group-hover:border-primary/50 transition-colors duration-500 line-clamp-4 md:line-clamp-none">
+            {/* Descripción — sin clamp, hace scroll si es larga */}
+            <p className="text-slate-300 text-sm md:text-base leading-relaxed font-light border-l border-white/10 pl-5 mb-5 max-w-md group-hover:border-primary/50 transition-colors duration-500">
               {project.desc}
             </p>
 
             {/* Data Modules (Metrics) */}
-            <div className="grid grid-cols-2 gap-3 mb-4">
+            <div className="grid grid-cols-2 gap-3 mb-4 shrink-0">
               {project.metrics.map((metric, i) => (
                 <div
                   key={i}
                   className="relative group/metric p-3 md:p-4 rounded-xl bg-white/[0.03] border border-white/5 hover:bg-white/[0.07] hover:border-primary/20 transition-all overflow-hidden"
                 >
                   <div className="absolute top-0 left-0 w-[2px] h-full bg-primary/0 group-hover/metric:bg-primary transition-colors duration-300" />
-
                   <div className="flex items-center gap-2 text-slate-400 mb-1 group-hover/metric:text-primary transition-colors">
                     {metric.icon}
                     <span className="text-[9px] font-mono uppercase tracking-wider truncate">
@@ -337,37 +339,60 @@ function ProjectCard({ project, index, t }) {
                 </div>
               ))}
             </div>
-          </div>
 
-          {/* Footer: Stack Chips */}
-          <div className="flex flex-wrap gap-3 mt-auto">
-            {project.stack.map((tech) => (
-              <span
-                key={tech}
-                className="px-4 py-2 text-xs md:text-sm font-mono rounded-lg bg-white/5 border border-white/10 text-slate-300 hover:text-white hover:border-primary/50 hover:bg-primary/10 transition-all cursor-default shadow-sm"
-              >
-                {tech}
-              </span>
-            ))}
+            {/* Stack Chips */}
+            <div className="flex flex-wrap gap-2 shrink-0">
+              {project.stack.map((tech) => (
+                <span
+                  key={tech}
+                  className="px-3 py-1.5 text-xs font-mono rounded-lg bg-white/5 border border-white/10 text-slate-300 hover:text-white hover:border-primary/50 hover:bg-primary/10 transition-all cursor-default"
+                >
+                  {tech}
+                </span>
+              ))}
+            </div>
+
+            {/* MOBILE/TOUCH: Botones inline (visible en pantallas sin hover) */}
+            {hasLinks && (
+              <div className="flex flex-wrap gap-3 mt-5 shrink-0 hover-device:hidden">
+                {project.links.live && (
+                  <a
+                    href={project.links.live}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-primary text-black text-xs font-bold hover:scale-105 hover:shadow-[0_0_20px_#38bdf8] transition-all"
+                  >
+                    <ExternalLink size={14} /> {t("projects.live")}
+                  </a>
+                )}
+                {project.links.github && (
+                  <a
+                    href={project.links.github}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-white/30 text-white text-xs font-medium hover:bg-white/10 transition-all"
+                  >
+                    <Github size={14} /> {t("projects.codebase")}
+                  </a>
+                )}
+              </div>
+            )}
           </div>
         </div>
 
         {/* RIGHT COLUMN: IMAGEN O VISUAL ABSTRACTO */}
         <div className="w-full md:w-1/2 relative hidden md:flex items-center justify-center border-l border-white/5 overflow-hidden">
           {project.image ? (
-            /* --- IMAGEN DEL PROYECTO --- */
             <>
               <img
                 src={project.image}
                 alt={project.title}
                 className="absolute inset-0 w-full h-full object-cover object-center opacity-60 group-hover:opacity-80 group-hover:scale-105 transition-all duration-700"
               />
-              {/* Vignette para que se integre suavemente */}
               <div className="absolute inset-0 bg-gradient-to-r from-[#020617] via-transparent to-transparent pointer-events-none" />
               <div className="absolute inset-0 bg-gradient-to-t from-[#020617]/80 via-transparent to-transparent pointer-events-none" />
             </>
           ) : (
-            /* --- FALLBACK: VISUAL ABSTRACTO --- */
             <div className="relative w-64 h-64 flex items-center justify-center">
               <div className="absolute inset-0 bg-primary/20 rounded-full blur-[80px] animate-pulse-slow" />
               <div className="w-[90%] h-[90%] border border-white/10 rounded-full animate-[spin_20s_linear_infinite]" />
@@ -375,29 +400,31 @@ function ProjectCard({ project, index, t }) {
             </div>
           )}
 
-          {/* Hover Actions Overlay (siempre encima) */}
-          <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 bg-black/60 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-all duration-500 z-20">
-            {project.links.live && (
-              <a
-                href={project.links.live}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="px-8 py-3 rounded-full bg-primary text-black font-bold hover:scale-110 hover:shadow-[0_0_30px_#38bdf8] transition-all flex items-center gap-2"
-              >
-                <ExternalLink size={18} /> {t("projects.live")}
-              </a>
-            )}
-            {project.links.github && (
-              <a
-                href={project.links.github}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="px-8 py-3 rounded-full border border-white/50 text-white hover:bg-white/10 flex items-center gap-2 backdrop-blur-md"
-              >
-                <Github size={18} /> {t("projects.codebase")}
-              </a>
-            )}
-          </div>
+          {/* Hover overlay — solo visible en dispositivos con mouse */}
+          {hasLinks && (
+            <div className="absolute inset-0 flex-col items-center justify-center gap-4 bg-black/60 backdrop-blur-sm transition-all duration-500 z-20 hidden hover-device:flex hover-device:opacity-0 hover-device:group-hover:opacity-100">
+              {project.links.live && (
+                <a
+                  href={project.links.live}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-8 py-3 rounded-full bg-primary text-black font-bold hover:scale-110 hover:shadow-[0_0_30px_#38bdf8] transition-all flex items-center gap-2"
+                >
+                  <ExternalLink size={18} /> {t("projects.live")}
+                </a>
+              )}
+              {project.links.github && (
+                <a
+                  href={project.links.github}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-8 py-3 rounded-full border border-white/50 text-white hover:bg-white/10 flex items-center gap-2 backdrop-blur-md"
+                >
+                  <Github size={18} /> {t("projects.codebase")}
+                </a>
+              )}
+            </div>
+          )}
         </div>
       </div>
     </div>
