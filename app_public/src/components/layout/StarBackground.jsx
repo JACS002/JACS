@@ -63,7 +63,7 @@ export default function StarBackground() {
     <Canvas
       camera={{ position: [0, 0, 8], fov: 60 }}
       gl={{ alpha: true, antialias: true }}
-      dpr={[1, 1.5]}
+      dpr={[1, 1]}
       style={{
         position: "fixed",
         top: 0,
@@ -125,31 +125,31 @@ function StarField({ scrollRef, viewportWidth }) {
   const config = useMemo(() => {
     const width = viewportWidth || 1920;
 
-    // Móvil pequeño
+    // Móvil pequeño (optimizacion agresiva)
     if (width <= 640) {
       return {
-        deep: { count: 3000, radius: 180, depth: 90 },
-        mid: { count: 1500, radius: 100, depth: 50 },
+        deep: { count: 800, radius: 180, depth: 90 },
+        mid: { count: 400, radius: 100, depth: 50 },
       };
     }
     // Tablet / laptop pequeño
     if (width <= 1024) {
       return {
-        deep: { count: 4500, radius: 200, depth: 100 },
-        mid: { count: 2200, radius: 120, depth: 60 },
+        deep: { count: 1500, radius: 200, depth: 100 },
+        mid: { count: 800, radius: 120, depth: 60 },
       };
     }
     // Desktop / laptop grande
     if (width <= 1920) {
       return {
-        deep: { count: 6000, radius: 220, depth: 110 },
-        mid: { count: 3000, radius: 140, depth: 70 },
+        deep: { count: 3000, radius: 220, depth: 110 },
+        mid: { count: 1500, radius: 140, depth: 70 },
       };
     }
     // Pantallas muy grandes (4K+)
     return {
-      deep: { count: 8000, radius: 250, depth: 120 },
-      mid: { count: 4000, radius: 160, depth: 80 },
+      deep: { count: 5000, radius: 250, depth: 120 },
+      mid: { count: 2500, radius: 160, depth: 80 },
     };
   }, [viewportWidth]);
 

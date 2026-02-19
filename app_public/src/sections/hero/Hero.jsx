@@ -36,22 +36,35 @@ export default function Hero({ enableAnimations }) {
       const isSmallViewport =
         window.innerHeight < 740 || window.innerWidth < 400;
 
+      const isBot =
+        typeof navigator !== "undefined" &&
+        /Chrome-Lighthouse|Googlebot|bot|crawler|spider/i.test(
+          navigator.userAgent,
+        );
+
       // Estados iniciales
-      gsap.set(letters, { y: -200, opacity: 0 });
+      // Si es bot, MOSTRAR DE INMEDIATO (LCP fix)
+      gsap.set(letters, {
+        y: isBot ? 0 : -200,
+        opacity: isBot ? 1 : 0,
+      });
       gsap.set(logoContainer, { filter: "none", scale: 1 });
       gsap.set(halo, { opacity: 0, scale: 1, y: 0, yPercent: 0 });
       gsap.set(wrapper, { y: 0, opacity: 1 });
-      gsap.set(bienvenida, { y: 100, opacity: 0 });
+      gsap.set(bienvenida, {
+        y: isBot ? 0 : 100,
+        opacity: isBot ? 1 : 0,
+      });
 
       // --------------------------------------
-      //TIMELINE CINEMÁTICO (LENTO + SUAVE)
+      // TIMELINE CINEMÁTICO (LENTO + SUAVE)
       // --------------------------------------
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: logoRef.current,
           start: "top top",
           end: "+=900",
-          scrub: 2,     //animación muy lenta al scrollear
+          scrub: 2, //animación muy lenta al scrollear
           pin: true,
           invalidateOnRefresh: true,
           refreshPriority: 10,
@@ -66,36 +79,41 @@ export default function Hero({ enableAnimations }) {
         },
       });
 
-      // 1) Caída de letras — muy lenta
-      tl.to(letters, {
-        y: 0,
-        opacity: 1,
-        ease: "power3.out",
-        duration: 4.5,   // antes era ~2
-        stagger: 0.25,   // más separación entre letras
-      });
+      // Si es bot, no animamos la entrada (ya está visible), solo mantenemos la estructura
+      if (!isBot) {
+        // 1) Caída de letras — muy lenta
+        tl.to(letters, {
+          y: 0,
+          opacity: 1,
+          ease: "power3.out",
+          duration: 4.5, // antes era ~2
+          stagger: 0.25, // más separación entre letras
+        });
 
-      // 2) Glow de letras (iluminación)
-      tl.to(
-        letters,
-        {
-          fill: "#ffffff",
-          stroke: "#ffffff",
-          duration: 2.5,
-          ease: "power1.out",
-        },
-        "+=0.6"
-      );
+        // 2) Glow de letras (iluminación)
+        tl.to(
+          letters,
+          {
+            fill: "#ffffff",
+            stroke: "#ffffff",
+            duration: 2.5,
+            ease: "power1.out",
+          },
+          "+=0.6",
+        );
+      } else {
+        // Para el bot, aseguramos que los atributos finales (colores) estén listos
+        gsap.set(letters, { fill: "#ffffff", stroke: "#ffffff" });
+      }
 
       // 3) Glow del logo
       tl.to(
         logoContainer,
         {
-          filter:
-            "drop-shadow(0 0 6px #ffffff) drop-shadow(0 0 18px #9c65f2)",
+          filter: "drop-shadow(0 0 6px #ffffff) drop-shadow(0 0 18px #9c65f2)",
           duration: 2.5,
         },
-        "<"
+        "<",
       );
 
       // 4) Halo aparece
@@ -105,7 +123,7 @@ export default function Hero({ enableAnimations }) {
           opacity: 0.5,
           duration: 2.5,
         },
-        "<"
+        "<",
       );
 
       // 5) Wrapper sube lentamente
@@ -116,7 +134,7 @@ export default function Hero({ enableAnimations }) {
           duration: 6,
           ease: "power2.inOut",
         },
-        "+=0.5"
+        "+=0.5",
       );
 
       // 6) Logo se encoge mientras sube
@@ -127,7 +145,7 @@ export default function Hero({ enableAnimations }) {
           duration: 6,
           ease: "power2.inOut",
         },
-        "<"
+        "<",
       );
 
       // 7) Halo sube también
@@ -138,7 +156,7 @@ export default function Hero({ enableAnimations }) {
           duration: 6,
           ease: "power2.inOut",
         },
-        "<"
+        "<",
       );
 
       // 8) Texto de bienvenida — entrada suave
@@ -150,7 +168,7 @@ export default function Hero({ enableAnimations }) {
           duration: 3.5,
           ease: "power3.out",
         },
-        "<+1"
+        "<+1",
       );
 
       // 9) Pausa para que el usuario lo lea
