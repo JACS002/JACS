@@ -10,12 +10,13 @@ import {
   ShieldCheck,
   Zap,
   Briefcase,
-  Terminal,
   Code2,
-  Database,
   Globe,
-  Layers,
   Send,
+  MessageSquare,
+  Brain,
+  Palette,
+  Wrench,
 } from "lucide-react";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -78,15 +79,34 @@ const ElectricCard = ({
   );
 };
 
-// --- WIDGET STACK ---
-const TechPill = ({ icon: Icon, name, color }) => (
-  <div className="flex items-center gap-3 p-3 rounded-xl bg-white/5 border border-white/5 hover:bg-white/10 transition-colors group/pill">
-    <div className={`p-2 rounded-lg bg-black/40 ${color}`}>
-      <Icon size={16} />
+// --- SKILL CATEGORY ---
+const SkillCategory = ({
+  icon: Icon,
+  label,
+  skills,
+  color,
+  borderColor,
+  bgHover,
+}) => (
+  <div className="space-y-3.5">
+    <div className="flex items-center gap-3">
+      <div className={`p-2 rounded-lg bg-white/5 ${color}`}>
+        <Icon size={18} />
+      </div>
+      <span className={`text-base font-bold uppercase tracking-wider ${color}`}>
+        {label}
+      </span>
     </div>
-    <span className="text-sm text-slate-300 font-medium group-hover/pill:text-white transition-colors">
-      {name}
-    </span>
+    <div className="flex flex-wrap gap-2.5">
+      {skills.map((skill) => (
+        <span
+          key={skill}
+          className={`px-4 py-2 text-sm font-medium rounded-xl bg-white/[0.04] border ${borderColor} text-slate-300 ${bgHover} hover:text-white hover:scale-[1.03] transition-all duration-200 cursor-default`}
+        >
+          {skill}
+        </span>
+      ))}
+    </div>
   </div>
 );
 
@@ -142,10 +162,10 @@ export default function BentoAboutV2() {
         </div>
 
         {/* BENTO GRID (Electric Layout + 3D Tilt) */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 auto-rows-auto md:auto-rows-[340px]">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
           {/* 1. PERFIL (Horizontal Grande) */}
           <ElectricCard
-            className="bento-item md:col-span-3"
+            className="bento-item md:col-span-4"
             glowColor="from-primary"
           >
             <div className="flex flex-col md:flex-row justify-between h-full gap-8">
@@ -216,54 +236,6 @@ export default function BentoAboutV2() {
             </div>
           </ElectricCard>
 
-          {/* 2. STACK VERTICAL */}
-          <ElectricCard
-            className="bento-item md:col-span-1 md:row-span-2"
-            glowColor="from-secondary"
-          >
-            <div className="flex flex-col h-full">
-              <div className="mb-6 pb-4 border-b border-white/5">
-                <h4 className="text-white font-bold text-lg flex items-center gap-2">
-                  <Terminal size={18} className="text-secondary" />
-                  Stack
-                </h4>
-              </div>
-
-              <div className="flex flex-col gap-3 flex-1 overflow-y-auto pr-2 custom-scrollbar">
-                <TechPill
-                  icon={Code2}
-                  name="React / Next.js"
-                  color="text-blue-400"
-                />
-                <TechPill
-                  icon={Server}
-                  name="Node.js / NestJS"
-                  color="text-green-400"
-                />
-                <TechPill
-                  icon={Database}
-                  name="Python / Django"
-                  color="text-yellow-400"
-                />
-                <TechPill
-                  icon={Cpu}
-                  name="Gen AI / LLMs"
-                  color="text-purple-400"
-                />
-                <TechPill
-                  icon={Globe}
-                  name="AWS / Cloud"
-                  color="text-orange-400"
-                />
-                <TechPill
-                  icon={Layers}
-                  name="PostgreSQL"
-                  color="text-cyan-400"
-                />
-              </div>
-            </div>
-          </ElectricCard>
-
           {/* 3. LATEST DEPLOYMENT */}
           <ElectricCard
             className="bento-item md:col-span-2"
@@ -302,7 +274,7 @@ export default function BentoAboutV2() {
 
           {/* 4. CORE PHILOSOPHY */}
           <ElectricCard
-            className="bento-item md:col-span-1"
+            className="bento-item md:col-span-2"
             glowColor="from-cyan-500"
           >
             <div className="h-full flex flex-col">
@@ -319,6 +291,119 @@ export default function BentoAboutV2() {
                     </p>
                   </div>
                 ))}
+              </div>
+            </div>
+          </ElectricCard>
+
+          {/* 5. SKILLS RADAR (Full Width — Premium) */}
+          <ElectricCard
+            className="bento-item md:col-span-4"
+            glowColor="from-violet-500"
+          >
+            <div className="flex flex-col h-full">
+              {/* Header */}
+              <div className="mb-8 pb-5 border-b border-white/5">
+                <div className="flex items-center justify-between mb-2">
+                  <h4 className="text-white font-bold text-xl flex items-center gap-2.5">
+                    <Brain size={22} className="text-violet-400" />
+                    {t("about.v2.skills.title")}
+                  </h4>
+                  <span className="text-xs font-mono text-slate-400 uppercase tracking-widest hidden sm:block">
+                    Full Stack + AI
+                  </span>
+                </div>
+                <p className="text-base text-slate-400 font-light ml-[34px]">
+                  {t("about.v2.skills.subtitle")}
+                </p>
+              </div>
+
+              {/* 2-Column Layout */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 flex-1">
+                {/* LEFT: Development */}
+                <div className="space-y-7">
+                  <SkillCategory
+                    icon={Code2}
+                    label={t("about.v2.skills.languages")}
+                    skills={[
+                      "JavaScript (ES6+)",
+                      "TypeScript",
+                      "Python",
+                      "SQL",
+                    ]}
+                    color="text-amber-400"
+                    borderColor="border-amber-400/15"
+                    bgHover="hover:bg-amber-400/10"
+                  />
+                  <SkillCategory
+                    icon={Palette}
+                    label={t("about.v2.skills.frontend")}
+                    skills={[
+                      "React",
+                      "Next.js",
+                      "Vite",
+                      "TailwindCSS",
+                      "HTML5",
+                      "CSS3",
+                      "Figma",
+                    ]}
+                    color="text-blue-400"
+                    borderColor="border-blue-400/15"
+                    bgHover="hover:bg-blue-400/10"
+                  />
+                  <SkillCategory
+                    icon={Server}
+                    label={t("about.v2.skills.backend")}
+                    skills={[
+                      "Node.js",
+                      "Express",
+                      "NestJS",
+                      "FastAPI",
+                      "Django",
+                    ]}
+                    color="text-green-400"
+                    borderColor="border-green-400/15"
+                    bgHover="hover:bg-green-400/10"
+                  />
+                </div>
+
+                {/* RIGHT: Ecosystem & More */}
+                <div className="space-y-7 md:border-l md:border-white/5 md:pl-12">
+                  <SkillCategory
+                    icon={Wrench}
+                    label={t("about.v2.skills.tools")}
+                    skills={[
+                      "PostgreSQL",
+                      "MongoDB",
+                      "Docker",
+                      "AWS",
+                      "Git",
+                      "GitHub",
+                      "Terraform",
+                    ]}
+                    color="text-cyan-400"
+                    borderColor="border-cyan-400/15"
+                    bgHover="hover:bg-cyan-400/10"
+                  />
+                  <SkillCategory
+                    icon={Cpu}
+                    label={t("about.v2.skills.ai")}
+                    skills={["GPT", "Gemini", "Claude", "Prompt Engineering"]}
+                    color="text-purple-400"
+                    borderColor="border-purple-400/15"
+                    bgHover="hover:bg-purple-400/10"
+                  />
+                  <SkillCategory
+                    icon={MessageSquare}
+                    label={t("about.v2.skills.spoken")}
+                    skills={[
+                      t("about.v2.skills.spoken.en"),
+                      t("about.v2.skills.spoken.es"),
+                    ]}
+                    color="text-rose-400"
+                    borderColor="border-rose-400/15"
+                    bgHover="hover:bg-rose-400/10"
+                  />
+                </div>
               </div>
             </div>
           </ElectricCard>

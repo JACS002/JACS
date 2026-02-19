@@ -69,6 +69,19 @@ const translations = {
     "about.v2.phil.3.title": "AI Integrated",
     "about.v2.phil.3.desc": "LLMs & Agents in production.",
 
+    // SKILLS RADAR
+    "about.v2.skills.title": "Skills Radar",
+    "about.v2.skills.subtitle":
+      "Technologies I work with daily to ship production-grade software.",
+    "about.v2.skills.languages": "Languages",
+    "about.v2.skills.frontend": "Frontend",
+    "about.v2.skills.backend": "Backend",
+    "about.v2.skills.tools": "Database & Tools",
+    "about.v2.skills.ai": "AI",
+    "about.v2.skills.spoken": "Spoken Languages",
+    "about.v2.skills.spoken.en": "English (C1 - Advanced)",
+    "about.v2.skills.spoken.es": "Spanish (Native)",
+
     // PROJECTS SECTION
     "projects.sectionTitle": "Deployments",
     "projects.missionLog": "MISSION LOG",
@@ -287,6 +300,19 @@ const translations = {
     "about.v2.phil.2.desc": "Protección JWT, CSRF y APIs blindadas.",
     "about.v2.phil.3.title": "IA Integrada",
     "about.v2.phil.3.desc": "LLMs y Agentes en producción.",
+
+    // SKILLS RADAR
+    "about.v2.skills.title": "Radar de Skills",
+    "about.v2.skills.subtitle":
+      "Tecnologías con las que trabajo a diario para entregar software de producción.",
+    "about.v2.skills.languages": "Lenguajes",
+    "about.v2.skills.frontend": "Frontend",
+    "about.v2.skills.backend": "Backend",
+    "about.v2.skills.tools": "Base de Datos & Herramientas",
+    "about.v2.skills.ai": "IA",
+    "about.v2.skills.spoken": "Idiomas",
+    "about.v2.skills.spoken.en": "Inglés (C1 - Avanzado)",
+    "about.v2.skills.spoken.es": "Español (Nativo)",
 
     // PROJECTS OLD (Legacy)
     "projects.title": "Proyectos",
