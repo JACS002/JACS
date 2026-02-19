@@ -179,68 +179,123 @@ export default function Contacto() {
         </div>
       </div>
 
-      {/* FINAL CTA / CONTACT CARD (Holographic finish) */}
-      <div className="mt-32 max-w-4xl mx-auto relative z-10 contact-card-final">
-        <div className="relative rounded-[2.5rem] p-1 md:p-[1px] bg-gradient-to-b from-white/20 to-transparent overflow-hidden">
-          <div className="relative rounded-[2.5rem] p-8 md:p-16 bg-[#020617]/95 backdrop-blur-3xl overflow-hidden text-center group">
-            {/* Grid de fondo animada */}
-            <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:30px_30px] opacity-20 pointer-events-none" />
-            <div className="absolute inset-0 bg-gradient-to-b from-primary/5 to-transparent pointer-events-none" />
+      {/* FINAL CTA / CONTACT CARD — Premium */}
+      <div
+        id="contact-cta"
+        className="mt-32 max-w-3xl mx-auto relative z-10 contact-card-final"
+      >
+        {/* Outer gradient border — cyan→purple sweep */}
+        <div className="relative rounded-[2.5rem] p-[1px] bg-gradient-to-br from-primary/50 via-purple-500/20 to-primary/10 overflow-hidden shadow-[0_0_100px_rgba(56,189,248,0.12)]">
+          <div className="relative rounded-[calc(2.5rem-1px)] bg-gradient-to-br from-slate-950 via-[#020617] to-indigo-950/60 backdrop-blur-3xl overflow-hidden text-center group px-6 py-14 md:px-16 md:py-20">
+            {/* — Aurora top-right (cyan) — */}
+            <div className="absolute -top-20 -right-20 w-72 h-72 bg-primary/20 rounded-full blur-[90px] pointer-events-none group-hover:bg-primary/30 transition-colors duration-1000" />
+            {/* — Aurora bottom-left (purple) — */}
+            <div className="absolute -bottom-20 -left-20 w-64 h-64 bg-purple-600/15 rounded-full blur-[80px] pointer-events-none group-hover:bg-purple-600/25 transition-colors duration-1000" />
+            {/* — Aurora top-left secondary (faint) — */}
+            <div className="absolute top-0 left-0 w-48 h-48 bg-indigo-500/10 rounded-full blur-[60px] pointer-events-none" />
 
-            <div
-              className="relative z-10 flex flex-col items-center"
-              id="contact-cta"
-            >
-              <div className="w-20 h-20 rounded-full bg-white/5 border border-white/10 flex items-center justify-center mb-8 shadow-[0_0_50px_rgba(56,189,248,0.15)] group-hover:shadow-[0_0_80px_rgba(56,189,248,0.3)] transition-all duration-500">
-                <Send
-                  size={36}
-                  className="text-primary group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform duration-300"
-                />
+            {/* — Dot grid mesh — */}
+            <div className="absolute inset-0 bg-[radial-gradient(rgba(255,255,255,0.08)_1px,transparent_1px)] bg-[size:24px_24px] pointer-events-none opacity-30" />
+
+            {/* — Noise grain — */}
+            <div className="absolute inset-0 opacity-[0.04] bg-[url('https://grainy-gradients.vercel.app/noise.svg')] pointer-events-none" />
+
+            {/* — Corner HUD marks — */}
+            <div className="absolute top-5 left-5 w-4 h-4 border-t border-l border-primary/30" />
+            <div className="absolute top-5 right-5 w-4 h-4 border-t border-r border-primary/30" />
+            <div className="absolute bottom-5 left-5 w-4 h-4 border-b border-l border-primary/30" />
+            <div className="absolute bottom-5 right-5 w-4 h-4 border-b border-r border-primary/30" />
+
+            {/* — Content — */}
+            <div className="relative z-10 flex flex-col items-center">
+              {/* Icon with aurora rings */}
+              <div className="relative flex items-center justify-center mb-10">
+                {/* Outer ring */}
+                <div className="absolute w-32 h-32 rounded-full border border-primary/15 animate-[spin_12s_linear_infinite]" />
+                {/* Middle ring dashed */}
+                <div className="absolute w-24 h-24 rounded-full border border-dashed border-white/10 animate-[spin_8s_linear_infinite_reverse]" />
+                {/* Glow blur */}
+                <div className="absolute w-20 h-20 rounded-full bg-primary/15 blur-2xl animate-pulse" />
+                {/* Icon circle */}
+                <div className="relative w-16 h-16 rounded-full bg-white/5 border border-white/10 flex items-center justify-center shadow-[0_0_40px_rgba(56,189,248,0.2)] group-hover:shadow-[0_0_70px_rgba(56,189,248,0.4)] transition-all duration-700 z-10">
+                  <Send
+                    size={28}
+                    className="text-primary transition-all duration-300 group-hover:scale-110 group-hover:drop-shadow-[0_0_12px_rgba(56,189,248,0.9)]"
+                  />
+                </div>
               </div>
 
-              <h2 className="text-3xl md:text-5xl font-bold text-white mb-6 tracking-tight">
+              {/* Transmission label */}
+              <div className="flex items-center gap-3 mb-5">
+                <span className="w-8 h-[1px] bg-primary/40" />
+                <span className="text-[10px] font-mono uppercase tracking-[0.25em] text-primary/70">
+                  Open Channel
+                </span>
+                <span className="w-8 h-[1px] bg-primary/40" />
+              </div>
+
+              {/* Title */}
+              <h2 className="text-3xl md:text-5xl font-bold tracking-tight mb-5 text-white">
                 {t("contact.s5.title")}
               </h2>
-              <p className="text-slate-300 text-lg mb-10 max-w-xl font-light">
+
+              {/* Subtitle */}
+              <p className="text-slate-400 text-base md:text-lg mb-10 max-w-md font-light leading-relaxed">
                 {t("contact.s5.text")}
               </p>
 
-              <div className="flex flex-col gap-5 w-full items-center">
-                <a
-                  href="mailto:joel.cuascota@hotmail.com"
-                  className="relative w-full md:w-auto px-5 md:px-8 py-4 rounded-full bg-white text-black font-bold overflow-hidden group/btn hover:scale-[1.02] transition-transform shadow-[0_0_30px_rgba(255,255,255,0.2)]"
-                >
-                  <div className="absolute inset-0 bg-gradient-to-r from-primary via-white to-primary opacity-0 group-hover/btn:opacity-20 transition-opacity" />
-                  <div className="flex items-center justify-center gap-3 relative z-10 min-w-0">
-                    <Mail size={18} className="shrink-0" />
-                    <span className="truncate text-sm md:text-base">
-                      joel.cuascota@hotmail.com
-                    </span>
-                    <ArrowRight
-                      size={16}
-                      className="shrink-0 group-hover/btn:-rotate-45 transition-transform duration-300"
-                    />
-                  </div>
-                </a>
+              {/* Email CTA button */}
+              <a
+                href="mailto:joel.cuascota@hotmail.com"
+                className="group/btn relative w-full md:w-auto overflow-hidden flex items-center justify-center gap-3 px-6 md:px-10 py-4 rounded-full bg-white text-black font-bold text-sm md:text-base shadow-[0_0_30px_rgba(255,255,255,0.15)] hover:shadow-[0_0_50px_rgba(56,189,248,0.4)] hover:scale-[1.03] transition-all duration-300"
+              >
+                {/* Shimmer */}
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/20 to-transparent -translate-x-full group-hover/btn:translate-x-full transition-transform duration-700 ease-in-out" />
+                <Mail size={18} className="shrink-0 relative z-10" />
+                <span className="truncate relative z-10">
+                  joel.cuascota@hotmail.com
+                </span>
+                <ArrowRight
+                  size={16}
+                  className="shrink-0 relative z-10 group-hover/btn:-rotate-45 transition-transform duration-300"
+                />
+              </a>
 
-                <div className="flex gap-4">
-                  <a
-                    href="https://github.com/JACS002"
-                    target="_blank"
-                    rel="noreferrer"
-                    className="p-4 rounded-full border border-white/10 bg-white/5 hover:bg-white/10 hover:border-white/30 hover:scale-110 transition-all text-white"
-                  >
-                    <Github size={24} />
-                  </a>
-                  <a
-                    href="https://www.linkedin.com/in/joel-cuascota-b49284308"
-                    target="_blank"
-                    rel="noreferrer"
-                    className="p-4 rounded-full border border-white/10 bg-white/5 hover:bg-white/10 hover:border-white/30 hover:scale-110 transition-all text-white"
-                  >
-                    <Linkedin size={24} />
-                  </a>
-                </div>
+              {/* Separator */}
+              <div className="flex items-center gap-4 w-full max-w-xs my-7">
+                <span className="flex-1 h-[1px] bg-white/8" />
+                <span className="text-[10px] font-mono text-slate-600 uppercase tracking-widest">
+                  or find me at
+                </span>
+                <span className="flex-1 h-[1px] bg-white/8" />
+              </div>
+
+              {/* Social links */}
+              <div className="flex gap-4">
+                <a
+                  href="https://github.com/JACS002"
+                  target="_blank"
+                  rel="noreferrer"
+                  aria-label="GitHub"
+                  className="group/g flex items-center gap-2 px-5 py-3 rounded-full border border-white/10 bg-white/5 text-slate-400 hover:text-white hover:bg-purple-500/10 hover:border-purple-500/40 hover:shadow-[0_0_20px_rgba(168,85,247,0.3)] transition-all duration-300"
+                >
+                  <Github size={18} />
+                  <span className="text-xs font-medium hidden sm:inline">
+                    GitHub
+                  </span>
+                </a>
+                <a
+                  href="https://www.linkedin.com/in/joel-cuascota-b49284308"
+                  target="_blank"
+                  rel="noreferrer"
+                  aria-label="LinkedIn"
+                  className="group/l flex items-center gap-2 px-5 py-3 rounded-full border border-white/10 bg-white/5 text-slate-400 hover:text-blue-400 hover:bg-blue-500/10 hover:border-blue-500/40 hover:shadow-[0_0_20px_rgba(96,165,250,0.3)] transition-all duration-300"
+                >
+                  <Linkedin size={18} />
+                  <span className="text-xs font-medium hidden sm:inline">
+                    LinkedIn
+                  </span>
+                </a>
               </div>
             </div>
           </div>
