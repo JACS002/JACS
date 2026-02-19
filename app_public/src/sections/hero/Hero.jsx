@@ -3,7 +3,7 @@
 // Sección "Hero" del portfolio
 // -----------------------------------------------------------------------------
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import styles from "./Hero.module.css";
 import LogoNombre from "../../assets/icons/LogoNombre";
 import gsap from "gsap";
@@ -13,10 +13,13 @@ import { useScroll } from "../../context/ScrollContext";
 
 gsap.registerPlugin(ScrollTrigger);
 
+import DecoderText from "../../components/ui/DecoderText";
+
 export default function Hero({ enableAnimations }) {
   const logoRef = useRef(null);
   const { t } = useLang();
   const { refreshScroll } = useScroll();
+  // ... rest of component
 
   // Timeline principal del hero
   useEffect(() => {
@@ -216,28 +219,34 @@ export default function Hero({ enableAnimations }) {
         <div className={`${styles.logoHalo} logo-halo`}></div>
       </div>
 
-      {/* Texto de bienvenida */}
+      {/* Texto de bienvenida - TIPO HUD / DECODER */}
       <div
         className={`
           ${styles.bienvenida} bienvenida
-          mt-8 md:mt-10 lg:mt-12
+          mt-12 md:mt-16 lg:mt-20 relative z-10 text-center
         `}
       >
-        <h1 className="text-white font-titulos font-bold text-5xl mb-5 mt-3">
-          {t("hero.title")}
-        </h1>
+        <div className="inline-flex flex-col items-center">
+          <div className="flex items-center gap-3 mb-4 opacity-80">
+            <span className="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+            <span className="text-primary font-mono text-xs tracking-widest uppercase">
+              {t("hero.status")}
+            </span>
+          </div>
 
-        <h2 className="text-white font-titulos font-semibold text-3xl mb-5">
-          <span className="text-accent">{t("hero.tagline.fs")}</span> ·{" "}
-          <span className="text-accent">{t("hero.tagline.dm")}</span>
-        </h2>
+          <h1 className="text-4xl md:text-6xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white via-slate-200 to-slate-400 mb-6 tracking-tight">
+            <span className="block">
+              <DecoderText text={t("hero.title.p1")} />
+            </span>
+            <span className="block mt-2">
+              <DecoderText text={t("hero.title.p2")} />
+            </span>
+          </h1>
 
-        <p className="text-center text-white font-contenido text-lg md:text-xl leading-relaxed mb-3">
-          {t("hero.p1")}
-        </p>
-        <p className="text-center text-gray-400 font-contenido text-lg md:text-xl leading-relaxed">
-          {t("hero.p2")}
-        </p>
+          <p className="text-slate-300 text-lg md:text-xl leading-relaxed max-w-2xl mx-auto font-light">
+            {t("hero.p1")}
+          </p>
+        </div>
       </div>
 
       {/* Indicador de scroll */}

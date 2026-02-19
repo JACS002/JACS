@@ -8,10 +8,10 @@ const translations = {
     "nav.langLabel": "Change language",
 
     // HERO
+    "hero.status": "System Online",
     "hero.scrollHint": "Scroll down",
-    "hero.title": "Hi, I'm JACS",
-    "hero.tagline.fs": "Full stack developer",
-    "hero.tagline.dm": "Data mining",
+    "hero.title.p1": "Architecting",
+    "hero.title.p2": "Scalable Systems",
     "hero.p1":
       "I craft modern web experiences, build scalable backends, and turn data into actionable insights through clean engineering and thoughtful design.",
     "hero.p2":
@@ -21,26 +21,114 @@ const translations = {
     //PORYECTOS
     "projects.dragHint": "Drag to explore",
 
-    // ABOUT / WHO AM I
-    "about.title": "Who I Am",
-    "about.p1":
-      "I am <h>Joel Cuascota (JACS)</h>, a Computer Scientist and <h>Full Stack & Data Engineer</h> graduated from <h>Universidad San Francisco de Quito (USFQ)</h>. I specialize in building modern digital ecosystems, fusing interactive React interfaces with robust Python (Django/FastAPI) and Node.js backends.",
-    "about.p2":
-      "My technical profile is hybrid: I design scalable <h>cloud-native</h> architectures using <h>AWS and Docker</h>, while integrating data pipelines and Machine Learning models to create intelligent, performance-driven applications.",
-    "about.p3":
-      "Beyond code, I find balance in <b>basketball</b>, exploring <b>nature</b>, and playing <b>video games</b>. I am defined by technical curiosity and persistence; I always seek the 'why' behind technologies to implement solutions that not only work but endure.",
-    "about.p4":
-      "Currently, I am focused on <h>AI-Native</h> development, integrating <h>LLMs and AI Agents</h> into full-stack workflows. I continue refining my skills in <h>Data Engineering (Spark/Snowflake)</h> and distributed system optimization, utilizing <h>AWS</h> and <h>Docker</h> for scalable deployment.",
+    // ABOUT (BENTO GRID)
+    "about.role": "Full-Stack Engineer",
+    "about.subrole": "Specializing in Scalable B2B Platforms & AI",
+    "about.available": "Available for Remote Work",
+    "about.location": "Quito, Ecuador (GMT-5)",
 
-    // PROJECTS
-    "projects.title": "Projects",
-    "projects.loading": "Loading projects…",
+    "about.card.stack": "Tech Arsenal",
+    "about.card.focus": "Core Focus",
+    "about.focus.1": "Cloud-Native Arch",
+    "about.focus.2": "Generative AI",
+    "about.focus.3": "Performance",
 
-    // COMMON
-    "common.retry": "Retry",
+    "about.exp.title": "Recent Deployments",
+    "about.exp.boman":
+      "Architected a hybrid Next.js/NestJS B2B platform with 90% load reduction.",
+    "about.exp.cenespe":
+      "Digitized a multi-category catalog with SSR & automated SEO.",
 
-    // CONTACT
-    "contact.tag": "Contact",
+    "about.bio":
+      "I architect secure, production-grade systems. From optimizing SQL queries to fine-tuning LLM prompts, I bridge the gap between complex data engineering and intuitive user experiences.",
+
+    // ABOUT V2 (Deep Space Bento)
+    "about.v2.title": "Mission Profile",
+    "about.v2.subtitle": "Designing the invisible engines of the web.",
+    "about.v2.role": "Full Stack Engineer",
+    "about.v2.available": "AVAILABLE FOR HIRE",
+    "about.v2.remote": "Remote Ready",
+    "about.v2.reloc": "Quito, EC",
+    "about.v2.summary":
+      "I specialize in building scalable B2B platforms and integrating Generative AI into real-world applications.",
+
+    "about.v2.stack.title": "Tech Arsenal",
+    "about.v2.stack.arch": "Architecture:",
+    "about.v2.stack.micro": "Microservices Ready",
+
+    "about.v2.deploy.title": "Latest Deployment",
+    "about.v2.deploy.role": "Full-Stack Engineer (Freelance)",
+    "about.v2.deploy.quote":
+      '"Architected a B2B platform... reducing backend load by ~90%."',
+
+    "about.v2.phil.title": "Engineering Philosophy",
+    "about.v2.phil.1.title": "Cloud Native",
+    "about.v2.phil.1.desc": "Scalable infrastructure on AWS & Docker.",
+    "about.v2.phil.2.title": "Secure Architecture",
+    "about.v2.phil.2.desc": "JWT, CSRF protection & hardened APIs.",
+    "about.v2.phil.3.title": "AI Integrated",
+    "about.v2.phil.3.desc": "LLMs & Agents in production.",
+
+    // PROJECTS SECTION
+    "projects.sectionTitle": "Deployments",
+    "projects.missionLog": "MISSION LOG",
+    "projects.scrollHint":
+      "Scrolling through the log of scalable architectures and AI solutions deployed in production.",
+    "projects.scrollCta": "SCROLL DOWN TO EXPLORE",
+    "projects.outroTitle": "Ready to launch a new mission?",
+    "projects.contactBtn": "Initialize Contact",
+    "projects.codebase": "Codebase",
+    "projects.live": "Live Mission",
+
+    // Project: Boman Electric
+    "projects.boman.title": "Boman Electric",
+    "projects.boman.type": "Enterprise B2B Platform",
+    "projects.boman.role": "Full Stack Architect",
+    "projects.boman.desc":
+      "Architected a B2B digital platform with custom CMS. Implemented hybrid caching strategies reducing backend load by ~90%.",
+    "projects.boman.stack": "Next.js 16, NestJS, Railway",
+    "projects.boman.m1": "Load Reduction",
+    "projects.boman.m2": "Rendering",
+
+    // Project: AI Blog Generator
+    "projects.aiblog.title": "AI Blog Generator",
+    "projects.aiblog.type": "SaaS Platform",
+    "projects.aiblog.role": "SaaS Engineer",
+    "projects.aiblog.desc":
+      "Production-ready SaaS generating SEO content using Llama 3 (70B). Engineered a scalable Clean Architecture separating Core AI logic.",
+    "projects.aiblog.stack": "React, Django, Docker, Groq",
+    "projects.aiblog.m1": "Inference Latency",
+    "projects.aiblog.m2": "Model",
+
+    // Project: TradingML
+    "projects.trade.title": "TradingML System",
+    "projects.trade.type": "FinTech Algorithm",
+    "projects.trade.role": "Data Engineer",
+    "projects.trade.desc":
+      "Deployed a low-latency inference API for real-time market predictions using serialized XGBoost models and time-series validation.",
+    "projects.trade.stack": "Python, FastAPI, Scikit-Learn",
+    "projects.trade.m1": "API Latency",
+    "projects.trade.m2": "Pipeline",
+
+    // Project: Cenespe
+    "projects.cenespe.title": "Cenespe Industries",
+    "projects.cenespe.type": "E-commerce Ecosystem",
+    "projects.cenespe.role": "Full Stack Engineer",
+    "projects.cenespe.desc":
+      "Digitized a multi-category catalog with automated SEO indexing. Engineered high-performance APIs for complex product lookups.",
+    "projects.cenespe.stack": "Node.js, MongoDB, Pug, AWS",
+    "projects.cenespe.m1": "Search",
+    "projects.cenespe.m2": "Uptime",
+
+    // Project: CarConnect
+    "projects.car.title": "CarConnect System",
+    "projects.car.type": "Microservices System",
+    "projects.car.role": "Microservices Architect",
+    "projects.car.desc":
+      "Dealership management with decoupled inventory/user systems and IBM Watson NLU for sentiment analysis.",
+    "projects.car.stack": "React, Django, Node.js, IBM Cloud",
+    "projects.car.m1": "Architecture",
+    "projects.car.m2": "AI Analysis",
     "contact.title": "From idea space to something real.",
     "contact.p1":
       "This is the route to work with me: a small space mission from your initial idea to launching something that looks good, works well and is ready to grow.",
@@ -80,10 +168,10 @@ const translations = {
     "nav.langLabel": "Cambiar idioma",
 
     // HERO
-    "hero.scrollHint": "Desliza hacia abajo",
-    "hero.title": "Hola, soy JACS",
-    "hero.tagline.fs": "Desarrollador full stack",
-    "hero.tagline.dm": "Minería de datos",
+    "hero.status": "Sistema en Línea",
+    "hero.scrollHint": "Desliza para explorar",
+    "hero.title.p1": "Diseñando",
+    "hero.title.p2": "Sistemas Escalables",
     "hero.p1":
       "Creo experiencias web modernas, desarrollo backends escalables y transformo datos en información útil mediante ingeniería limpia y diseño bien pensado.",
     "hero.p2":
@@ -92,17 +180,115 @@ const translations = {
     //PORYECTOS
     "projects.dragHint": "Arrastra para navegar",
 
-    // ABOUT / QUIÉN SOY
-    "about.title": "Quién soy",
-    "about.p1":
-      "Soy <h>Joel Cuascota (JACS)</h>, Ingeniero en Ciencias de la Computación y desarrollador <h>Full Stack & Data Engineer</h> graduado de la <h>Universidad San Francisco de Quito (USFQ)</h>. Me especializo en construir ecosistemas digitales modernos, fusionando interfaces interactivas en React con backends robustos en Python (Django/FastAPI) y Node.js.",
-    "about.p2":
-      "Mi perfil técnico es híbrido: diseño arquitecturas <h>cloud-native</h> escalables utilizando <h>AWS y Docker</h>, mientras integro pipelines de datos y modelos de Machine Learning para crear aplicaciones inteligentes y orientadas al rendimiento.",
-    "about.p3":
-      "Fuera del código, encuentro balance en el <b>básquet</b>, explorando la <b>naturaleza</b> y disfrutando de los <b>videojuegos</b>. Me define la curiosidad técnica y la constancia; siempre busco el 'por qué' detrás de las tecnologías para implementar soluciones que no solo funcionen, sino que perduren.",
-    "about.p4":
-      "Actualmente, estoy enfocado en el desarrollo <h>AI-Native</h>, integrando <h>LLMs y Agentes de IA</h> en flujos de trabajo full-stack. Sigo perfeccionando mis habilidades en <h>Ingeniería de Datos (Spark/Snowflake)</h> y optimización de sistemas distribuidos, utilizando <h>AWS</h> y <h>Docker</h> para el despliegue escalable.",
-    // PROYECTOS
+    // ABOUT (BENTO GRID)
+    "about.role": "Full-Stack Engineer",
+    "about.subrole": "Especialista en Plataformas B2B y AI",
+    "about.available": "Disponible Remoto Global",
+    "about.location": "Quito, Ecuador (GMT-5)",
+
+    "about.card.stack": "Arsenal Técnico",
+    "about.card.focus": "Enfoque Principal",
+    "about.focus.1": "Arq. Cloud-Native",
+    "about.focus.2": "Inteligencia Artificial",
+    "about.focus.3": "Rendimiento",
+
+    "about.exp.title": "Despliegues Recientes",
+    "about.exp.boman":
+      "Arquitectura híbrida Next.js/NestJS con reducción del 90% de carga.",
+    "about.exp.cenespe":
+      "Digitalización de catálogo con SSR y SEO automatizado.",
+
+    "about.bio":
+      "Arquitecto sistemas seguros y listos para producción. Desde optimizar queries SQL hasta ajustar prompts de LLMs, conecto ingeniería de datos compleja con experiencias de usuario intuitivas.",
+    // PROJECTS SECTION (New Horizontal Scroll)
+    "projects.sectionTitle": "Despliegues",
+    "projects.missionLog": "Bitácora de Misión",
+    "projects.scrollHint":
+      "Explorando historial de arquitecturas escalables y soluciones de IA en producción.",
+    "projects.scrollCta": "DESLIZA PARA EXPLORAR",
+    "projects.outroTitle": "¿Listo para una nueva misión?",
+    "projects.contactBtn": "Iniciar Contacto",
+    "projects.codebase": "Código Fuente",
+    "projects.live": "Ver en Vivo",
+
+    // Project: Boman Electric
+    "projects.boman.title": "Boman Electric",
+    "projects.boman.type": "Plataforma B2B",
+    "projects.boman.role": "Arquitecto Full Stack",
+    "projects.boman.desc":
+      "Plataforma digital con CMS personalizado. Estrategias de caché híbridas que redujeron la carga del backend en un ~90%.",
+    "projects.boman.stack": "Next.js 16, NestJS, Railway",
+    "projects.boman.m1": "Carga Reducida",
+    "projects.boman.m2": "Renderizado",
+
+    // Project: AI Blog Generator
+    "projects.aiblog.title": "Generador Blog IA",
+    "projects.aiblog.type": "Plataforma SaaS",
+    "projects.aiblog.role": "Ingeniero SaaS",
+    "projects.aiblog.desc":
+      "SaaS de producción generando contenido SEO con Llama 3 (70B). Arquitectura limpia separando lógica IA de API REST.",
+    "projects.aiblog.stack": "React, Django, Docker, Groq",
+    "projects.aiblog.m1": "Latencia Inferencia",
+    "projects.aiblog.m2": "Modelo",
+
+    // Project: TradingML
+    "projects.trade.title": "Sistema TradingML",
+    "projects.trade.type": "Algoritmo FinTech",
+    "projects.trade.role": "Ingeniero de Datos",
+    "projects.trade.desc":
+      "API de inferencia de baja latencia para predicciones de mercado en tiempo real usando modelos XGBoost serializados.",
+    "projects.trade.stack": "Python, FastAPI, Scikit-Learn",
+    "projects.trade.m1": "Latencia API",
+    "projects.trade.m2": "Pipeline",
+
+    // Project: Cenespe
+    "projects.cenespe.title": "Cenespe Industrias",
+    "projects.cenespe.type": "Ecosistema E-commerce",
+    "projects.cenespe.role": "Ingeniero Full Stack",
+    "projects.cenespe.desc":
+      "Digitalización de catálogo multicategoría con indexación SEO automática. APIs de alto rendimiento para búsquedas complejas.",
+    "projects.cenespe.stack": "Node.js, MongoDB, Pug, AWS",
+    "projects.cenespe.m1": "Búsqueda",
+    "projects.cenespe.m2": "Uptime",
+
+    // Project: CarConnect
+    "projects.car.title": "Sistema CarConnect",
+    "projects.car.type": "Sistema Microservicios",
+    "projects.car.role": "Arquitecto Microservicios",
+    "projects.car.desc":
+      "Gestión de concesionarios con sistemas de inventario y usuarios desacoplados, integrando IBM Watson NLU para análisis de sentimiento.",
+    "projects.car.stack": "React, Django, Node.js, IBM Cloud",
+    "projects.car.m1": "Arquitectura",
+    "projects.car.m2": "Análisis IA",
+
+    // ABOUT V2 (Deep Space Bento)
+    "about.v2.title": "Perfil de Misión",
+    "about.v2.subtitle": "Diseñando los motores invisibles de la web.",
+    "about.v2.role": "Ingeniero Full Stack",
+    "about.v2.available": "DISPONIBLE PARA PROYECTOS",
+    "about.v2.remote": "Listo para Remoto",
+    "about.v2.reloc": "Quito, EC",
+    "about.v2.summary":
+      "Me especializo en construir plataformas B2B escalables e integrar Inteligencia Artificial, asegurando código robusto y seguro.",
+
+    "about.v2.stack.title": "Arsenal Técnico",
+    "about.v2.stack.arch": "Arquitectura:",
+    "about.v2.stack.micro": "Lista para Microservicios",
+
+    "about.v2.deploy.title": "Último Despliegue",
+    "about.v2.deploy.role": "Ingeniero Full-Stack (Freelance)",
+    "about.v2.deploy.quote":
+      '"Arquitectura de plataforma B2B... reduciendo la carga del backend en ~90%."',
+
+    "about.v2.phil.title": "Filosofía de Ingeniería",
+    "about.v2.phil.1.title": "Nativo en Nube",
+    "about.v2.phil.1.desc": "Infraestructura escalable en AWS y Docker.",
+    "about.v2.phil.2.title": "Arquitectura Segura",
+    "about.v2.phil.2.desc": "Protección JWT, CSRF y APIs blindadas.",
+    "about.v2.phil.3.title": "IA Integrada",
+    "about.v2.phil.3.desc": "LLMs y Agentes en producción.",
+
+    // PROJECTS OLD (Legacy)
     "projects.title": "Proyectos",
     "projects.loading": "Trayendo proyectos…",
 

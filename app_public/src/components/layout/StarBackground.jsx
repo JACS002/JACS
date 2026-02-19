@@ -2,6 +2,7 @@
 import { useEffect, useRef, useState, useMemo } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { Stars } from "@react-three/drei";
+import * as THREE from "three";
 
 // -----------------------------------------------------------------------------
 // Componente principal: canvas fijo con fondo estrellado
@@ -160,15 +161,24 @@ function StarField({ scrollRef, viewportWidth }) {
     const deltaScroll = scrollY - lastScroll.current;
     lastScroll.current = scrollY;
 
-    // intensidad limitada (para evitar locuras)
-    const intensity = Math.max(Math.min(deltaScroll / 300, 0.05), -0.05);
+    // WARP EFFECT: Intensidad basada en scroll (SUTIL)
+    // Reducimos la sensibilidad y los multiplicadores
+    const intensity = Math.max(Math.min(deltaScroll / 200, 0.3), -0.3);
 
     if (!groupRef.current) return;
 
-    // extra por scroll: girar en los 3 ejes tipo "globo espacial"
-    groupRef.current.rotation.y += intensity * 0.02; // giro horizontal
-    groupRef.current.rotation.x += intensity * 0.01; // inclinación vertical
-    groupRef.current.rotation.z += intensity * 0.05; // torsión leve
+    // 1. Rotación suave
+    groupRef.current.rotation.y += intensity * 0.02; // antes 0.05
+    groupRef.current.rotation.x += intensity * 0.005; // muy leve
+    groupRef.current.rotation.z += intensity * 0.03; // antes 0.1
+
+    // 2. Estiramiento de estrellas (Stretch Effect) muy sutil
+    const targetScaleZ = 1 + Math.abs(intensity) * 0.5; // antes * 2
+    groupRef.current.scale.z = THREE.MathUtils.lerp(
+      groupRef.current.scale.z,
+      targetScaleZ,
+      0.1,
+    );
   });
 
   return (

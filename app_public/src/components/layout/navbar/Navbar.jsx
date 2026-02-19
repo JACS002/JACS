@@ -1,10 +1,11 @@
 // ============================================================================
-// Navbar tipo "casco / visor"
+// Navbar tipo "casco / visor" (Diseño Original JACS)
 // ============================================================================
 
 import { useState, useEffect } from "react";
 import logo from "../../../assets/icons/logo.svg";
 import styles from "./Navbar.module.css";
+console.log(styles); // Debug para asegurar que carga
 
 import { gsap } from "gsap";
 import { ScrollToPlugin } from "gsap/ScrollToPlugin";
@@ -18,12 +19,13 @@ export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [showNavbar, setShowNavbar] = useState(true);
   const [activeSection, setActiveSection] = useState("");
+  const [scrolled, setScrolled] = useState(false);
 
   const navLinks = [
     { name: t("nav.home"), href: "#inicio" },
-    { name: t("nav.projects"), href: "#proyectos" },
-    { name: t("nav.about"), href: "#quien-soy" },
-    { name: t("nav.contact"), href: "#contacto" },
+    { name: t("nav.about"), href: "#about" },
+    { name: t("nav.projects"), href: "#projects" },
+    { name: t("nav.contact"), href: "#contact" },
   ];
 
   const toggleMenu = () => {
@@ -88,6 +90,7 @@ export default function Navbar() {
   useEffect(() => {
     const handleScroll = () => {
       const scrollTop = window.scrollY;
+      setScrolled(scrollTop > 50);
 
       const heroEnd = window.heroEnd || 0;
       if (scrollTop < heroEnd - window.innerHeight * 0.3) {
@@ -95,18 +98,17 @@ export default function Navbar() {
         return;
       }
 
-      const sectionIds = ["proyectos", "quien-soy", "contacto"];
+      const sectionIds = ["about", "projects", "contact"];
 
       for (const id of sectionIds) {
         const section = document.getElementById(id);
         if (!section) continue;
 
-        const { offsetTop, offsetHeight } = section;
+        const rect = section.getBoundingClientRect();
+        const center = window.innerHeight / 2;
 
-        if (
-          scrollTop >= offsetTop - window.innerHeight * 0.3 &&
-          scrollTop < offsetTop + offsetHeight - window.innerHeight * 0.3
-        ) {
+        // Si la sección cruza el centro de la pantalla, es la activa
+        if (rect.top <= center && rect.bottom >= center) {
           setActiveSection(id);
           return;
         }
@@ -129,7 +131,7 @@ export default function Navbar() {
       const almostEnd = heroStart + length * 0.75; // ~75% de la animación
       target = almostEnd;
     } else if (
-      targetId === "#proyectos" &&
+      targetId === "#projects" && // Cambiado de #proyectos a #projects para coincidir con ID
       window.proyectosStart !== undefined
     ) {
       target = window.proyectosStart;
@@ -155,7 +157,7 @@ export default function Navbar() {
       <header
         className={`${styles.fixedHeader} ${
           showNavbar ? styles["navbar-visible"] : styles["navbar-hidden"]
-        }`}
+        } ${scrolled ? styles.scrolled : ""}`}
       >
         <div className={styles.headerInner}>
           {/* Columna izquierda: solo toggle de idioma */}
@@ -254,8 +256,9 @@ export default function Navbar() {
 
             <ul className={styles.visorNavList}>
               {navLinks.map((link) => {
-                const id = link.href.substring(1);
-                const isActive = activeSection === id;
+                const linkIdWithoutHash = link.href.substring(1);
+                // Si el link href es #projects y activeSection es projects, es match
+                const isActive = activeSection === linkIdWithoutHash;
 
                 return (
                   <li key={link.href} className={styles.visorNavItem}>
@@ -266,9 +269,7 @@ export default function Navbar() {
                       }`}
                       onClick={() => handleVisorNavClick(link.href)}
                     >
-                      <span className={styles.visorNavLabel}>
-                        {link.name}
-                      </span>
+                      <span className={styles.visorNavLabel}>{link.name}</span>
                     </button>
                   </li>
                 );

@@ -11,7 +11,29 @@
   display: flex;
   justify-content: center;
   pointer-events: none;
-  transition: opacity 0.35s ease;
+  transition:
+    opacity 0.35s ease,
+    background 0.5s ease,
+    backdrop-filter 0.5s ease,
+    padding 0.5s ease;
+  backdrop-filter: blur(0px);
+}
+
+.scrolled {
+  background: linear-gradient(
+    to bottom,
+    rgba(2, 6, 23, 0.95) 0%,
+    rgba(2, 6, 23, 0.6) 80%,
+    transparent 100%
+  );
+  backdrop-filter: blur(12px);
+  padding-bottom: 0.5rem;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.15);
+}
+
+.scrolled .headerInner {
+  padding-top: 0.8rem;
+  padding-bottom: 0.8rem;
 }
 
 .navbar-visible {
@@ -39,7 +61,11 @@
 }
 
 .headerMetaSmall {
-  font-family: "Space Grotesk", system-ui, -apple-system, sans-serif;
+  font-family:
+    "Space Grotesk",
+    system-ui,
+    -apple-system,
+    sans-serif;
   font-size: clamp(0.65rem, 1.5vw, 0.9rem);
   letter-spacing: 0.21em;
   text-transform: uppercase;
@@ -49,7 +75,7 @@
 /* Logo centrado */
 
 .headerLogoButton {
-  position: absolute; 
+  position: absolute;
   left: 50%;
   top: 70%;
   transform: translateX(-50%) translateY(-50%) scale(1);
@@ -87,14 +113,21 @@
   gap: 0.5rem;
   cursor: pointer;
   overflow: hidden;
-  font-family: "Space Grotesk", system-ui, -apple-system, sans-serif;
+  font-family:
+    "Space Grotesk",
+    system-ui,
+    -apple-system,
+    sans-serif;
   text-transform: uppercase;
   font-size: clamp(0.65rem, 1.3vw, 0.9rem);
   letter-spacing: 0.25em;
   color: rgba(220, 255, 255, 0.95);
   box-shadow: 0 0 14px rgba(0, 255, 255, 0.35);
-  transition: background 0.2s ease, box-shadow 0.2s ease,
-    border-color 0.2s ease, transform 0.2s ease;
+  transition:
+    background 0.2s ease,
+    box-shadow 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease;
 }
 
 .visorToggle::before {
@@ -153,7 +186,9 @@
   pointer-events: none;
   opacity: 0;
   transform: translateY(-4%);
-  transition: opacity 0.4s ease, transform 0.4s ease;
+  transition:
+    opacity 0.4s ease,
+    transform 0.4s ease;
 }
 
 .visorOverlayOpen {
@@ -232,7 +267,11 @@
 }
 
 .hudLabel {
-  font-family: "Space Grotesk", system-ui, -apple-system, sans-serif;
+  font-family:
+    "Space Grotesk",
+    system-ui,
+    -apple-system,
+    sans-serif;
   font-size: clamp(0.75rem, 1.5vw, 1rem);
   letter-spacing: 0.32em;
   text-transform: uppercase;
@@ -240,7 +279,11 @@
 }
 
 .hudSubLabel {
-  font-family: "Space Grotesk", system-ui, -apple-system, sans-serif;
+  font-family:
+    "Space Grotesk",
+    system-ui,
+    -apple-system,
+    sans-serif;
   font-size: clamp(0.65rem, 1.3vw, 0.85rem);
   letter-spacing: 0.22em;
   text-transform: uppercase;
@@ -259,7 +302,11 @@
   background: rgba(15, 23, 42, 0.9);
   padding: clamp(0.25rem, 0.6vh, 0.35rem) clamp(0.45rem, 1vw, 0.65rem);
   cursor: pointer;
-  font-family: "Space Grotesk", system-ui, -apple-system, sans-serif;
+  font-family:
+    "Space Grotesk",
+    system-ui,
+    -apple-system,
+    sans-serif;
 }
 
 .langLabel {
@@ -317,7 +364,11 @@
 }
 
 .visorTitle {
-  font-family: "Space Grotesk", system-ui, -apple-system, sans-serif;
+  font-family:
+    "Space Grotesk",
+    system-ui,
+    -apple-system,
+    sans-serif;
   font-size: clamp(1.2rem, 3vw, 2rem);
   letter-spacing: 0.25em;
   text-transform: uppercase;
@@ -357,9 +408,16 @@
   text-align: center;
   gap: 0.6rem;
   cursor: pointer;
-  font-family: "Space Grotesk", system-ui, -apple-system, sans-serif;
-  transition: border-color 0.18s ease, box-shadow 0.18s ease,
-    transform 0.18s ease, background 0.18s ease;
+  font-family:
+    "Space Grotesk",
+    system-ui,
+    -apple-system,
+    sans-serif;
+  transition:
+    border-color 0.18s ease,
+    box-shadow 0.18s ease,
+    transform 0.18s ease,
+    background 0.18s ease;
   color: #e2e8f0;
   font-size: clamp(0.8rem, 1.5vw, 1rem);
   letter-spacing: 0.16em;
@@ -418,7 +476,9 @@
   background: rgba(15, 23, 42, 0.65);
   backdrop-filter: blur(6px);
   cursor: pointer;
-  transition: background 0.2s ease, border-color 0.2s ease;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease;
 }
 
 .langSwitchCenter:hover {
@@ -456,7 +516,6 @@
   z-index: 45;
   pointer-events: none;
 }
-
 
 /* ===========================================================
    RESPONSIVE: ALTURA PEQUEÑA (HORIZONTAL)
